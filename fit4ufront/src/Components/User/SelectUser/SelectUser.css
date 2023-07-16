@@ -1,0 +1,69 @@
+.signup-body{
+    background: url('../../../assets/loginbanner.jpg');
+    background-size: cover;
+    height: 100vh;
+}
+
+  
+  .cards {
+    perspective: 500px;
+  
+  }
+  
+  .trainercard {
+    width: 20vw;
+    height: 25vw;
+    background:url("../../../assets/trainer.jpg");
+    background-size: cover;
+    border: 2px solid #e9cf0c;
+    border-radius: 4px;
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform .5s;
+  }
+  
+  .trainercard:hover {
+    transform: translateZ(10px) rotateX(20deg) rotateY(20deg);
+  }
+   
+  .trainercard:hover .card_title {
+    transform: translateZ(50px);
+  }
+  .beginnercard {
+    width: 20vw;
+    height: 25vw;
+    background:url("../../../assets/beginner.jpg");
+    background-size: cover;
+    border: 2px solid #e9cf0c;
+    border-radius: 4px;
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform .5s;
+  }
+  
+  .beginnercard:hover {
+    transform: translateZ(10px) rotateX(20deg) rotateY(20deg);
+  }
+   
+  .beginnercard:hover .card_title {
+    transform: translateZ(50px);
+  }
+
+  .card_title {
+    color: #e9cf0c;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    transition: transform .5s;
+    font: 700 1.5rem monospace;
+    text-shadow: -1px -1px 0 #000,  
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+       1px 1px 0 #000;
+  }
+ 
+
+
