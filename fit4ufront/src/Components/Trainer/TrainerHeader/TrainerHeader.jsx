@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../../assets/logo-1.png'
 import './TrainerHeader.css'
 
 function TrainerHeader() {
+    const [logout,setLogout] = useState(false)
+    useEffect(()=>{
+        const trainer = localStorage.getItem('trainerToken')
+        if(trainer){
+            setLogout(true)
+        }
+    })
   return (
     <div>
       <nav className="bg-transparent-800 ">
@@ -36,15 +43,16 @@ function TrainerHeader() {
                                 <img src={logo} alt="" className='logo-img' />
                             </div>
                             <div className="hidden sm:ml-6 sm:block items-center ml-auto w-[100%] nav-items-div">
-                                <div className="flex items-center space-x-center justify-center mt-5">
+                                <div className="flex items-center space-x-center justify-center mt-6">
                                     {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
+                                    <div className="mt-6">
                                     <a href="#" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">home</a>
                                     <a href="#" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">about</a>
                                     <a href="#" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">services</a>
                                     <a href="#" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">Students</a>
                                     <a href="#" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">pricing</a>
                                     <a href="#" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">blog</a>
-
+                                    </div>
 
                                 </div>
                             </div>
@@ -52,16 +60,29 @@ function TrainerHeader() {
                         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
                             {/* Profile dropdown */}
-                            <div className="relative ml-3">
+                            {!logout ?
+                                (<div className="relative ml-3">
                                 <Link to = '/selectUser'>
-                                <div class="svg-wrapper hidden sm:ml-6 sm:block">
+                                <div className="svg-wrapper hidden sm:ml-6 sm:block text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="190" height="60">
-                                        <rect width="190" height="60" class="shape"></rect>
+                                        <rect width="190" height="60" className="shape"></rect>
                                     </svg>
-                                    <div class="text">Membership</div>
+                                    <div className="text">Membership</div>
                                 </div>
                                 </Link>
-                            </div>
+                            </div>)
+                            :
+                            (<div className="relative ml-3">
+                                <Link to = '/trainer/login'>
+                                <div className="svg-wrapper hidden sm:ml-6 sm:block text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="190" height="60">
+                                        <rect width="190" height="60" className="shape"></rect>
+                                    </svg>
+                                    <div className="text">Logout</div>
+                                </div>
+                                </Link>
+                            </div>)
+                            }
                         </div>
                     </div>
                 </div>

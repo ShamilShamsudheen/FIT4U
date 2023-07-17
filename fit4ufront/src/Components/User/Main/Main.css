@@ -1,58 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@700&family=Oswald:wght@500;700&display=swap');
+@keyframes slide-top {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 
-.main-slide{
-    font-family: 'Oswald', sans-serif;
-    color: white;
-    margin-top: 15%;
-    margin-left: 7%;
-    
+@keyframes slide-left {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
-.main-slide h3{
-    font-size: 3vw;
-    font-weight: 700;
-    display: inline-block;
-    position: relative;
-    text-transform: uppercase;
-    -webkit-text-stroke: 1px #f6f7f8;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.2;
+
+.animate-slide-top {
+  animation: slide-top 1s ease-in-out forwards;
 }
-.main-slide h1{
-    font-size: 6vw;
+
+.animate-slide-left {
+  animation: slide-left 1s ease-in-out forwards;
 }
-.svg-wrapper {
-    position: relative;
-    width: 190px;
-    height: 60px;
-    text-align: center;
-    cursor: pointer;
-  }
-  
-  .shape {
-    stroke-dasharray: 100 300;
-    stroke-dashoffset: -297;
-    fill: transparent;
-    stroke: rgb(220, 20, 60);
-    stroke-width: 5px;
-    transition: stroke-width 1s, stroke-dashoffset 1s, stroke-dasharray 1s;
-  }
-  
-  .text {
-    font-size: 22px;
-    top: -48px;
-    position: relative;
-    font-weight: 600;
-  }
-  
-  .svg-wrapper:hover .shape {
-    stroke-width: 2px;
-    stroke-dashoffset: 0;
-    stroke-dasharray: 760;
-  }
-  
-  .svg-wrapper:hover {
-    background-color: rgba(220, 20, 60, 0.2);
-    transition: 1s;
-  }
-  
-  

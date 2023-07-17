@@ -39,7 +39,6 @@ function UserLogin() {
                     if (res.data.status) {
                         localStorage.setItem('userToken',res.data.token)
                         toast.success(res.data.message)
-
                         navigate('/');
                     }
                 })

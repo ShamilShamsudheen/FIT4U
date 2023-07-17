@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { AdminApi } from '../../../api/api'
 import Button from '../../Button/Button'
+import { toast } from 'react-hot-toast'
 
 function UserDetails() {
     const [userData, setUserData] = useState([])
     const [showModal, setShowModal] = useState(false)
+    const [userId, setUserId] = useState(null)
 
     useEffect(() => {
-        AdminApi.post('/admin/userDetails').then((res) => {
+        AdminApi.get('/admin/userDetails').then((res) => {
             setUserData(res.data.userDetails)
         })
     }, [])
-    console.log(showModal);
+    const handleClick = async(e)=>{
+      e.preventDefault()
+      await AdminApi.post('/admin/userBlock',{userId}).then((res)=>{
+        if(res.data.status){
+          setShowModal(false)
+          toast.success(res.data.message)
+        }else{
+          setShowModal(false)
+          toast.error(res.data.message)
+        }
+      })
+    }
+
     return (
         <div className=''>
         <div className="h-[93.1vh] w-full bg-white-400 py-4 pt-16 font-serif">
@@ -57,12 +71,11 @@ function UserDetails() {
                   </td>
                   <td className="px-6 py-4">
                     {/* Modal toggle */}
-                    <div onClick={()=>setShowModal(true)}>
+                    <div onClick={()=>{setShowModal(true);setUserId(user._id)}}>
 
                     <Button
                       
                       buttonText={user.isBlocked ? 'Unblock' : 'Block'}
-                      onClick={() => setShowModal(!showModal)}
                       />
                       </div>
                   </td>
@@ -83,16 +96,16 @@ function UserDetails() {
                     </svg>
                   </div>
                   <div className="mt-2 text-center sm:ml-4 sm:text-left">
-                    <h4 className="text-lg font-medium text-gray-800">Delete account ?</h4>
+                    <h4 className="text-lg font-medium text-gray-800">Block alert ?</h4>
                     <p className="mt-2 text-[15px] leading-relaxed text-gray-500">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                     </p>
                     <div className="items-center gap-2 mt-3 sm:flex">
                       <button
                         className="w-full mt-2 p-2.5 flex-1 text-white bg-red-600 rounded-md outline-none ring-offset-2 ring-red-600 focus:ring-2"
-                        onClick={() => setShowModal(false)}
+                        onClick={handleClick}
                       >
-                        Delete
+                        OK
                       </button>
                       <button
                         className="w-full mt-2 p-2.5 flex-1 text-gray-800 rounded-md outline-none border ring-offset-2 ring-indigo-600 focus:ring-2"

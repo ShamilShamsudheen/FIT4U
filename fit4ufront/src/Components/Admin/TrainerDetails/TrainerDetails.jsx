@@ -1,6 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { AdminApi } from '../../../api/api'
+import Button from '../../Button/Button'
+import { toast } from 'react-hot-toast'
+import { Navigate } from 'react-router-dom'
 
 function TrainerDetails() {
+  const [trainerData,setTrianerData] = useState([])
+  const [showModal,setShowModal] = useState(false)
+  const [trainerId,setTrainerId] = useState(null)
+  useEffect(()=>{
+    AdminApi.get('/admin/trainerDetails').then((res)=>{
+      setTrianerData(res.data.trainerDetails)
+    })
+  },[])
+  const handleClick = async(e)=>{
+    e.preventDefault()
+    console.log(trainerId+"trainerId")
+    await AdminApi.post('/admin/trainerApproval',{trainerId}).then((res)=>{
+      if(res.data.status){
+        setShowModal(false)
+        toast.success(res.data.message)
+      }else{
+        setShowModal(false)
+        toast.error(res.data.message)
+      }
+    }) 
+  }
+
   return (
     <div className=''>
         <div className="h-[93.1vh] w-full bg-white-400 py-4 pt-16 font-serif">
@@ -22,36 +48,36 @@ function TrainerDetails() {
               </tr>
             </thead>
             <tbody>
-              {userData.map((user) => (
-                <tr key={user.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              {trainerData.map((trainer) => (
+                <tr key={trainer.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   {/* <td className="w-4 p-4">
                     <div className="flex items-center">
-                      <input id={`checkbox-table-search-${user.id}`} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                      <label htmlFor={`checkbox-table-search-${user.id}`} className="sr-only">checkbox</label>
+                      <input id={`checkbox-table-search-${trainer.id}`} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                      <label htmlFor={`checkbox-table-search-${trainer.id}`} className="sr-only">checkbox</label>
                     </div>
                   </td> */}
                   <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                    {/* <img className="w-10 h-10 rounded-full" src={user.image} alt="User image" /> */}
+                    {/* <img className="w-10 h-10 rounded-full" src={trainer.image} alt="trainer image" /> */}
                     <div className="pl-3">
-                      <div className="text-base font-semibold">{user.name}</div>
-                      <div className="font-normal text-gray-500">{user.email}</div>
+                      <div className="text-base font-semibold">{trainer.name}</div>
+                      <div className="font-normal text-gray-500">{trainer.email}</div>
                     </div>
                   </th>
-                  {/* <td className="px-6 py-4">{user.position}</td> */}
+                  {/* <td className="px-6 py-4">{trainer.position}</td> */}
                   <td className="px-6 py-4">
                     <div className="flex items-center">
-                      {user.isBlocked ? (<div className="h-2.5 w-2.5 rounded-full bg-red-500 mr-2" />) : (<div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2" />)}
-                      {user.isBlocked ? 'Blocked' : 'Unblock'}
+                      {!(trainer.isApproved) ? (<div className="h-2.5 w-2.5 rounded-full bg-red-500 mr-2" />) : (<div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2" />)}
+                      {!(trainer.isApproved) ? 'Not-Approved' : 'Approved'}
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     {/* Modal toggle */}
-                    <div onClick={()=>setShowModal(true)}>
+                    <div onClick={() => {setTrainerId(trainer._id);setShowModal(!(showModal))}}>
 
                     <Button
                       
-                      buttonText={user.isBlocked ? 'Unblock' : 'Block'}
-                      onClick={() => setShowModal(!showModal)}
+                      buttonText={!(trainer.isApproved) ? 'Approved' : 'Not-Approved'}
+                      
                       />
                       </div>
                   </td>
@@ -59,7 +85,7 @@ function TrainerDetails() {
               ))}
             </tbody>
           </table>
-        
+        )
         </div>
         {showModal && (
           <div className='flex justify-center items-center fixed inset-0 w-full h-full  background-blur-sm '>
@@ -72,16 +98,16 @@ function TrainerDetails() {
                     </svg>
                   </div>
                   <div className="mt-2 text-center sm:ml-4 sm:text-left">
-                    <h4 className="text-lg font-medium text-gray-800">Delete account ?</h4>
+                    <h4 className="text-lg font-medium text-gray-800">Alert</h4>
                     <p className="mt-2 text-[15px] leading-relaxed text-gray-500">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                     </p>
                     <div className="items-center gap-2 mt-3 sm:flex">
                       <button
                         className="w-full mt-2 p-2.5 flex-1 text-white bg-red-600 rounded-md outline-none ring-offset-2 ring-red-600 focus:ring-2"
-                        onClick={() => setShowModal(false)}
+                        onClick={handleClick}
                       >
-                        Delete
+                        OK
                       </button>
                       <button
                         className="w-full mt-2 p-2.5 flex-1 text-gray-800 rounded-md outline-none border ring-offset-2 ring-indigo-600 focus:ring-2"

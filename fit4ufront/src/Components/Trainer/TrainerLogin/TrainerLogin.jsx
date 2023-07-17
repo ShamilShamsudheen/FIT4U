@@ -33,8 +33,8 @@ function TrainerLogin() {
       try {
           await TrainerApi.post('/trainer/login', { values }).then((res)=>{
           if(res.data.status) {
+            localStorage.setItem('trainerToken',res.data.token)
             toast.success(res.data.message)
-            console.log(res.data)
             navigate('/trainer')
           }else{
             toast.error(res.data.message)

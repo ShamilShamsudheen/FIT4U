@@ -2,6 +2,7 @@ require('dotenv').config()
 const bcrypt = require('bcrypt');
 const User = require('../models/user/userModel')
 const jwt = require('jsonwebtoken')
+const Trainer = require('../models/trainer/trainerModel')
 
 
 module.exports = {
@@ -66,6 +67,20 @@ module.exports = {
         } catch (error) {
             console.log(error.message)
         }
-    }
+    },
+    trainersList:async (req,res)=>{
+        try {
+            const approvedTrainer = await Trainer.find({isApproved:true})
+            console.log(approvedTrainer);
+            if(approvedTrainer){
+                res.json({status:true,approvedTrainer})
+            }else{
+                res.json({status:false})
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+    
 
 }
