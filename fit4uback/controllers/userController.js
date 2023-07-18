@@ -41,7 +41,7 @@ module.exports = {
             console.log(req.body)
             let userData = await User.findOne({email:req.body.values.email})
             console.log(userData+"userData")
-            if(userData){
+            if(userData.isBlocked){
 
                 const passMatch = await bcrypt.compare(req.body.values.pass,userData.password)
                 if(passMatch){
@@ -62,7 +62,27 @@ module.exports = {
                 }
             }else{
                 console.log('not login');
-                res.json({status:false,message:'Email Not Exist'})
+                res.json({status:false,message:'Email Blocked'})
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+    postLogin:async (req,res) =>{
+        try {
+            console.log(req.body.userJwtToken)
+            userToken = req.body.userJwtToken
+            if(userToken){
+                jwt.verify(userToken,process.env.JWT_SECRET_KEY,async (err,decoded)=>{
+                    if(err) {
+                        console.log('Token verification failed:', err.message);
+                    }else {
+                        console.log('Decoded token:', decoded);
+                            const userData = await User.findById(decoded.id).exec(); 
+                            console.log(userData);
+                            res.json({userData})
+                    }
+                })
             }
         } catch (error) {
             console.log(error.message)

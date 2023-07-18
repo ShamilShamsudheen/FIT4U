@@ -7,6 +7,7 @@ const userController  = require('../controllers/userController')
 // user routes
 userRouter.post('/signUp',userController.signUp)
 userRouter.post('/login',userController.logIn)
+userRouter.post('/postLogin',userController.postLogin)
 userRouter.get('/trainers',userController.trainersList)
 
 

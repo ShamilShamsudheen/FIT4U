@@ -25,7 +25,27 @@ const User = new Schema({
   isBlocked:{
     type:Boolean,
     default: false
-  }
+  },
+  age:{
+    type: String,
+    default: 'Nill'
+  },
+  height:{
+    type: String,
+    default: 'Nill'
+  },
+  weight:{
+    type: String,
+    required:"Nil"
+  },
+  goal:{
+    type: String,
+    default: 'Nill'
+  },
+  profileImg:{
+    type: String,
+    default: 'Nill'
+  },
 });
 
 module.exports = mongoose.model('User', User);

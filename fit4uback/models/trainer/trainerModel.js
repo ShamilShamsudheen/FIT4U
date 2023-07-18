@@ -41,7 +41,11 @@ const Trainer = new Schema({
   description:{
     type:String,
     required: true
-  }
+  },
+  profileImg:{
+    type:String,
+    default:'NIL'
+  },
 });
 
 module.exports = mongoose.model('Trainer', Trainer);

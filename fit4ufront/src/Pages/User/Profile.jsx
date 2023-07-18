@@ -7,12 +7,13 @@ import heroImage from '../../assets/h1_hero.png'
 function Profile() {
     const style = {
         backgroundImage: `url(${heroImage})`,
-        width: '100vw',
+        width: '98.8vw',
         height: '100vh',
         backgroundSize: 'cover'
+      
     };
   return (
-    <div style={style}>
+    <div className='object-cover' style={style}>
       <Header/>
       <UserProfile/>
     </div>

@@ -6,7 +6,7 @@ import heroImage from '../../assets/h1_hero.png'
 function Home() {
   const style = {
     backgroundImage: `url(${heroImage})`,
-    width: '100vw',
+    width: '99vw',
     height: '100vh',
     backgroundSize: 'cover'
   };
