@@ -63,5 +63,53 @@ module.exports = {
         } catch (error) {
             console.log(error.message)
         }
+    },
+    // profile:async (req,res)=>{
+    //     console.log(req.body)
+    //     try {
+    //         const userId = req.body.id
+    //         updateFields = {
+    //             age:req.body.values.age,
+    //             height:req.body.values.height,
+    //             weight:req.body.values.weight,
+    //             goal:req.body.values.goal
+    //         }
+    //         await User.findByIdAndUpdate(userId, updateFields, { new: true })
+    //         .then((updatedUser) => {
+    //           if (!updatedUser) {
+    //             console.log('User not found');
+    //           } else {
+    //             console.log('Updated User:', updatedUser);
+    //             res.json({updatedUser,message:'Details updated Successfully..'})
+    //           }
+    //         })
+    //         .catch((error) => {
+    //           console.log('Error:', error.message);
+    //         });
+    //     } catch (error) {
+    //         console.log(error.message)
+    //     }
+    // },
+    profileImageUpload:async (req,res)=>{
+        try {
+            const userId = req.body.id
+            updateFields = {
+                profileImg:req.body.profileUrl
+            }
+            await User.findByIdAndUpdate(userId, updateFields, { new: true })
+            .then((updateProfile) => {
+              if (!updateProfile) {
+                console.log('User not found');
+              } else {
+                console.log('Updated User:', updateProfile);
+                res.json({updateProfile,message:'profile image updated..'})
+              }
+            })
+            .catch((error) => {
+              console.log('Error:', error.message);
+            });
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 }

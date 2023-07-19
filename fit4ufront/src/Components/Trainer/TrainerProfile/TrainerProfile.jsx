@@ -1,60 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom';
-import { UserApi } from '../../../api/api';
+import { TrainerApi } from '../../../api/api';
 import { fileUpload } from '../../../Constants/Constants';
-import { useFormik } from 'formik';
 import { toast } from 'react-hot-toast';
 
 
-const initialValues = {
-  age: '',
-  height: '',
-  weight: '',
-  goal: '',
-}
-const validate = (values) => {
-  let errors = {};
 
-  if (!values.age || values.age.trim() === '') {
-    errors.age = 'This field is required';
-  } else if (parseInt(values.age) < 16) {
-    errors.age = 'Age must be at least 16 or above';
-  }
-
-  if (!values.height || values.height.trim() === '') {
-    errors.height = 'This field is required';
-  } else if (parseInt(values.height) < 120) {
-    errors.height = 'Height must be at least 120 cm or above';
-  }
-
-  if (!values.weight || values.weight.trim() === '') {
-    errors.weight = 'This field is required';
-  } else if (parseInt(values.weight) < 25) {
-    errors.weight = 'Weight must be at least 25 kg or above';
-  }
-
-  if (!values.goal || values.goal.trim() === '') {
-    errors.goal = 'This field is required';
-  }
-
-  return errors;
-};
-function UserProfile() {
-  const [details, setDetails] = useState(false)
-  const [detailsForm, setDetailsForm] = useState(false)
-  const [status, setStatus] = useState(true)
-  const [history, setHistory] = useState(true)
-  const [user, setUser] = useState([]);
+function TrainerProfilePage() {
+  const [trainer, setTrainer] = useState([]);
   const [showInput, setShowInput] = useState(false);
 
 useEffect(() => {
-  const userJwtToken = localStorage.getItem('userToken');
-  console.log(userJwtToken);
-  if (userJwtToken) {
-    UserApi.post('/postLogin', { userJwtToken })
+  const trainerJwtToken = localStorage.getItem('trainerToken');
+  console.log(trainerJwtToken);
+  if (trainerJwtToken) {
+    TrainerApi.post('/postLogin', { trainerJwtToken })
       .then((res) => {
-        console.log(res.data.userData);
-        setUser(res.data.userData); 
+        console.log(res.data.trainerData);
+        setTrainer(res.data.trainerData); 
       })
       .catch((error) => {
         console.log(error);
@@ -63,19 +26,7 @@ useEffect(() => {
     <Navigate to="/login" />;
   }
 }, []);
-const formik = useFormik({
-  initialValues,
-  validate,
-  onSubmit: async (values) => {
-    console.log(values)
-    await UserApi.post('/profile', { values, id: user._id }).then((res) => {
-      console.log(res.data.updatedUser)
-      setUser(res.data.updatedUser)
-      setDetailsForm(false)
-      toast.success(res.data.message)
-    })
-  }
-})
+
 const handleImageClick = () => {
   setShowInput(!showInput);
 };
@@ -83,10 +34,10 @@ const handleImageClick = () => {
 const handleImageInputChange = async (event) => {
   const file = event.target.files[0];
   if (file) {
-    const profileUrl = await fileUpload('userProfile', file)
+    const profileUrl = await fileUpload('TrainerProfile', file)
     console.log(profileUrl)
-    UserApi.post('/profileImgUpload', { profileUrl, id: user._id }).then((res) => {
-      setUser(res.data.updateProfile)
+    TrainerApi.post('/profileImgUpload', { profileUrl, id: trainer._id }).then((res) => {
+      setTrainer(res.data.updateProfile)
       setShowInput(false);
       toast.success(res.data.message)
     })
@@ -95,7 +46,7 @@ const handleImageInputChange = async (event) => {
 
 return (
     <div class="p-16 bg-black">
-      {/* {user.map((data)=>( */}
+      {/* {trainer.map((data)=>( */}
 
       <div class="p-8 bg-white shadow mt-24 flex flex-col">
         <div class="relative flex justify-center">
@@ -105,7 +56,7 @@ return (
               className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500"
               onClick={handleImageClick}
             >
-              <img src={user.profileImg} className="w-full h-full rounded-full" alt="" />
+              <img src={trainer.profileImg} className="w-full h-full rounded-full" alt="" />
             </div>
 
             {/* Input to select image */}
@@ -124,14 +75,14 @@ return (
         <p class="text-center mt-20">click on photo to change</p>
        
         <div class="pt-10 text-center border-b pb-12">
-          <h1 class="text-4xl font-medium text-gray-700">{user.name}</h1>
-          <p class="font-light text-gray-600 mt-3">{user.email}</p>
+          <h1 class="text-4xl font-medium text-gray-700">{trainer.name}</h1>
+          <p class="font-light text-gray-600 mt-3">{trainer.email}</p>
 
-          <p class="mt-2 text-gray-500">{user.mobile}</p>
+          <p class="mt-2 text-gray-500">{trainer.mobile}</p>
         </div>
 
        
-        <div className="mt-10">
+        {/* <div className="mt-10">
           <div className="mx-auto w-2/4">
             <ul className="bg-gray-300 grid grid-flow-col gap-10 text-center text-gray-500rounded-lg p-1">
               <li>
@@ -164,8 +115,8 @@ return (
             </ul>
           </div>
           
-        </div>
-        {details &&
+        </div> */}
+        {/* {details &&
            <div className="rounded-lg bg-white shadow-lg p-16">
            <div className="flex justify-center">
              <svg
@@ -192,10 +143,10 @@ return (
      
              <div className="py-8 border-b border-indigo-50">
   <div className="flex flex-col">
-    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Age: <span>{user.age}</span></p>
-    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Height: <span>{user.height}</span></p>
-    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Weight: <span>{user.weight}</span></p>
-    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Goal: <span>{user.goal}</span></p>
+    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Age: <span>{trainer.age}</span></p>
+    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Height: <span>{trainer.height}</span></p>
+    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Weight: <span>{trainer.weight}</span></p>
+    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Goal: <span>{trainer.goal}</span></p>
   </div>
 </div>
 
@@ -209,7 +160,7 @@ return (
              </button>
            </div>
          </div>
-        }
+        } */}
       </div>
       {/* ))} */}
       
@@ -217,4 +168,4 @@ return (
   )
 }
 
-export default UserProfile
+export default TrainerProfilePage
