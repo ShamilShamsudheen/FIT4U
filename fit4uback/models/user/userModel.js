@@ -44,8 +44,12 @@ const User = new Schema({
   },
   profileImg:{
     type: String,
-    default: 'Nill'
+    default: ''
   },
+  paymentDetails:{
+    type:Array,
+    required:false
+  }
 });
 
 module.exports = mongoose.model('User', User);

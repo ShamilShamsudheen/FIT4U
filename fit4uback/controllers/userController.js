@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user/userModel')
 const jwt = require('jsonwebtoken')
 const Trainer = require('../models/trainer/trainerModel')
+const stripe = require('stripe')('sk_test_51NVuw9SJyk53wp6NXIc8sDhAuye4Ij07PIcFsPOaWfZC9wgAwaTvcnAGLsbaUAcirkD66KsLdLWpoQWuNMXe4xbu00hclwCwS9');
 
 
 module.exports = {
@@ -148,6 +149,41 @@ module.exports = {
         } catch (error) {
             console.log(error.message)
         }
-    }
+    },
+
+    payment: async (req, res) => {
+      try {
+        console.log(req.body.id);
+        const trainerId = req.body.id;
+        const trainerData = await Trainer.findById(trainerId);
+        const priceId = trainerData.price; // Price in your currency (e.g., INR)
+    
+        const session = await stripe.checkout.sessions.create({
+          line_items: [
+            {
+              price_data: {
+                currency: 'inr', // Replace 'inr' with your desired currency code
+                unit_amount: priceId * 100, // Convert price to smallest currency unit (e.g., cents)
+                product_data: {
+                  name: 'Training Session', // Replace with the name of the product or description
+                },
+              },
+              quantity: 1,
+            },
+          ],
+          mode: 'payment',
+          success_url: 'http://localhost:5173/trainerList',
+          cancel_url: 'http://localhost:5173/trainerList',
+        });
+    
+        console.log(session);
+        res.json({ URL: session.url });
+      } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ error: 'An error occurred while processing the payment.' });
+      }
+    },
+    
+      
 
 }

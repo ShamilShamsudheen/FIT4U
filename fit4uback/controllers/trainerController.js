@@ -38,7 +38,7 @@ module.exports = {
     login:async(req,res)=>{
         try {
             const trainerData = await Trainer.findOne({email:req.body.values.email})
-            console.log(trainerData);
+            // console.log(trainerData);
             if(trainerData) {
                 let passMatch = await bcrypt.compare(req.body.values.pass,trainerData.password)
                 if(passMatch){
@@ -64,39 +64,33 @@ module.exports = {
             console.log(error.message)
         }
     },
-    // profile:async (req,res)=>{
-    //     console.log(req.body)
-    //     try {
-    //         const userId = req.body.id
-    //         updateFields = {
-    //             age:req.body.values.age,
-    //             height:req.body.values.height,
-    //             weight:req.body.values.weight,
-    //             goal:req.body.values.goal
-    //         }
-    //         await User.findByIdAndUpdate(userId, updateFields, { new: true })
-    //         .then((updatedUser) => {
-    //           if (!updatedUser) {
-    //             console.log('User not found');
-    //           } else {
-    //             console.log('Updated User:', updatedUser);
-    //             res.json({updatedUser,message:'Details updated Successfully..'})
-    //           }
-    //         })
-    //         .catch((error) => {
-    //           console.log('Error:', error.message);
-    //         });
-    //     } catch (error) {
-    //         console.log(error.message)
-    //     }
-    // },
+    postLogin:async(req,res) =>{
+        try {
+            // console.log(req.body.trainerJwtToken);
+            trainerToken = req.body.trainerJwtToken
+            if(trainerToken){
+                jwt.verify(trainerToken,process.env.JWT_SECRET_KEY,async (err,decoded)=>{
+                    if(err) {
+                        console.log('Token verification failed:', err.message);
+                    }else {
+                        console.log('Decoded token:', decoded);
+                            const trainerData = await Trainer.findById(decoded.id).exec(); 
+                            console.log(trainerData);
+                            res.json({trainerData})
+                    }
+                })
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
     profileImageUpload:async (req,res)=>{
         try {
-            const userId = req.body.id
+            const trainerId = req.body.id
             updateFields = {
                 profileImg:req.body.profileUrl
             }
-            await User.findByIdAndUpdate(userId, updateFields, { new: true })
+            await Trainer.findByIdAndUpdate(trainerId, updateFields, { new: true })
             .then((updateProfile) => {
               if (!updateProfile) {
                 console.log('User not found');

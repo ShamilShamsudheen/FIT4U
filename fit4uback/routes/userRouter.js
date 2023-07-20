@@ -11,6 +11,8 @@ userRouter.post('/postLogin',userController.postLogin)
 userRouter.get('/trainers',userController.trainersList)
 userRouter.post('/profile',userController.profile)
 userRouter.post('/profileImgUpload',userController.profileImageUpload)
+userRouter.post('/payment',userController.payment)
+
 
 
 //export userRouter

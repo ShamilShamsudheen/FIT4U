@@ -14,7 +14,7 @@ useEffect(() => {
   const trainerJwtToken = localStorage.getItem('trainerToken');
   console.log(trainerJwtToken);
   if (trainerJwtToken) {
-    TrainerApi.post('/postLogin', { trainerJwtToken })
+    TrainerApi.post('/trainer/postLogin', { trainerJwtToken })
       .then((res) => {
         console.log(res.data.trainerData);
         setTrainer(res.data.trainerData); 
@@ -36,7 +36,7 @@ const handleImageInputChange = async (event) => {
   if (file) {
     const profileUrl = await fileUpload('TrainerProfile', file)
     console.log(profileUrl)
-    TrainerApi.post('/profileImgUpload', { profileUrl, id: trainer._id }).then((res) => {
+    TrainerApi.post('/trainer/profileImgUpload', { profileUrl, id: trainer._id }).then((res) => {
       setTrainer(res.data.updateProfile)
       setShowInput(false);
       toast.success(res.data.message)

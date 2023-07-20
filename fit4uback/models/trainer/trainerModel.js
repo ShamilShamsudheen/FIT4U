@@ -44,8 +44,12 @@ const Trainer = new Schema({
   },
   profileImg:{
     type:String,
-    default:'NIL'
+    default:''
   },
+  price:{
+    type:Number,
+    default:1000
+  }
 });
 
 module.exports = mongoose.model('Trainer', Trainer);

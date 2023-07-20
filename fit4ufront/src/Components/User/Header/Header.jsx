@@ -8,9 +8,21 @@ function Header() {
     useEffect(() => {
         const user = localStorage.getItem('userToken')
         if (user) {
+            console.log('login');
             setLogout(true)
+        }else{
+            console.log('not  login');
+            setLogout(false)
         }
-    })
+    },[])
+    const handleLogout = ()=>{
+        alert('logout')
+       
+        localStorage.removeItem('userToken')
+        setLogout(false)
+        toast.dismiss('logout sucessfully')
+
+    }
     return (
         <div>
             <nav className="bg-transparent-1000 ">
@@ -51,7 +63,7 @@ function Header() {
                                         <Link to="/" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">services</Link>
                                         <Link to="/trainerList" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">trainer</Link>
                                         <Link to="/profile" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">profile</Link>
-                                        <Link to="/" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">blog</Link>
+                                        <Link to="/blogs" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">blog</Link>
                                     </div>
 
                                 </div>
@@ -70,8 +82,8 @@ function Header() {
                                             <div class="text">Membership</div>
                                         </div>
                                     </Link>
-                                </div> : <div className="relative ml-3">
-                                    <div class="svg-wrapper hidden sm:ml-6 sm:block text-white" onClick>
+                                </div> : <div className="relative ml-3" onClick={handleLogout}>
+                                    <div class="svg-wrapper hidden sm:ml-6 sm:block text-white" >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="190" height="60">
                                             <rect width="190" height="60" class="shape"></rect>
                                         </svg>
