@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom';
-import { UserApi } from '../../../api/api';
+// import { UserApi } from '../../../api/api';
 import { fileUpload } from '../../../Constants/Constants';
 import { useFormik } from 'formik';
 import { toast } from 'react-hot-toast';
+import { userAxiosInstance } from '../../../axios/axios';
 
 
 const initialValues = {
@@ -49,17 +50,17 @@ function UserProfile() {
 
 useEffect(() => {
   const userJwtToken = localStorage.getItem('userToken');
-  console.log(userJwtToken);
-  if (userJwtToken) {
-    UserApi.post('/postLogin', { userJwtToken })
-      .then((res) => {
-        console.log(res.data.userData);
-        setUser(res.data.userData); 
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } else {
+    if (userJwtToken) {
+      userAxiosInstance
+        .post('/postLogin', { userJwtToken })
+        .then((res) => {
+          console.log(res.data.userData);
+          setUser(res.data.userData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
     <Navigate to="/login" />;
   }
 }, []);

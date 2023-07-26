@@ -39,6 +39,12 @@ function Sidebar() {
       icons:RiCalendarTodoFill,
 
     },
+    {
+      name:"Payment",
+      link:'/admin/paymentDetails',
+      icons:RiCalendarTodoFill,
+
+    },
   ]
   const handleClick =()=>{
     try {

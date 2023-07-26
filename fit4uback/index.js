@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const path = require('path')
-
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const mongoose = require('mongoose');
 const userRouter = require('./routes/userRouter');
 const adminRouter = require('./routes/adminRouter');
@@ -34,6 +34,9 @@ app.use(express.static(path.join(__dirname,'public'))); // for serving static fi
 app.use('/', userRouter); // example route for user
 app.use('/admin', adminRouter); // example route for admin
 app.use('/trainer', trainerRouter); // example route for trainer
+
+
+
 
 
 app.get('/', (req, res) => {

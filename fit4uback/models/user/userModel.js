@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema  = mongoose.Schema;
 
+
+
 const User = new Schema({
   name: {
     type: String,
@@ -46,10 +48,6 @@ const User = new Schema({
     type: String,
     default: ''
   },
-  paymentDetails:{
-    type:Array,
-    required:false
-  }
 });
 
 module.exports = mongoose.model('User', User);

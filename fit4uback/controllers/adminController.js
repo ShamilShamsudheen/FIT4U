@@ -1,5 +1,6 @@
 const User = require('../models/user/userModel')
 const Trainer = require('../models/trainer/trainerModel')
+const Purchase = require('../models/purchase/purchaseModel')
 
 module.exports = {
     logIn: async (req, res) => {
@@ -64,5 +65,13 @@ module.exports = {
         } catch (error) {
             console.log(error.message);
         }
-    }
+    },
+    paymentData: async (req, res) => {
+        try {
+            const paymentDetails = await Purchase.find()
+            res.json({ paymentDetails });
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
 }

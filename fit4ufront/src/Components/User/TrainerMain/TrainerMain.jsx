@@ -1,28 +1,59 @@
 import React, { useEffect, useState } from 'react'
 import Trainer from '../../../assets/trainerDefault.jpeg'
-import { UserApi } from '../../../api/api';
+// import { UserApi } from '../../../api/api';
+import { userAxiosInstance } from '../../../axios/axios';
+import { Navigate } from 'react-router-dom';
 
 
 function TrainerMain() {
   const [trainersData, setTrianerData] = useState([])
+  const [user,setUser] = useState([])
   useEffect(() => {
-    UserApi.get('/trainers').then((res) => {
-      setTrianerData(res.data.approvedTrainer)
-    })
-  },[])
-  const handleResreve = async(id)=>{
-    console.log(id+"hsfdjaklgdjshakjshflas")
-    // e.preventDefault();
-    await UserApi.post('/payment',{id}).then((res)=>{
-      console.log(res.data.URL);
-      const url = res.data.URL;
-      console.log(url);
+    const fetchData = async () => {
+      const userJwtToken = localStorage.getItem('userToken');
+      console.log(userJwtToken + " anything solved");
+      if (userJwtToken) {
+        try {
+          const response = await userAxiosInstance.post('/postLogin', { userJwtToken });
+          console.log(response.data.userData);
+          setUser(response.data.userData);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        return <Navigate to="/login" />;
+      }
 
-      // Redirect to the received URL page
-      window.location.href = url;
+      try {
+        const response = await userAxiosInstance.get('/trainers');
+        setTrianerData(response.data.approvedTrainer);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
+  console.log(trainersData)
+  const handleResreve = async(trainerId)=>{
+    console.log(trainerId)
+    // e.preventDefault();
+    await userAxiosInstance.post('/payment',{trainerId}).then(async(res)=>{
+      console.log(res.data.session);
+      const session = res.data.session;
+      console.log(session);
+      if(session){
+        await userAxiosInstance.post('/paymentConformation',{trainerId,userId:user._id,session}).then((res)=>{
+          if(res.data.status){
+
+            window.location.href = session.url;
+          }
+        })
+      }
+
     })
   }
-  console.log(trainersData)
   return (
     <div className="flex justify-center mt-6">
       <div className="grid grid-cols-3 gap-6 mt-6">

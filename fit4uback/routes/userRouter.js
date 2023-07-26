@@ -12,6 +12,7 @@ userRouter.get('/trainers',userController.trainersList)
 userRouter.post('/profile',userController.profile)
 userRouter.post('/profileImgUpload',userController.profileImageUpload)
 userRouter.post('/payment',userController.payment)
+userRouter.post('/paymentConformation',userController.paymentConformation)
 
 
 
