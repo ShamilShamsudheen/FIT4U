@@ -14,7 +14,7 @@ function TrainerMain() {
       console.log(userJwtToken + " anything solved");
       if (userJwtToken) {
         try {
-          const response = await userAxiosInstance.post('/postLogin', { userJwtToken });
+          const response = await userAxiosInstance.get('/postLogin', { userJwtToken });
           console.log(response.data.userData);
           setUser(response.data.userData);
         } catch (error) {

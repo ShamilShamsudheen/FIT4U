@@ -81,7 +81,7 @@ module.exports = {
           } else {
             console.log('Decoded token:', decoded);
             const userData = await User.findById(decoded.id).exec();
-            console.log(userData);
+            // console.log(userData);
             res.json({ userData })
           }
         })
@@ -92,8 +92,10 @@ module.exports = {
   },
   trainersList: async (req, res) => {
     try {
+      console.log(req.headers.Authorization)
+
       const approvedTrainer = await Trainer.find({ isApproved: true })
-      console.log(approvedTrainer);
+      // console.log(approvedTrainer);
       if (approvedTrainer) {
         res.json({ status: true, approvedTrainer })
       } else {

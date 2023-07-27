@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast'
 import { Navigate } from 'react-router-dom'
 import { adminAxiosInstance } from '../../../axios/axios'
 
-function PaymentDetails() {
+function PaymentDetail() {
   const [paymentData,setPaymentData] = useState([])
 //   const [showModal,setShowModal] = useState(false)
 //   const [paymentId,setpaymentId] = useState(null);
@@ -114,4 +114,4 @@ await adminAxiosInstance.get('/admin/paymentDetails').then((res)=>{
   )
 }
 
-export default PaymentDetails
+export default PaymentDetail

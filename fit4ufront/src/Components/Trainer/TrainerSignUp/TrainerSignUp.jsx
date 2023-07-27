@@ -71,7 +71,7 @@ function TrainerSignUp() {
   const handleResumeChange = (e) => {
     const file = e.target.files[0];
     setResume(file);
-    console.log(resume+"tgtgtgtgtgtgtg")
+    console.log(resume)
   };
 
   const handleCertificateChange = (e) => {
