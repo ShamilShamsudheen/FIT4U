@@ -1,5 +1,6 @@
 require('dotenv').config()
 const Trainer = require('../models/trainer/trainerModel')
+const Workout = require('../models/workout/workout')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog/blogModel')
@@ -113,6 +114,48 @@ module.exports = {
             res.json({message:'blog created ....'})
         } catch (error) {
             console.log('error', error.message)
+        }
+    },
+    addWorkout: async(req,res)=>{
+        console.log('adfad');
+        try {
+            console.log(req.user,req.body.values,req.body.instruction_video)
+            const {workout_name,item_name_1,first_item_instruction,item_name_2,second_item_instruction,item_name_3,third_item_instruction,item_name_4,fourth_item_instruction} = req.body.values
+            const trainer = await Trainer.findOne({_id:req.user.id},{name:1,_id:0})
+            const trainer_name = trainer.name;
+            const {id} = req.user
+            const newWorkout = new Workout({
+                trainer_id: id,
+                trainer_name: trainer_name,
+                workout_name: workout_name,
+                workout_items: [
+                    {
+                        item_name: item_name_1,
+                        item_instruction: first_item_instruction,
+                        item_instruction_refer: req.body.instruction_video[0]
+                    },
+                    {
+                        item_name: item_name_2,
+                        item_instruction: second_item_instruction,
+                        item_instruction_refer: req.body.instruction_video[1]
+                    },
+                    {
+                        item_name: item_name_3,
+                        item_instruction: third_item_instruction,
+                        item_instruction_refer: req.body.instruction_video[2]
+                    },
+                    {
+                        item_name: item_name_4,
+                        item_instruction: fourth_item_instruction,
+                        item_instruction_refer: req.body.instruction_video[3]
+                    },
+                ]
+            });
+            
+            await newWorkout.save()
+            res.json({message:'ok'})
+        } catch (error) {
+            console.log('Error',error.message)
         }
     }
 }

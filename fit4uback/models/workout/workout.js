@@ -11,7 +11,7 @@ const workouts_Item_Details = new Schema({
         type:String,
         required:true
     },
-    item_instrustion_refer:{
+    item_instruction_refer:{
         type:String,
         required:true
     }
@@ -23,9 +23,17 @@ const WorkoutSchema = new Schema({
         ref: 'Trainer', // Reference to the Trainer schema
         required: true
     },
+    trainer_name:{
+        type:String,
+        required:true
+    },
     workout_name: {
         type: String,
         required: true
+    },
+    isApprove:{
+        type:Boolean,
+        default:false
     },
     workout_items: [workouts_Item_Details]
 });

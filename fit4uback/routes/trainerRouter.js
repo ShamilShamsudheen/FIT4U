@@ -9,6 +9,7 @@ trainerRouter.post('/trainer/login',trainerController.login)
 trainerRouter.get('/postLogin',isLogged,trainerController.postLogin)
 trainerRouter.post('/trainer/profileImgUpload',trainerController.profileImageUpload)
 trainerRouter.post('/addBlog',isLogged,trainerController.addBlog)
+trainerRouter.post('/addWorkout',isLogged,trainerController.addWorkout)
 
 
 
