@@ -28,7 +28,7 @@ const Blog = new Schema({
     },
     blog_approve:{
         type:Boolean,
-        default:false
+        default:true
     },
 });
 

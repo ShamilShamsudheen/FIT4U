@@ -9,8 +9,8 @@ function PaymentDetail() {
   const [paymentData,setPaymentData] = useState([])
 //   const [showModal,setShowModal] = useState(false)
 //   const [paymentId,setpaymentId] = useState(null);
-  useEffect(async()=>{
-await adminAxiosInstance.get('/admin/paymentDetails').then((res)=>{
+  useEffect(()=>{
+    adminAxiosInstance.get('/admin/paymentDetails').then((res)=>{
       setTrianerData(res.data.paymentDetails)
     })
   },[])
@@ -73,7 +73,7 @@ await adminAxiosInstance.get('/admin/paymentDetails').then((res)=>{
               ))}
             </tbody>
           </table>
-        )
+        
         </div>
         {/* {showModal && (
           <div className='flex justify-center items-center fixed inset-0 w-full h-full  background-blur-sm '>

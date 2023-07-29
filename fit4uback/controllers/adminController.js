@@ -1,20 +1,35 @@
+require('dotenv').config()
+const jwt = require('jsonwebtoken')
 const User = require('../models/user/userModel')
 const Trainer = require('../models/trainer/trainerModel')
 const Purchase = require('../models/purchase/purchaseModel')
+const Blog = require('../models/blog/blogModel')
+const Workout = require('../models/workout/workout');
 
 module.exports = {
     logIn: async (req, res) => {
         try {
             const emailAdmin = 'admin@gmail.com';
-            const passAdmin = 'admin'
+            const passAdmin = process.env.ADMIN_PASSWORD
+            const username = 'admin'
             if (emailAdmin === req.body.values.email && passAdmin === req.body.values.pass) {
-                res.json({ status: true, message: 'Login Successfully' })
+                let token = jwt.sign(
+                    { id: process.env.ADMIN_ID},
+                    process.env.JWT_SECRET_KEY,
+                    { expiresIn: "1d" }
+                  );
+                  res.json({
+                    message: 'Login Successfully',
+                    status: true,
+                    token,
+                    username
+                  })
             } else {
                 res.json({ status: false, message: 'Login Failed' })
             }
 
         } catch (error) {
-            cosnole.log(error.message)
+            console.log(error.message)
         }
     },
     userData: async (req, res) => {
@@ -72,6 +87,22 @@ module.exports = {
             res.json({ paymentDetails });
         } catch (error) {
             console.log(error.message)
+        }
+    },
+    blogData: async(req,res)=>{
+        try {
+            const blogDetails = await Blog.find()
+            res.json({ blogDetails })
+        } catch (error) {
+            console.log("Error",error.message)
+        }
+    },
+    workoutData: async(req,res)=>{
+        try {
+            const workoutDetails = await Workout.find()
+            res.status(200).json({ workoutDetails })
+        } catch (error) {
+            console.log("Error",error.message)
         }
     },
 }

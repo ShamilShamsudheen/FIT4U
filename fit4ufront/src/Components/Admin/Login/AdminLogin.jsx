@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import Background from "../../Background/Background";
 import Button from "../../Button/Button";
 import logo from '../../../assets/logo-1.png'
+import { adminAxiosInstance } from "../../../axios/axios";
 // import Cookies from "js-cookie";
 
 const initialValues = {
@@ -31,11 +32,12 @@ function AdminLogin() {
         onSubmit: async (values) => {
           try {
             
-              await AdminApi.post('/admin/login', { values }).then((res)=>{
+              await adminAxiosInstance.post('/login', { values }).then((res)=>{
               if(res.data.status) {
+                localStorage.setItem('adminToken',res.data.token)
                 toast.success(res.data.message)
                 console.log(res.data)
-                navigate('/admin/dashboard')
+                navigate('/admin')
               }else{
                 toast.error(res.data.message)
               }

@@ -36,9 +36,7 @@ function TrainerDetails() {
                 <th scope="col" className="px-6 py-3">
                   Name
                 </th>
-                {/* <th scope="col" className="px-6 py-3">
-                  Position
-                </th> */}
+                
                 <th scope="col" className="px-6 py-3">
                   Status
                 </th>
@@ -50,20 +48,13 @@ function TrainerDetails() {
             <tbody>
               {trainerData.map((trainer) => (
                 <tr key={trainer.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                      <input id={`checkbox-table-search-${trainer.id}`} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                      <label htmlFor={`checkbox-table-search-${trainer.id}`} className="sr-only">checkbox</label>
-                    </div>
-                  </td> */}
+                 
                   <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                    {/* <img className="w-10 h-10 rounded-full" src={trainer.image} alt="trainer image" /> */}
                     <div className="pl-3">
                       <div className="text-base font-semibold">{trainer.name}</div>
                       <div className="font-normal text-gray-500">{trainer.email}</div>
                     </div>
                   </th>
-                  {/* <td className="px-6 py-4">{trainer.position}</td> */}
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       {!(trainer.isApproved) ? (<div className="h-2.5 w-2.5 rounded-full bg-red-500 mr-2" />) : (<div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2" />)}
@@ -85,7 +76,7 @@ function TrainerDetails() {
               ))}
             </tbody>
           </table>
-        )
+
         </div>
         {showModal && (
           <div className='flex justify-center items-center fixed inset-0 w-full h-full  background-blur-sm '>

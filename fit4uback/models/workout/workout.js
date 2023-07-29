@@ -33,7 +33,7 @@ const WorkoutSchema = new Schema({
     },
     isApprove:{
         type:Boolean,
-        default:false
+        default:true
     },
     workout_items: [workouts_Item_Details]
 });
