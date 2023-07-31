@@ -1,9 +1,9 @@
 import React from 'react'
 import Header from '../../Components/User/Header/Header'
-import Main from '../../Components/User/Main/Main'
 import heroImage from '../../assets/h1_hero.png'
+import Blogs from '../../Components/User/BlogsComponet/Blogs';
 
-function Home() {
+function BlogsPage() {
   const style = {
     backgroundImage: `url(${heroImage})`,
     width: '98.9vw',
@@ -11,11 +11,11 @@ function Home() {
     backgroundSize: 'cover'
   };
   return (
-    <div className="home" style={style}>
+    <div className="BlogsPage" style={style}>
       <Header/>
-      <Main/>
+      <Blogs/>
     </div>
   )
 }
 
-export default Home
+export default BlogsPage

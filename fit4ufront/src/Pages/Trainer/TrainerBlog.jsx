@@ -1,3 +1,4 @@
+import Blogs from '../../Components/Trainer/BlogsComponet/Blogs';
 import BlogForm from '../../Components/Trainer/TrainerBlog/BlogForm';
 import TrainerHeader from '../../Components/Trainer/TrainerHeader/TrainerHeader';
 import heroImage from '../../assets/h1_hero.png'
@@ -13,6 +14,7 @@ function TrainerBlog() {
   return (
     <div style={style}>
       <TrainerHeader />
+      <Blogs/>
       <BlogForm/>
     </div>
   )

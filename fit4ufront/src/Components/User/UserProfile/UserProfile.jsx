@@ -95,7 +95,7 @@ const handleImageInputChange = async (event) => {
 };
 
 return (
-    <div class="p-16 bg-black">
+    <div class="p-16 bg-transpaarent">
       {/* {user.map((data)=>( */}
 
       <div class="p-8 bg-white shadow mt-24 flex flex-col">

@@ -157,5 +157,28 @@ module.exports = {
         } catch (error) {
             console.log('Error',error.message)
         }
+    },
+    blogList: async(req,res)=>{
+      try {
+        const blogData = await Blog.find()
+        // console.log(blogData)
+        res.status(200).json({blogData})
+      } catch (error) {
+        console.log('Error',error.message)
+      }
+    },
+    singleBlog: async(req,res)=>{
+      try {
+        const {blogId} = req.params
+        const blogData = await Blog.findById({_id:blogId})
+        if (!blogData) {
+          return res.status(404).json({ error: 'Blog not found' });
+        }
+        res.json({blogData});
+  
+      } catch (error) {
+        console.log('Error',error.message)
+        res.status(500).json({ error: 'Server error' });
+      }
     }
 }

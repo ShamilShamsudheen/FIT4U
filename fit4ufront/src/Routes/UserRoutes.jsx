@@ -6,6 +6,8 @@ import UserReg from '../Pages/User/UserReg';
 import UserLoginPage from '../Pages/User/UserLogin';
 import Trainers from '../Pages/User/Trainers';
 import Profile from '../Pages/User/Profile';
+import BlogsPage from '../Pages/User/Blogs';
+import SingleBlog from '../Pages/User/SingleBlog';
 
 const UserRoutes = () => {
     return (
@@ -16,6 +18,8 @@ const UserRoutes = () => {
           <Route path="/login" element={<UserLoginPage/>} />
           <Route exact path={"/trainerList"} element={<Trainers/>} />
           <Route exact path={"/profile"} element={<Profile/>} />
+          <Route exact path={"/blogs"} element={<BlogsPage/>} />
+          <Route exact path={"/singleBlogs/:blogId"} element={<SingleBlog/>} />
          
         </Routes>
     );

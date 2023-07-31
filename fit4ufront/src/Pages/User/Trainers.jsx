@@ -6,7 +6,7 @@ import TrainerMain from '../../Components/User/TrainerMain/TrainerMain';
 function Trainers() {
     const style = {
         backgroundImage: `url(${heroImage})`,
-        width: '100vw',
+        width: '98.9vw',
         height: '100vh',
         backgroundSize: 'cover'
     };

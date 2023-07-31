@@ -1,9 +1,11 @@
 import React from 'react'
 import Header from '../../Components/User/Header/Header'
-import Main from '../../Components/User/Main/Main'
 import heroImage from '../../assets/h1_hero.png'
+import SingleBlogComponent from '../../Components/User/SingleBlog/SingleBlogComponent';
+import { useParams } from 'react-router-dom';
 
-function Home() {
+function SingleBlog() {
+    const {blogId} = useParams()
   const style = {
     backgroundImage: `url(${heroImage})`,
     width: '98.9vw',
@@ -11,11 +13,11 @@ function Home() {
     backgroundSize: 'cover'
   };
   return (
-    <div className="home" style={style}>
+    <div className="SingleBlog" style={style}>
       <Header/>
-      <Main/>
+      <SingleBlogComponent blogId={blogId}/>
     </div>
   )
 }
 
-export default Home
+export default SingleBlog

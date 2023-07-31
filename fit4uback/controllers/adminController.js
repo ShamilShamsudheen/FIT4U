@@ -83,10 +83,12 @@ module.exports = {
     },
     paymentData: async (req, res) => {
         try {
+            console.log('object')
             const paymentDetails = await Purchase.find()
+            console.log(paymentDetails)
             res.json({ paymentDetails });
         } catch (error) {
-            console.log(error.message)
+            console.log("payment error",error.message)
         }
     },
     blogData: async(req,res)=>{

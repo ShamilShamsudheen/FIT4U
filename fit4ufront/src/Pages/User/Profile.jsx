@@ -1,12 +1,12 @@
 import React from 'react'
 import Header from '../../Components/User/Header/Header'
 import UserProfile from '../../Components/User/UserProfile/UserProfile';
-import heroImage from '../../assets/h1_hero.png'
+import bg from '../../assets/img/gallery/section_bg01.png'
 
 
 function Profile() {
     const style = {
-        backgroundImage: `url(${heroImage})`,
+        backgroundImage: `url(${bg})`,
         width: '98.8vw',
         height: '100vh',
         backgroundSize: 'cover'

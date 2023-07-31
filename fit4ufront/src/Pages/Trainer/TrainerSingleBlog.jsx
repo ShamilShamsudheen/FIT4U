@@ -1,10 +1,10 @@
 import React from 'react'
 import TrainerHeader from '../../Components/Trainer/TrainerHeader/TrainerHeader'
-import TrainerMain from '../../Components/Trainer/TrainerMain/TrainerMain'
 import heroImage from '../../assets/h1_hero.png'
 import TrainerFooter from '../../Components/Trainer/TrainerFooter/TrainerFooter'
+import SingleBlogComponent from '../../Components/Trainer/SingleBlog/SingleBlogComponent';
 
-function TrainerHome() {
+function TrainerSingleBlog() {
     const style = {
         backgroundImage: `url(${heroImage})`,
         width: '98.9vw',
@@ -14,11 +14,11 @@ function TrainerHome() {
   return (
     <div className="trainer-home" style={style}>
       <TrainerHeader />
-      <TrainerMain />
+      <SingleBlogComponent />
       <TrainerFooter />
     </div>
   )
 }
 
-export default TrainerHome
+export default TrainerSingleBlog
 
