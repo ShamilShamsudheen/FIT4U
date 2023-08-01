@@ -191,8 +191,9 @@ module.exports = {
   },
   paymentConformation: async (req, res) => {
     try {
-      const { trainerId, userId, session } = req.body;
-      const userData = await User.findById(userId);
+      const { trainerId, session } = req.body;
+      const {id} = req.user
+      const userData = await User.findById(id);
       const trainerData = await Trainer.findById(trainerId);
       console.log(session)
       const currentDate = new Date();
@@ -207,7 +208,7 @@ module.exports = {
         purchase_date: currentDate,
         purchase_expire: oneMonthLater,
         trainer_id: trainerId,
-        user_id: userId,
+        user_id: id,
       });
   
       await purchase.save();
@@ -238,6 +239,13 @@ module.exports = {
     } catch (error) {
       console.log('Error',error.message)
       res.status(500).json({ error: 'Server error' });
+    }
+  },
+  workouts: async(req,res)=>{
+    try {
+      
+    } catch (error) {
+      clg
     }
   }
 

@@ -44,7 +44,7 @@ function TrainerMain() {
       const session = res.data.session;
       console.log(session);
       if(session){
-        await userAxiosInstance.post('/paymentConformation',{trainerId,userId:user._id,session}).then((res)=>{
+        await userAxiosInstance.post('/paymentConformation',{trainerId,session}).then((res)=>{
           if(res.data.status){
 
             window.location.href = session.url;

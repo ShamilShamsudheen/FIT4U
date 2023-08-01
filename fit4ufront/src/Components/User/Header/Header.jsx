@@ -59,8 +59,7 @@ function Header() {
                                     {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
                                     <div className="mt-6">
                                         <Link to="/" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">home</Link>
-                                        <Link to="/" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">about</Link>
-                                        <Link to="/" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">services</Link>
+                                        <Link to="/workouts" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">workout</Link>
                                         <Link to="/trainerList" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">trainer</Link>
                                         <Link to="/profile" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">profile</Link>
                                         <Link to="/blogs" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">blog</Link>

@@ -4,7 +4,7 @@ import heroImage from '../../assets/h1_hero.png'
 import SingleBlogComponent from '../../Components/User/SingleBlog/SingleBlogComponent';
 import { useParams } from 'react-router-dom';
 
-function SingleBlog() {
+function SingleBlogPage() {
     const {blogId} = useParams()
   const style = {
     backgroundImage: `url(${heroImage})`,
@@ -13,11 +13,11 @@ function SingleBlog() {
     backgroundSize: 'cover'
   };
   return (
-    <div className="SingleBlog" style={style}>
+    <div className="SingleBlogPage" style={style}>
       <Header/>
       <SingleBlogComponent blogId={blogId}/>
     </div>
   )
 }
 
-export default SingleBlog
+export default SingleBlogPage
