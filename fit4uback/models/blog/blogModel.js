@@ -18,6 +18,10 @@ const Blog = new Schema({
         type:String,
         required:true
     },
+    blog_writer_id:{
+        type:String,
+        required:true
+    },
     blog_date:{
         type:Date,
         required:true

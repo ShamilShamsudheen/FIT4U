@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { trainerAxiosInstance } from '../../../axios/axios';
 import { fileUpload } from '../../../Constants/Constants';
 import Button from '../../Button/Button';
+import { toast } from 'react-hot-toast';
 
 function BlogForm() {
     const [templateImg, setTemplate] = useState('')
@@ -44,6 +45,7 @@ function BlogForm() {
         } catch (error) {
             console.log('Error:', error.message);
         }
+        setBlogForm(false);
 
     };
 
@@ -82,9 +84,9 @@ function BlogForm() {
     }
     console.log(blogForm)
     return (
-        <div className="mt-6 bg-opacity-50 backdrop-filter backdrop-blur-lg flex justify-center items-center">
+        <div className="mt-6 bg-opacity-50 backdrop-filter backdrop-blur-lg flex justify-center items-center bg-white">
             {blogForm &&
-                <div className="p-8 rounded border border-gray-200 text-white mt-10 z-10 relative">
+                <div className="p-8 rounded border border-gray-200 t mt-10 z-10 relative text-black">
                     <h1 className="font-medium text-3xl">Add Blog</h1>
                     <br />
                     <form onSubmit={formik.handleSubmit}>

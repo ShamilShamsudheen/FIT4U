@@ -107,6 +107,7 @@ module.exports = {
                 blog_title:blog_title,
                 blog_content:content,
                 blog_writer:writer_name,
+                blog_writer_id:req.user.id,
                 blog_date:Date.now(),
                 blog_category:category
             })
@@ -117,7 +118,6 @@ module.exports = {
         }
     },
     addWorkout: async (req, res) => {
-        console.log('adfad');
         try {
           console.log(req.user, req.body);
       
@@ -147,7 +147,7 @@ module.exports = {
       },
     blogList: async(req,res)=>{
       try {
-        const blogData = await Blog.find()
+        const blogData = await Blog.find({blog_writer_id:req.user.id})
         // console.log(blogData)
         res.status(200).json({blogData})
       } catch (error) {
@@ -167,5 +167,25 @@ module.exports = {
         console.log('Error',error.message)
         res.status(500).json({ error: 'Server error' });
       }
-    }
+    },
+    deleteBlog: async (req, res) => {
+        try {
+          const blogId = req.body.blogId;
+      
+          if (!blogId) {
+            return res.status(400).json({ message: 'Invalid blog ID' });
+          }
+      
+          const deletedBlog = await Blog.findByIdAndDelete(blogId);
+      
+          if (!deletedBlog) {
+            return res.status(404).json({ message: 'Blog not found' });
+          }
+      
+          res.json({ message: 'Successfully deleted the blog' });
+        } catch (error) {
+          console.log('Error:', error.message);
+          res.status(500).json({ message: 'Internal server error' });
+        }
+      },
 }
