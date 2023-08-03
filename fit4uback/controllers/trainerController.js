@@ -68,7 +68,6 @@ module.exports = {
     },
     postLogin: async (req, res) => {
         try {
-            // console.log(req);
             const trainerData = await Trainer.findById(req.user.id).exec();
             res.json({ trainerData })
         } catch (error) {
@@ -77,7 +76,7 @@ module.exports = {
     },
     profileImageUpload: async (req, res) => {
         try {
-            const trainerId = req.body.id
+            const trainerId = req.user.id
             updateFields = {
                 profileImg: req.body.profileUrl
             }
@@ -99,93 +98,137 @@ module.exports = {
     },
     addBlog: async (req, res) => {
         try {
-            const trainer = await Trainer.findOne({_id:req.user.id},{name:1,_id:0})
+            const trainer = await Trainer.findOne({ _id: req.user.id }, { name: 1, _id: 0 })
             const writer_name = trainer.name;
-            const {blog_title,content,category} = req.body.values
+            const { blog_title, content, category } = req.body.values
             const blog = new Blog({
-                blog_template:req.body.templateImg,
-                blog_title:blog_title,
-                blog_content:content,
-                blog_writer:writer_name,
-                blog_writer_id:req.user.id,
-                blog_date:Date.now(),
-                blog_category:category
+                blog_template: req.body.templateImg,
+                blog_title: blog_title,
+                blog_content: content,
+                blog_writer: writer_name,
+                blog_writer_id: req.user.id,
+                blog_date: Date.now(),
+                blog_category: category
             })
             await blog.save()
-            res.json({message:'blog created ....'})
+            res.json({ message: 'blog created ....' })
         } catch (error) {
             console.log('error', error.message)
         }
     },
     addWorkout: async (req, res) => {
         try {
-          console.log(req.user, req.body);
-      
-          const trainer = await Trainer.findOne({ _id: req.user.id }, { name: 1, _id: 0 });
-          const trainer_name = trainer.name;
-          const { id } = req.user;
-      
-          const workoutItems = req.body.workoutItems.map((item) => ({
-            item_name: item.item_name,
-            item_instruction: item.item_instruction,
-            item_instruction_refer: item.item_instruction_video,
-          }));
-      
-          const newWorkout = new Workout({
-            trainer_id: id,
-            trainer_name: trainer_name,
-            workout_name: req.body.workout_name,
-            workout_items: workoutItems,
-          });
-      
-          await newWorkout.save();
-          res.json({ message: 'ok' });
+            console.log(req.user, req.body);
+
+            const trainer = await Trainer.findOne({ _id: req.user.id }, { name: 1, _id: 0 });
+            const trainer_name = trainer.name;
+            const { id } = req.user;
+
+            const workoutItems = req.body.workoutItems.map((item) => ({
+                item_name: item.item_name,
+                item_instruction: item.item_instruction,
+                item_instruction_refer: item.item_instruction_video,
+            }));
+
+            const newWorkout = new Workout({
+                trainer_id: id,
+                trainer_name: trainer_name,
+                workout_name: req.body.workout_name,
+                workout_items: workoutItems,
+            });
+
+            await newWorkout.save();
+            res.json({ message: 'ok' });
         } catch (error) {
-          console.log('Error:', error.message);
-          res.status(500).json({ error: 'An error occurred while saving the workout.' });
+            console.log('Error:', error.message);
+            res.status(500).json({ error: 'An error occurred while saving the workout.' });
         }
-      },
-    blogList: async(req,res)=>{
-      try {
-        const blogData = await Blog.find({blog_writer_id:req.user.id})
-        // console.log(blogData)
-        res.status(200).json({blogData})
-      } catch (error) {
-        console.log('Error',error.message)
-      }
     },
-    singleBlog: async(req,res)=>{
-      try {
-        const {blogId} = req.params
-        const blogData = await Blog.findById({_id:blogId})
-        if (!blogData) {
-          return res.status(404).json({ error: 'Blog not found' });
+    blogList: async (req, res) => {
+        try {
+            const blogData = await Blog.find({ blog_writer_id: req.user.id })
+            // console.log(blogData)
+            res.status(200).json({ blogData })
+        } catch (error) {
+            console.log('Error', error.message)
         }
-        res.json({blogData});
-  
-      } catch (error) {
-        console.log('Error',error.message)
-        res.status(500).json({ error: 'Server error' });
-      }
+    },
+    singleBlog: async (req, res) => {
+        try {
+            const { blogId } = req.params
+            const blogData = await Blog.findById({ _id: blogId })
+            if (!blogData) {
+                return res.status(404).json({ error: 'Blog not found' });
+            }
+            res.json({ blogData });
+
+        } catch (error) {
+            console.log('Error', error.message)
+            res.status(500).json({ error: 'Server error' });
+        }
     },
     deleteBlog: async (req, res) => {
         try {
-          const blogId = req.body.blogId;
-      
-          if (!blogId) {
-            return res.status(400).json({ message: 'Invalid blog ID' });
-          }
-      
-          const deletedBlog = await Blog.findByIdAndDelete(blogId);
-      
-          if (!deletedBlog) {
-            return res.status(404).json({ message: 'Blog not found' });
-          }
-      
-          res.json({ message: 'Successfully deleted the blog' });
+            const blogId = req.body.blogId;
+
+            if (!blogId) {
+                return res.status(400).json({ message: 'Invalid blog ID' });
+            }
+
+            const deletedBlog = await Blog.findByIdAndDelete(blogId);
+
+            if (!deletedBlog) {
+                return res.status(404).json({ message: 'Blog not found' });
+            }
+
+            res.json({ message: 'Successfully deleted the blog' });
         } catch (error) {
-          console.log('Error:', error.message);
-          res.status(500).json({ message: 'Internal server error' });
+            console.log('Error:', error.message);
+            res.status(500).json({ message: 'Internal server error' });
         }
-      },
+    },
+    editBlog: async (req, res) => {
+        const { blogId } = req.params;
+        const { blog_title, blog_category, blog_content } = req.body.values;
+        const { id } = req.user
+        const blog_template = req.body.templateImg
+        const trainer = await Trainer.findById(id);
+        const blog_writer = trainer.name;
+        const blog_date = Date.now()
+
+        try {
+            const updatedBlog = await Blog.findByIdAndUpdate(
+                blogId,
+                {
+                    blog_title,
+                    blog_content,
+                    blog_category,
+                    blog_writer,
+                    blog_template,
+                    blog_date,
+                },
+                { new: true } 
+            );
+
+            if (!updatedBlog) {
+                return res.status(404).json({ message: 'Blog not found' });
+            }
+
+            res.status(200).json({ message: 'Blog updated successfully', blog: updatedBlog });
+        } catch (error) {
+            res.status(500).json({ message: 'An error occurred', error: error.message });
+        }
+    },
+    workoutList: async(req,res)=>{
+        try {
+            const trainer_id = req.user.id;
+        
+            const workouts = await Workout.find({ trainer_id });
+            console.log(workouts)
+            res.json({workouts})
+          } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+          }
+    },
+    
 }

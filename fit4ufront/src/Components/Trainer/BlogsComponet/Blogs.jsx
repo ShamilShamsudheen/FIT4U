@@ -5,6 +5,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'
 import { trainerAxiosInstance } from '../../../axios/axios';
 import { toast } from 'react-hot-toast';
+import BlogForm from '../TrainerBlog/BlogForm';
 
 function Blogs() {
     const navigate = useNavigate()
@@ -53,6 +54,10 @@ function Blogs() {
             toast.error(res.data.message)
         })
     }
+    const handleBlogEdit = async(blogId)=>{
+        navigate(`/trainer/editBlog/${blogId}`)
+        
+    }
     return (
         <div className="flex justify-center mt-10 bg-white">
             <div className="grid grid-cols-3 gap-6 mt-6">
@@ -84,7 +89,6 @@ function Blogs() {
                     </div>
                 ))}
             </div>
-
         </div>
     )
 }

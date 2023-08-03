@@ -1,10 +1,20 @@
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fileUpload } from '../../../Constants/Constants';
 import Button from '../../Button/Button';
 import { trainerAxiosInstance } from '../../../axios/axios';
 
 function WorkoutForm() {
+  useEffect(()=>{
+    const fetchWorkout = async() => {
+      try {
+        await trainerAxiosInstance.get('/workouts')
+      } catch (error) {
+        
+      }
+    }
+    fetchWorkout()
+  },[])
   const [tableShow,setTableShow] = useState(true)
   const [instruction_video, setInstruction_video] = useState([]);
   const [workoutItems, setWorkoutItems] = useState([]);
@@ -106,9 +116,15 @@ function WorkoutForm() {
   };
 
   return (
-    <div className="p-8 w-2/4 mx-auto rounded border border-gray-200 text-white mt-10 backdrop-blur flex justify-center">
+    <div className="p-8 bg-white mx-auto rounded border flex justify-center">
+      
       <div>
-        <h1 className="font-medium text-3xl">Add Workout Item</h1>
+      <div >
+        <Button 
+        buttonText='Add Workouts'
+        />
+      </div>
+        <h1 className="font-medium text-3xl mt-4">Add Workout Item</h1>
         <form onSubmit={formik.handleSubmit}>
           <div className="mt-8">
             <label htmlFor="workout_name" className="text-sm text-grey-700 block mb-1 font-medium">
@@ -207,8 +223,7 @@ function WorkoutForm() {
 
         
         {tableShow &&
-          <div className="mt-1 bg-black border-rounded-3 t">
-          <h2 className="font-medium text-2xl">Saved Workouts</h2>
+          <div className="mt-4 bg-white border-rounded-3 t">
           <table className="mt-4 w-full">
             <thead>
               <tr>

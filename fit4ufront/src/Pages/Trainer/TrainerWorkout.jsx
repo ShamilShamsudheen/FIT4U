@@ -2,6 +2,7 @@ import React from 'react'
 import heroImage from '../../assets/h1_hero.png'
 import TrainerHeader from '../../Components/Trainer/TrainerHeader/TrainerHeader';
 import WorkoutForm from '../../Components/Trainer/TrainerWorkout/WorkoutForm';
+import Workouts from '../../Components/Trainer/Workouts/Workouts';
 
 
 function TrainerWorkout() {
@@ -14,6 +15,7 @@ function TrainerWorkout() {
   return (
     <div style={style}>
       <TrainerHeader />
+      <Workouts/>
       <WorkoutForm/>
     </div>
   )

@@ -19,8 +19,7 @@ function BlogForm() {
             } catch (error) {
                 console.log(error);
             }
-        };
-
+        }
         fetchData();
     }, []);
     const initialValues = {

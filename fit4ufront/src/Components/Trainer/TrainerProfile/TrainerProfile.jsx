@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { TrainerApi } from '../../../api/api';
 import { fileUpload } from '../../../Constants/Constants';
 import { toast } from 'react-hot-toast';
+import { trainerAxiosInstance } from '../../../axios/axios';
 
 
 
@@ -11,20 +12,9 @@ function TrainerProfilePage() {
   const [showInput, setShowInput] = useState(false);
 
 useEffect(() => {
-  const trainerJwtToken = localStorage.getItem('trainerToken');
-  console.log(trainerJwtToken);
-  if (trainerJwtToken) {
-    TrainerApi.post('/trainer/postLogin', { trainerJwtToken })
-      .then((res) => {
-        console.log(res.data.trainerData);
-        setTrainer(res.data.trainerData); 
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } else {
-    <Navigate to="/login" />;
-  }
+  trainerAxiosInstance.get('/postLogin').then((res)=>{
+    setTrainer(res.data.trainerData)
+  })
 }, []);
 
 const handleImageClick = () => {
@@ -33,10 +23,12 @@ const handleImageClick = () => {
 
 const handleImageInputChange = async (event) => {
   const file = event.target.files[0];
+  console.log(file)
+
   if (file) {
-    const profileUrl = await fileUpload('TrainerProfile', file)
+    const profileUrl = await fileUpload('TrainerProfile/', file)
     console.log(profileUrl)
-    TrainerApi.post('/trainer/profileImgUpload', { profileUrl, id: trainer._id }).then((res) => {
+    trainerAxiosInstance.post('/profileImgUpload',{profileUrl}).then((res) => {
       setTrainer(res.data.updateProfile)
       setShowInput(false);
       toast.success(res.data.message)
@@ -45,7 +37,7 @@ const handleImageInputChange = async (event) => {
 };
 
 return (
-    <div class="p-16 bg-black">
+    <div class="p-16 bg-transparent">
       {/* {trainer.map((data)=>( */}
 
       <div class="p-8 bg-white shadow mt-24 flex flex-col">
