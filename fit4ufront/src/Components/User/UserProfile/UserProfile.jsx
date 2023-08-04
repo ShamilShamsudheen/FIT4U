@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom';
-// import { UserApi } from '../../../api/api';
+import logo from '../../../assets/logo-1.png'
 import { fileUpload } from '../../../Constants/Constants';
 import { useFormik } from 'formik';
 import { toast } from 'react-hot-toast';
 import { userAxiosInstance } from '../../../axios/axios';
+import Button from '../../Button/Button';
 
 
 const initialValues = {
@@ -41,6 +42,7 @@ const validate = (values) => {
   return errors;
 };
 function UserProfile() {
+  const [showUpload, setShowUpload] = useState(false)
   const [details, setDetails] = useState(false)
   const [detailsForm, setDetailsForm] = useState(false)
   const [status, setStatus] = useState(true)
@@ -93,15 +95,15 @@ function UserProfile() {
       })
     }
   };
-
+  const handleUpload = () => {
+    // userAxiosInstance.post('updateProfile')
+    setShowUpload(true)
+  }
   return (
-    <div class="p-16 bg-transpaarent">
-      {/* {user.map((data)=>( */}
-
+    <div class="p-16 bg-white mt-10">
       <div class="p-8 bg-white shadow mt-24 flex flex-col">
         <div class="relative flex justify-center">
           <div>
-            {/* Image Div */}
             <div
               className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500"
               onClick={handleImageClick}
@@ -109,7 +111,6 @@ function UserProfile() {
               <img src={user.profileImg} className="w-full h-full rounded-full" alt="" />
             </div>
 
-            {/* Input to select image */}
             {showInput && (
               <input
                 type="file"
@@ -133,7 +134,7 @@ function UserProfile() {
 
 
         <div className="mt-10">
-          <div className="mx-auto w-2/4">
+          <div className="mx-auto w-2/4 border-rounded-2">
             <ul className="bg-gray-300 grid grid-flow-col gap-10 text-center text-gray-500rounded-lg p-1">
               <li>
                 <a
@@ -167,49 +168,134 @@ function UserProfile() {
 
         </div>
         {details &&
-          <div className="rounded-lg bg-white shadow-lg p-16">
-            <div className="flex justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-10 w-10 text-indigo-800"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                />
-              </svg>
-            </div>
+          <div className="rounded-lg mt-2 bg-gray-300 shadow-lg p-16 justify-items-start w-1/3 items-start">
 
-            <div className="text-center mt-2">
+
+            <div className=" mt-2">
               <h1 className="text-purple-900 font-bold text-2xl">Details</h1>
 
 
 
 
               <div className="py-8 border-b border-indigo-50">
-                <div className="flex flex-col">
-                  <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Age: <span>{user.age} yr</span></p>
-                  <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Height: <span>{user.height} cm</span></p>
-                  <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Weight: <span>{user.weight} kg</span></p>
-                  <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Goal: <span>{user.goal}</span></p>
+                <div className="flex flex-col items-start"> {/* Add 'items-end' class here */}
+                  <p className="ml-1 text-white-900 font-bold text-2xl items-start ">Age: <span className='text-amber-600'>{user.age} </span>yr</p>
+                  <p className="ml-1 text-white-900 font-bold text-2xl items-start ">Height: <span className='text-amber-600'>{user.height} </span>cm</p>
+                  <p className="ml-1 text-white-900 font-bold text-2xl items-start ">Weight: <span className='text-amber-600'>{user.weight}</span> kg</p>
+                  <p className="ml-1 text-white-900 font-bold text-2xl items-start ">Goal: <span>{user.goal}</span></p>
                 </div>
               </div>
 
 
 
+
             </div>
 
-            <div className="flex justify-center mt-8">
+            <div className=" mt-8" onClick={handleUpload}>
               <button className="text-white py-2 px-4 rounded-lg bg-purple-700 hover:bg-purple-600 shadow-md font-medium transition-colors">
                 Upload
               </button>
             </div>
+            {showUpload &&
+              (<div className='fixed inset-0 flex items-center justify-center z-50'>
+                <div className="bg-white p-8 shadow-lg rounded-lg w-1/2">
+              <div className="bg-gray-100 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                  <img className="mx-auto h-12 w-auto" src={logo} alt="Workflow" />
+                </div>
+                <hr className="w-full border border-red-500 mt-3" />
+                <form className="mt-4" onSubmit={formik.handleSubmit}>
+
+                  <div className="mt-4">
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                      <input
+                        id="age"
+                        name="age"
+                        placeholder="Age"
+                        type="text"
+                        required
+                        value={formik.values.age}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="appearance-none block w-full px-3 py-2 border border-white rounded-md placeholder-gray-400 hover:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      />
+                    </div>
+                    <div style={{ color: '#eb070f' }}>
+                      {formik.touched.age && formik.errors.age ? formik.errors.age : ''}
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                      <input
+                        id="age"
+                        name="age"
+                        placeholder="Age"
+                        type="text"
+                        required
+                        value={formik.values.age}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="appearance-none block w-full px-3 py-2 border border-white rounded-md placeholder-gray-400 hover:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      />
+                    </div>
+                    <div style={{ color: '#eb070f' }}>
+                      {formik.touched.age && formik.errors.age ? formik.errors.age : ''}
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                      <input
+                        id="age"
+                        name="age"
+                        placeholder="Age"
+                        type="text"
+                        required
+                        value={formik.values.age}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="appearance-none block w-full px-3 py-2 border border-white rounded-md placeholder-gray-400 hover:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      />
+                    </div>
+                    <div style={{ color: '#eb070f' }}>
+                      {formik.touched.age && formik.errors.age ? formik.errors.age : ''}
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                      <input
+                        id="age"
+                        name="age"
+                        placeholder="Age"
+                        type="text"
+                        required
+                        value={formik.values.age}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="appearance-none block w-full px-3 py-2 border border-white rounded-md placeholder-gray-400 hover:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      />
+                    </div>
+                    <div style={{ color: '#eb070f' }}>
+                      {formik.touched.age && formik.errors.age ? formik.errors.age : ''}
+                    </div>
+                  </div>
+
+
+
+                  <div id='recaptcha-container'></div>
+                  <div className="mt-4 flex justify-center">
+                    <Button
+                      buttonText="Update"
+                      className="w-full py-3 text-xs uppercase font-semibold rounded-md duration-300 mx-auto"
+                      type="submit"
+                    />
+                  </div>
+                </form>
+              </div>
+              </div>
+              </div>)
+            }
           </div>
+
         }
       </div>
       {/* ))} */}

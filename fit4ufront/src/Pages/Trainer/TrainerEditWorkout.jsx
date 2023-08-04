@@ -1,6 +1,7 @@
 import React from 'react'
 import TrainerHeader from '../../Components/Trainer/TrainerHeader/TrainerHeader'
 import heroImage from '../../assets/h1_hero.png'
+import EditWorkout from '../../Components/Trainer/EditWorkout/EditWorkout';
 
 function TrainerEditWorkout() {
     const style = {
@@ -12,7 +13,7 @@ function TrainerEditWorkout() {
     return (
         <div className="editBlog" style={style}>
             <TrainerHeader />
-
+            <EditWorkout/>
         </div>
     )
 }

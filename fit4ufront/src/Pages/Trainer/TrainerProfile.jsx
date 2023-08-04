@@ -6,7 +6,7 @@ import TrainerProfilePage from '../../Components/Trainer/TrainerProfile/TrainerP
 function TrainerProfile() {
     const style = {
         backgroundImage: `url(${heroImage})`,
-        width: '100vw',
+        width: '98.9vw',
         height: '100vh',
         backgroundSize: 'cover'
       };

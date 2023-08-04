@@ -15,6 +15,7 @@ trainerRouter.post('/addBlog',isLogged,trainerController.addBlog)
 trainerRouter.post('/editBlog/:blogId',isLogged,trainerController.editBlog)
 trainerRouter.post('/addWorkout',isLogged,trainerController.addWorkout)
 trainerRouter.post('/deleteBlog',isLogged,trainerController.deleteBlog)
+trainerRouter.post('/deleteWorkout',isLogged,trainerController.deleteWorkout)
 
 
 

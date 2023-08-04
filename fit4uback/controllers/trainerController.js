@@ -223,12 +223,30 @@ module.exports = {
         try {
             const trainer_id = req.user.id;
         
-            const workouts = await Workout.find({ trainer_id });
+            const workouts = await Workout.find({ trainer_id },);
             console.log(workouts)
             res.json({workouts})
           } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
           }
     },
-    
+    deleteWorkout: async(req,res)=>{
+        try {
+            const {workout_id} = req.body;
+            if (!workout_id) {
+                return res.status(400).json({ message: 'Invalid workout ID' });
+            }
+
+            const deletedBlog = await Blog.deleteOne({_id:workout_id});
+
+            if (!deletedBlog) {
+                return res.status(404).json({ message: 'workout not found' });
+            }
+
+            res.json({ message: 'Successfully deleted the workout' });
+        } catch (error) {
+            console.log('Error:', error.message);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
 }
