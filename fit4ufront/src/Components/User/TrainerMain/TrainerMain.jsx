@@ -80,15 +80,19 @@ function TrainerMain() {
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2 text-white uppercase">{trainer.name}</div>
               <p class="text-white text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
+                {trainer.description}
               </p>
               {/* <div class="font-bold text-xl mb-2 text-white mt-2">INR. {trainer.price}</div> */}
 
             </div>
             <div class="px-6 pt-4 pb-2">
-              <div class="svg-wrapper hidden sm:ml-6 sm:block text-white">
-                
-                <div class="text mt-6" onClick={() => handleResreve(trainer._id)}>Reserve</div>
+              <div class=" hidden sm:ml-6 sm:block text-white">
+
+                <div class="text mt-6" onClick={() => handleResreve(trainer._id)}><button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                  connect with us  <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                  </svg>
+                </button></div>
               </div>
             </div>
           </div>

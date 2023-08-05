@@ -5,16 +5,7 @@ import Button from '../../Button/Button';
 import { trainerAxiosInstance } from '../../../axios/axios';
 
 function WorkoutForm() {
-  useEffect(()=>{
-    const fetchWorkout = async() => {
-      try {
-        await trainerAxiosInstance.get('/workouts')
-      } catch (error) {
-        
-      }
-    }
-    fetchWorkout()
-  },[])
+  
   const [tableShow,setTableShow] = useState(true)
   const [instruction_video, setInstruction_video] = useState([]);
   const [workoutItems, setWorkoutItems] = useState([]);

@@ -95,7 +95,7 @@ module.exports = {
         } catch (error) {
             console.log(error.message)
         }
-    },
+    },      
     addBlog: async (req, res) => {
         try {
             const trainer = await Trainer.findOne({ _id: req.user.id }, { name: 1, _id: 0 })

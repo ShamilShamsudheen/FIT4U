@@ -54,7 +54,7 @@ function UserProfile() {
     const userJwtToken = localStorage.getItem('userToken');
     if (userJwtToken) {
       userAxiosInstance
-        .post('/postLogin', { userJwtToken })
+        .post('/postLogin')
         .then((res) => {
           console.log(res.data.userData);
           setUser(res.data.userData);
@@ -71,11 +71,10 @@ function UserProfile() {
     validate,
     onSubmit: async (values) => {
       console.log(values)
-      await UserApi.post('/profile', { values, id: user._id }).then((res) => {
-        console.log(res.data.updatedUser)
-        setUser(res.data.updatedUser)
-        setDetailsForm(false)
+      await userAxiosInstance.post('/profile', { values}).then((res) => {
+        
         toast.success(res.data.message)
+        setShowUpload(false)
       })
     }
   })
@@ -96,7 +95,11 @@ function UserProfile() {
     }
   };
   const handleUpload = () => {
-    // userAxiosInstance.post('updateProfile')
+    console.log(user)
+    formik.setFieldValue('age',user.age)
+    formik.setFieldValue('height',user.height)
+    formik.setFieldValue('weight',user.weight)
+    formik.setFieldValue('goal',user.goal)
     setShowUpload(true)
   }
   return (
@@ -227,55 +230,55 @@ function UserProfile() {
                   <div className="mt-4">
                     <div className="mt-1 relative rounded-md shadow-sm">
                       <input
-                        id="age"
-                        name="age"
-                        placeholder="Age"
+                        id="height"
+                        name="height"
+                        placeholder="height"
                         type="text"
                         required
-                        value={formik.values.age}
+                        value={formik.values.height}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         className="appearance-none block w-full px-3 py-2 border border-white rounded-md placeholder-gray-400 hover:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                       />
                     </div>
                     <div style={{ color: '#eb070f' }}>
-                      {formik.touched.age && formik.errors.age ? formik.errors.age : ''}
+                      {formik.touched.height && formik.errors.height ? formik.errors.height : ''}
                     </div>
                   </div>
                   <div className="mt-4">
                     <div className="mt-1 relative rounded-md shadow-sm">
                       <input
-                        id="age"
-                        name="age"
-                        placeholder="Age"
+                        id="weight"
+                        name="weight"
+                        placeholder="weight"
                         type="text"
                         required
-                        value={formik.values.age}
+                        value={formik.values.weight}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         className="appearance-none block w-full px-3 py-2 border border-white rounded-md placeholder-gray-400 hover:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                       />
                     </div>
                     <div style={{ color: '#eb070f' }}>
-                      {formik.touched.age && formik.errors.age ? formik.errors.age : ''}
+                      {formik.touched.weight && formik.errors.weight ? formik.errors.weight : ''}
                     </div>
                   </div>
                   <div className="mt-4">
                     <div className="mt-1 relative rounded-md shadow-sm">
                       <input
-                        id="age"
-                        name="age"
-                        placeholder="Age"
+                        id="goal"
+                        name="goal"
+                        placeholder="goal"
                         type="text"
                         required
-                        value={formik.values.age}
+                        value={formik.values.goal}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         className="appearance-none block w-full px-3 py-2 border border-white rounded-md placeholder-gray-400 hover:border-red-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                       />
                     </div>
                     <div style={{ color: '#eb070f' }}>
-                      {formik.touched.age && formik.errors.age ? formik.errors.age : ''}
+                      {formik.touched.goal && formik.errors.goal ? formik.errors.goal : ''}
                     </div>
                   </div>
 

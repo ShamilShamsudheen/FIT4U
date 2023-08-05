@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const Trainer = require('../models/trainer/trainerModel')
 const Purchase = require('../models/purchase/purchaseModel')
 const Blog = require('../models/blog/blogModel')
+const Workout = require('../models/workout/workout')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 
@@ -73,27 +74,22 @@ module.exports = {
   },
   postLogin: async (req, res) => {
     try {
-      console.log(req.body.userJwtToken)
-      userToken = req.body.userJwtToken
-      if (userToken) {
-        jwt.verify(userToken, process.env.JWT_SECRET_KEY, async (err, decoded) => {
-          if (err) {
-            console.log('Token verification failed:', err.message);
-          } else {
-            console.log('Decoded token:', decoded);
-            const userData = await User.findById(decoded.id).exec();
-            // console.log(userData);
-            res.json({ userData })
-          }
-        })
+      const { id } = req.user;
+  
+      const userData = await User.findById(id);
+  
+      if (!userData) {
+        return res.status(404).json({ message: 'UserData not found' });
       }
+  
+      return res.status(200).json({userData});
     } catch (error) {
-      console.log(error.message)
+      console.error('Error fetching user data:', error);
+      return res.status(500).json({ message: 'An error occurred while fetching user data' });
     }
   },
   trainersList: async (req, res) => {
     try {
-      console.log(req.headers.Authorization)
 
       const approvedTrainer = await Trainer.find({ isApproved: true })
       // console.log(approvedTrainer);
@@ -106,32 +102,28 @@ module.exports = {
       console.log(error.message)
     }
   },
-  profile: async (req, res) => {
-    console.log(req.body)
+  profileUpdate: async (req, res) => {
     try {
-      const userId = req.body.id
-      updateFields = {
-        age: req.body.values.age,
-        height: req.body.values.height,
-        weight: req.body.values.weight,
-        goal: req.body.values.goal
+      const { age, height, weight, goal } = req.body.values;
+      const { id } = req.user;
+  
+      const user = await User.findByIdAndUpdate(
+        { _id: id },
+        { age, height, weight, goal },
+        { new: true } 
+      );
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
       }
-      await User.findByIdAndUpdate(userId, updateFields, { new: true })
-        .then((updatedUser) => {
-          if (!updatedUser) {
-            console.log('User not found');
-          } else {
-            console.log('Updated User:', updatedUser);
-            res.json({ updatedUser, message: 'Details updated Successfully..' })
-          }
-        })
-        .catch((error) => {
-          console.log('Error:', error.message);
-        });
+  
+      return res.status(200).json({ message: 'Profile updated successfully', user });
     } catch (error) {
-      console.log(error.message)
+      console.error('Error updating profile:', error);
+      return res.status(500).json({ message: 'An error occurred while updating profile' });
     }
   },
+  
   profileImageUpload: async (req, res) => {
     try {
       const userId = req.body.id
@@ -241,13 +233,25 @@ module.exports = {
       res.status(500).json({ error: 'Server error' });
     }
   },
-  workouts: async(req,res)=>{
+  workouts: async (req, res) => {
     try {
-      
+      const { id } = req.user;
+      const paymentDetails = await Purchase.findOne({ user_id: id });
+  
+      if (!paymentDetails) {
+        return res.json({ message: 'You have not selected any user' });
+      }
+  
+      const { trainer_id } = paymentDetails;
+      const workoutDetails = await Workout.findOne({ trainer_id });
+  
+      return res.json({workoutDetails});
     } catch (error) {
-      clg
+      console.log(error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
-  }
+  },
+  
 
 
 }

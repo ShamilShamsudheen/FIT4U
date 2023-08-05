@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import Background from '../../Background/Background';
 import Button from '../../Button/Button';
 import { GoogleLogin } from '@react-oauth/google';
-import { CLIENT_ID } from '../../../Constants/Constants';
+// import { CLIENT_ID } from '../../../Constants/Constants';
 
 const initialValues = {
     email: '',
@@ -37,7 +37,7 @@ function UserLogin() {
 
                 await UserApi.post('/login', { values }).then((res) => {
                     if (res.data.status) {
-                        localStorage.setItem('userToken',res.data.token)
+                        localStorage.setItem('userToken', res.data.token)
                         toast.success(res.data.message)
                         navigate('/');
                     }
@@ -48,11 +48,11 @@ function UserLogin() {
             }
         }
     });
-    const onSuccess =(res)=>{
+    const handleGoogleSuccess = (res) => {
         console.log('success');
         console.log(res);
     }
-    const onFailure =(res)=>{
+    const handleGoogleFailure = (res) => {
         console.log('failure');
         console.log(res);
     }
@@ -114,16 +114,17 @@ function UserLogin() {
                             />
                         </div>
                         <div className='mt-4 flex justify-center' id='signInButton'>
-                            <GoogleLogin 
-                                onSuccess = {onSuccess}
-                                onFailure = {onFailure}
+                            <GoogleLogin
+                                buttonText="Login with Google"
+                                onSuccess={handleGoogleSuccess}
+                                onFailure={handleGoogleFailure}
                             />
                         </div>
                         <div className="mt-4 flex justify-center">
                             <p className="text-sm">
                                 create a account? <Link to="/signup" className="text-red-500 underline">Register Here</Link>
                             </p>
-                            
+
                         </div>
                     </form>
                 </div>

@@ -26,9 +26,6 @@ function Workouts() {
       toast.success(res.data.message)
     })
   }
-  const handleEditWorkout = async (workout_id) => {
-    navigate(`/trainer/editWorkout/${workout_id}`)
-  }
   return (
     <>
       {workoutData && (
