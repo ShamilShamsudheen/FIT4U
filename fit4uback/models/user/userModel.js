@@ -30,23 +30,23 @@ const User = new Schema({
   },
   age:{
     type: String,
-    default: 'Nill'
+    default: null
   },
   height:{
     type: String,
-    default: 'Nill'
+    default: null
   },
   weight:{
     type: String,
-    required:"Nil"
+    default:null
   },
   goal:{
     type: String,
-    default: 'Nill'
+    default: null
   },
   profileImg:{
     type: String,
-    default: ''
+    default: null
   },
 });
 

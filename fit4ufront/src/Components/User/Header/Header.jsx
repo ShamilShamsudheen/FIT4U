@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import logo from '../../../assets/logo-1.png'
 import { Link } from 'react-router-dom'
+import { GrChat } from 'react-icons/gr';
+
 
 function Header() {
     const [logout, setLogout] = useState(false)
@@ -10,14 +12,14 @@ function Header() {
         if (user) {
             console.log('login');
             setLogout(true)
-        }else{
+        } else {
             console.log('not  login');
             setLogout(false)
         }
-    },[])
-    const handleLogout = ()=>{
+    }, [])
+    const handleLogout = () => {
         alert('logout')
-       
+
         localStorage.removeItem('userToken')
         setLogout(false)
         toast.dismiss('logout sucessfully')
@@ -73,6 +75,7 @@ function Header() {
                             {/* Profile dropdown */}
                             {!logout ?
                                 <div className="relative ml-3">
+
                                     <Link to='/selectUser'>
                                         <div class="svg-wrapper hidden sm:ml-6 sm:block text-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="190" height="60">
@@ -82,6 +85,7 @@ function Header() {
                                         </div>
                                     </Link>
                                 </div> : <div className="relative ml-3" onClick={handleLogout}>
+                                    
                                     <div class="svg-wrapper hidden sm:ml-6 sm:block text-white" >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="190" height="60">
                                             <rect width="190" height="60" class="shape"></rect>

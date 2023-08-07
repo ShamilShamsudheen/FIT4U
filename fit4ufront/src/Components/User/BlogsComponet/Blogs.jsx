@@ -1,18 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { trainerAxiosInstance } from '../../../axios/axios'
+import { userAxiosInstance } from '../../../axios/axios'
 
 function Blogs() {
     const navigate = useNavigate()
     const [blogDetails,setBlogDetails] = useState([])
     useEffect(()=>{
-        trainerAxiosInstance.get('/blogs').then((res)=>{
-            setBlogDetails(res.data.blogData)
-        })
+        const fetchBlog = async()=>{
+            try {
+                await userAxiosInstance.get('/blogs').then((res)=>{
+                    setBlogDetails(res.data.blogData)
+                })
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+        fetchBlog()
     },[])
     const handleBlog = async(blogId)=>{
         navigate(`/singleBlogs/${blogId}`);
     }
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
     return (
         <div className="flex justify-center mt-10">
             <div className="grid grid-cols-3 gap-6 mt-6">
@@ -30,6 +41,8 @@ function Blogs() {
                         <p class=" text-base">
                             <span>{blog.blog_category}</span> | <span className='uppercase'>{blog.blog_writer}</span>
                         </p>
+                        <p className="text-blue-500 text-sm">Published on {formatDate(blog.blog_date)}</p>
+
                     </div>
                 </div>
             ))}

@@ -87,7 +87,7 @@ function UserProfile() {
     if (file) {
       const profileUrl = await fileUpload('userProfile', file)
       console.log(profileUrl)
-      UserApi.post('/profileImgUpload', { profileUrl, id: user._id }).then((res) => {
+      userAxiosInstance.post('/profileImgUpload', { profileUrl}).then((res) => {
         setUser(res.data.updateProfile)
         setShowInput(false);
         toast.success(res.data.message)

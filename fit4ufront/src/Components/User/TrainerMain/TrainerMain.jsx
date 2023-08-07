@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Trainer from '../../../assets/trainerDefault.jpeg'
-// import { UserApi } from '../../../api/api';
 import { userAxiosInstance } from '../../../axios/axios';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
 function TrainerMain() {
+  const navigate = useNavigate();
   const [trainersData, setTrianerData] = useState([])
   const [user, setUser] = useState([])
   useEffect(() => {
@@ -54,13 +54,16 @@ function TrainerMain() {
 
     })
   }
+  const handleClick = (trainerId)=>{
+    navigate(`/singleTrainer/${trainerId}`)
+  }
   return (
     <div className="flex justify-center mt-6">
       <div className="grid grid-cols-3 gap-6 mt-6">
         {trainersData.map((trainer) => (
 
 
-          <div class="max-w-sm rounded overflow-hidden shadow-lg">
+          <div class="max-w-sm rounded overflow-hidden shadow-lg" onClick={()=>handleClick(trainer._id)}>
             <div className="flex justify-center w-full rounded overflow-hidden mb-3 shadow-lg">
               {!trainer.profileImg ? (
                 <img
@@ -89,7 +92,7 @@ function TrainerMain() {
               <div class=" hidden sm:ml-6 sm:block text-white">
 
                 <div class="text mt-6" onClick={() => handleResreve(trainer._id)}><button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                  connect with us  <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                  connect with us : <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                   </svg>
                 </button></div>

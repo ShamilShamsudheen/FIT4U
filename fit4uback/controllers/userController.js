@@ -29,6 +29,7 @@ module.exports = {
             password: secPass,
             role: body.role
           })
+          console.log(userData)
           await userData.save();
           res.json({ message: 'Your account has been created successfully', status: true })
         } else {
@@ -41,10 +42,7 @@ module.exports = {
   },
   logIn: async (req, res) => {
     try {
-      console.log('login')
-      console.log(req.body)
       let userData = await User.findOne({ email: req.body.values.email })
-      console.log(userData + "userData")
       if (!userData.isBlocked) {
 
         const passMatch = await bcrypt.compare(req.body.values.pass, userData.password)
@@ -126,7 +124,7 @@ module.exports = {
   
   profileImageUpload: async (req, res) => {
     try {
-      const userId = req.body.id
+      const userId = req.user.id
       updateFields = {
         profileImg: req.body.profileUrl
       }
@@ -213,7 +211,7 @@ module.exports = {
   blogList: async(req,res)=>{
     try {
       const blogData = await Blog.find()
-      // console.log(blogData)
+      console.log(blogData)
       res.status(200).json({blogData})
     } catch (error) {
       console.log('Error',error.message)
@@ -228,6 +226,19 @@ module.exports = {
       }
       res.json({blogData});
 
+    } catch (error) {
+      console.log('Error',error.message)
+      res.status(500).json({ error: 'Server error' });
+    }
+  },
+  singleTrainer: async(req,res) =>{
+    try {
+      const {trainerId} = req.params
+      const trainerData = await Trainer.findById({_id:trainerId})
+      if (!trainerData) {
+        return res.status(404).json({ error: 'Trainer not found' });
+      }
+      res.json({trainerData});
     } catch (error) {
       console.log('Error',error.message)
       res.status(500).json({ error: 'Server error' });

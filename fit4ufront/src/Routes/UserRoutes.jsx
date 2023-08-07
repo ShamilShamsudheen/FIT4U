@@ -9,6 +9,7 @@ import Profile from '../Pages/User/Profile';
 import BlogsPage from '../Pages/User/Blogs';
 import SingleBlog from '../Pages/User/SingleBlog.jsx';
 import WorkoutPage from '../Pages/User/Workouts';
+import SingleTrainerPage from '../Pages/User/SingleTrainer';
 
 const UserRoutes = () => {
     return (
@@ -22,6 +23,7 @@ const UserRoutes = () => {
           <Route exact path={"/blogs"} element={<BlogsPage/>} />
           <Route exact path={"/workouts"} element={<WorkoutPage/>} />
           <Route exact path={"/singleBlogs/:blogId"} element={<SingleBlog/>} />
+          <Route exact path={"/singleTrainer/:trainerId"} element={<SingleTrainerPage/>} />
          
         </Routes>
     );

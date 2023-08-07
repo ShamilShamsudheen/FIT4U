@@ -14,16 +14,16 @@ module.exports = {
             const username = 'admin'
             if (emailAdmin === req.body.values.email && passAdmin === req.body.values.pass) {
                 let token = jwt.sign(
-                    { id: process.env.ADMIN_ID},
+                    { id: process.env.ADMIN_ID },
                     process.env.JWT_SECRET_KEY,
                     { expiresIn: "1d" }
-                  );
-                  res.json({
+                );
+                res.json({
                     message: 'Login Successfully',
                     status: true,
                     token,
                     username
-                  })
+                })
             } else {
                 res.json({ status: false, message: 'Login Failed' })
             }
@@ -86,25 +86,55 @@ module.exports = {
             console.log('object')
             const paymentDetails = await Purchase.find()
             console.log(paymentDetails)
-            res.json({ paymentDetails });
+
+            res.json({ paymentDetails});
         } catch (error) {
-            console.log("payment error",error.message)
+            console.log("payment error", error.message)
         }
     },
-    blogData: async(req,res)=>{
+    blogData: async (req, res) => {
         try {
             const blogDetails = await Blog.find()
             res.json({ blogDetails })
         } catch (error) {
-            console.log("Error",error.message)
+            console.log("Error", error.message)
         }
     },
-    workoutData: async(req,res)=>{
+    workoutData: async (req, res) => {
         try {
             const workoutDetails = await Workout.find()
             res.status(200).json({ workoutDetails })
         } catch (error) {
-            console.log("Error",error.message)
+            console.log("Error", error.message)
         }
     },
+    userName: async(req,res)=>{
+        try {
+            const {id} = req.params
+            const user = await User.findOne({_id:id})
+            res.json({name:user.name})
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+    trainerName: async(req,res)=>{
+        try {
+            const {id} = req.params
+            const trainer = await Trainer.findOne({_id:id})
+            res.json({name:trainer.name})
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
+    singleWorkout: async(req,res)=>{
+        console.log(req.params)
+        try {
+            const {id} = req.params
+            const workoutData = await Workout.findOne({_id:id})
+            res.json({workout:workoutData})
+            
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
 }

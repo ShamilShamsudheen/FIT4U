@@ -28,16 +28,17 @@ const validate = (values) => {
 };
 
 function UserLogin() {
+    
     const navigate = useNavigate()
     const formik = useFormik({
         initialValues,
         validate,
         onSubmit: async (values) => {
             try {
-
                 await UserApi.post('/login', { values }).then((res) => {
                     if (res.data.status) {
                         localStorage.setItem('userToken', res.data.token)
+
                         toast.success(res.data.message)
                         navigate('/');
                     }

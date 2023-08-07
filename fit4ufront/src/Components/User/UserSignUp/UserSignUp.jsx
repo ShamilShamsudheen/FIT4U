@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import logo from '../../../assets/logo-1.png';
@@ -7,6 +7,7 @@ import { auth, firebase } from '../../../firebase/config';
 import { toast } from 'react-hot-toast';
 import Background from '../../Background/Background';
 import Button from '../../Button/Button';
+import { userAxiosInstance } from '../../../axios/axios';
 
 const initialValues = {
   name: '',
@@ -44,10 +45,24 @@ const validate = (values) => {
 };
 
 function UserSignUp() {
+  const [timeout, setTimeOut] = useState(30)
+  const [reset, setReset] = useState(false)
   const navigate = useNavigate();
   const [modal, setModal] = useState(false);
   const [otp, setOtp] = useState('');
   const [result, setResult] = useState();
+  useEffect(() => {
+    if (timeout > 0) {
+      const timer = setTimeout(() => {
+        setTimeOut((preTime) => preTime - 1)
+      }, 1000);
+      setReset(true)
+    }else{
+
+      setReset(false)
+    }
+
+  }, [timeout])
 
   const formik = useFormik({
     initialValues,
@@ -63,6 +78,8 @@ function UserSignUp() {
             auth.signInWithPhoneNumber(mobile, verify).then((res) => {
               setResult(res);
               setModal(true);
+              setTimeout(30)
+
             });
           } else {
             toast.error(res.data.message);
@@ -78,10 +95,10 @@ function UserSignUp() {
     e.preventDefault();
     const values = formik.values;
     try {
-      result.confirm(otp).then(() => {
+      result.confirm(otp).then(async() => {
         console.log(result);
         console.log('Success');
-        UserApi.post('/signUp', { values, otp })
+        await userAxiosInstance.post('/signUp', { values, otp })
           .then((res) => {
             toast.success(res.data.message);
             navigate('/login');
@@ -94,7 +111,14 @@ function UserSignUp() {
       console.log('Error occurred during OTP verification:', error);
     }
   };
+  const handleResetClick = () => {
+    mobile = `91${formik.values.mob}`
+    auth.signInWithPhoneNumber(mobile, verify).then((res) => {
+      setTimeOut(30)
+      setReset(false)
+    })
 
+  }
   return (
     <div>
       <Background />
@@ -195,7 +219,7 @@ function UserSignUp() {
                   {formik.touched.repass && formik.errors.repass ? formik.errors.repass : ''}
                 </div>
               </div>
-              <div id ='recaptcha-container'></div>
+              <div id='recaptcha-container'></div>
               <div className="mt-4 flex justify-center">
                 <Button
                   buttonText="Create Account"
@@ -216,9 +240,10 @@ function UserSignUp() {
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
               <img className="mx-auto h-12 w-auto" src={logo} alt="Workflow" />
             </div>
-            <p>Verify OTP</p>
+            <p className='mx-auto'>Verify OTP</p>
+            <span>timout {timeout}</span>
             <hr className="w-full border border-red-500 mt-3" />
-            <form className="mt-4" onSubmit={handleSubmit}>
+            <form className="mx-auto mt-4" onSubmit={handleSubmit}>
               <input
                 type="text"
                 className="text-center border-spacing-2 mb-5"
@@ -229,11 +254,19 @@ function UserSignUp() {
               />
               <br />
               <div className="mt-4 flex justify-center">
-                <Button
-                  buttonText="Verify OTP"
-                  className="w-full py-3 text-xs uppercase font-semibold rounded-md duration-300 mx-auto"
-                  type="submit"
-                />
+                {reset ? (<button
+                  type="button"
+                  className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={handleResetClick}
+                >
+                  reset otp
+                </button>) :
+                  (<Button
+                    buttonText="Verify OTP"
+                    className="w-full py-3 text-xs uppercase font-semibold rounded-md duration-300 mx-auto"
+                    type="submit"
+                  />)}
+
               </div>
             </form>
           </div>
