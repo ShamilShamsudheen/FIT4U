@@ -10,6 +10,7 @@ import BlogsPage from '../Pages/User/Blogs';
 import SingleBlog from '../Pages/User/SingleBlog.jsx';
 import WorkoutPage from '../Pages/User/Workouts';
 import SingleTrainerPage from '../Pages/User/SingleTrainer';
+import chatPage from '../Pages/User/chatPage'
 
 const UserRoutes = () => {
     return (
@@ -24,6 +25,7 @@ const UserRoutes = () => {
           <Route exact path={"/workouts"} element={<WorkoutPage/>} />
           <Route exact path={"/singleBlogs/:blogId"} element={<SingleBlog/>} />
           <Route exact path={"/singleTrainer/:trainerId"} element={<SingleTrainerPage/>} />
+          <Route exact path={"/chat"} element={<chatPage/>} />
          
         </Routes>
     );

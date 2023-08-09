@@ -237,7 +237,7 @@ module.exports = {
                 return res.status(400).json({ message: 'Invalid workout ID' });
             }
 
-            const deletedBlog = await Blog.deleteOne({_id:workout_id});
+            const deletedBlog = await Workout.deleteOne({_id:workout_id});
 
             if (!deletedBlog) {
                 return res.status(404).json({ message: 'workout not found' });

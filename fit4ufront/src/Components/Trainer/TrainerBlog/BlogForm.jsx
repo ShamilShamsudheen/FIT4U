@@ -83,9 +83,9 @@ function BlogForm() {
     }
     console.log(blogForm)
     return (
-        <div className="mt-6 bg-opacity-50 backdrop-filter backdrop-blur-lg flex justify-center items-center bg-white">
+        <div className="mt-6 bg-opacity-50 backdrop-filter backdrop-blur-lg flex justify-center items-center">
             {blogForm &&
-                <div className="p-8 rounded border border-gray-200 t mt-10 z-10 relative text-black">
+                <div className="p-8 rounded border border-gray-200 t mt-10 z-10 relative text-gray-500">
                     <h1 className="font-medium text-3xl">Add Blog</h1>
                     <br />
                     <form onSubmit={formik.handleSubmit}>
@@ -183,7 +183,7 @@ function BlogForm() {
                         </div>
                     </form>
                 </div>}
-            <div className="fixed top-0 left-0 w-full flex justify-center z-20"  onClick={() => setBlogForm(!blogForm)} >
+            <div className="fixed w-full flex justify-center "  onClick={() => setBlogForm(!blogForm)} >
                 {!blogForm ? (<Button buttonText="Add Blog"/>):""}
             </div>
             

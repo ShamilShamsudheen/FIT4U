@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { FaUser } from 'react-icons/fa';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { FaUser, FaEdit, FaTrash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { trainerAxiosInstance } from '../../../axios/axios';
 import { toast } from 'react-hot-toast';
-import BlogForm from '../TrainerBlog/BlogForm';
 
 function Blogs() {
-    const navigate = useNavigate()
-    const [blogDetails, setBlogDetails] = useState([])
+    const navigate = useNavigate();
+    const [blogDetails, setBlogDetails] = useState([]);
+    const [isDarkMode, setIsDarkMode] = useState(false); // State for dark mode
+
     useEffect(() => {
         trainerAxiosInstance.get('/blogs').then((res) => {
-            setBlogDetails(res.data.blogData)
-        })
-    }, [])
+            setBlogDetails(res.data.blogData);
+        });
+    }, []);
+
     const handleBlog = async (blogId) => {
         navigate(`/singleBlogs/${blogId}`);
-    }
+    };
+
     const formatDate = (date) => {
         const now = new Date();
         const blogDate = new Date(date);
@@ -48,21 +49,28 @@ function Blogs() {
             return `${yearsAgo} ${yearsAgo === 1 ? 'year' : 'years'} ago`;
         }
     }
-    const handleBlogDelete = async(blogId)=>{
+
+    const handleBlogDelete = async (blogId) => {
         await trainerAxiosInstance
-        .post('/deleteBlog',{blogId}).then((res)=>{
-            toast.error(res.data.message)
-        })
-    }
-    const handleBlogEdit = async(blogId)=>{
-        navigate(`/trainer/editBlog/${blogId}`)
-        
-    }
+            .post('/deleteBlog', { blogId })
+            .then((res) => {
+                toast.error(res.data.message);
+            });
+    };
+
+    const handleBlogEdit = async (blogId) => {
+        navigate(`/trainer/editBlog/${blogId}`);
+    };
+
+    const toggleDarkMode = () => {
+        setIsDarkMode((prevMode) => !prevMode);
+    };
+
     return (
-        <div className="flex justify-center mt-10 bg-white">
+        <div className="flex justify-center mt-10 bg-transparent">
             <div className="grid grid-cols-3 gap-6 mt-6">
                 {blogDetails.map((blog) => (
-                    <div class="max-w-sm rounded overflow-hidden shadow-lg border-rounded-4">
+                    <div key={blog._id} className='max-w-sm rounded overflow-hidden shadow-lg border-rounded-4'>
                         <div className="flex justify-center w-full rounded overflow-hidden shadow-lg">
                             <img
                                 className="object-cover w-full h-full"
@@ -70,10 +78,9 @@ function Blogs() {
                                 alt="Profile image"
                             />
                         </div>
-                        <div class="px-6 py-4 bg-white text-black border-rounded-4">
-                            <div class="font-bold text-xl mb-2 uppercase cursor-pointer hover:text-blue-500" onClick={() => handleBlog(blog._id)}>{blog.blog_title}</div>
-                            
-                            <p class=" text-base flex space-x-2">
+                        <div className="px-6 py-4 bg-white text-black border-rounded-4">
+                            <div className="font-bold text-xl mb-2 uppercase cursor-pointer hover:text-blue-500" onClick={() => handleBlog(blog._id)}>{blog.blog_title}</div>
+                            <p className="text-base flex space-x-2">
                                 <span>{blog.blog_category}</span> | <span className=' flex space-x-2'><FaUser className='mt-1 ml-2'/> {blog.blog_writer}</span>
                             </p>
                             <span>{formatDate(blog.blog_date)}</span>
@@ -89,8 +96,11 @@ function Blogs() {
                     </div>
                 ))}
             </div>
+            {/* <button onClick={toggleDarkMode} className={`fixed right-5 bottom-5 p-2 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-black text-white'}`}>
+                {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+            </button> */}
         </div>
-    )
+    );
 }
 
-export default Blogs
+export default Blogs;

@@ -4,11 +4,11 @@ import { userAxiosInstance } from '../../../axios/axios'
 
 function Blogs() {
     const navigate = useNavigate()
-    const [blogDetails,setBlogDetails] = useState([])
-    useEffect(()=>{
-        const fetchBlog = async()=>{
+    const [blogDetails, setBlogDetails] = useState([])
+    useEffect(() => {
+        const fetchBlog = async () => {
             try {
-                await userAxiosInstance.get('/blogs').then((res)=>{
+                await userAxiosInstance.get('/blogs').then((res) => {
                     setBlogDetails(res.data.blogData)
                 })
             } catch (error) {
@@ -16,8 +16,8 @@ function Blogs() {
             }
         }
         fetchBlog()
-    },[])
-    const handleBlog = async(blogId)=>{
+    }, [])
+    const handleBlog = async (blogId) => {
         navigate(`/singleBlogs/${blogId}`);
     }
     const formatDate = (dateString) => {
@@ -25,29 +25,23 @@ function Blogs() {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
     return (
-        <div className="flex justify-center mt-10">
-            <div className="grid grid-cols-3 gap-6 mt-6">
-            {blogDetails.map((blog)=>(
-                <div class="max-w-sm rounded overflow-hidden shadow-lg border-rounded-4">
-                    <div className="flex justify-center w-full rounded overflow-hidden shadow-lg">
-                        <img
-                            className="object-cover w-full h-full"
-                            src={blog.blog_template}
-                            alt="Profile image"
-                        />
+        <div className="w-2/3 mx-auto">
+                {blogDetails.map((blog) => (
+                        <div className="w-full rounded overflow-hidden shadow-lg">
+                            <img
+                                className="object-cover w-full"
+                                src={blog.blog_template}
+                                alt="Blog"
+                            />
+                        <div className="px-6 py-4 bg-trainsparent text-gray-50 border-rounded-4">
+                            <div className="font-bold text-xl mb-2 uppercase cursor-pointer hover:text-blue-500" onClick={() => handleBlog(blog._id)}>{blog.blog_title}</div>
+                            <p className="text-sm">
+                                <span>{blog.blog_category}</span> | <span className=''>{blog.blog_writer}</span>
+                            </p>
+                            <p className="text-blue-500 text-sm">Published on {formatDate(blog.blog_date)}</p>
+                        </div>
                     </div>
-                    <div class="px-6 py-4 bg-white text-black border-rounded-4">
-                        <div class="font-bold text-xl mb-2 uppercase cursor-pointer hover:text-blue-500" onClick={()=>handleBlog(blog._id)}>{blog.blog_title}</div>
-                        <p class=" text-base">
-                            <span>{blog.blog_category}</span> | <span className='uppercase'>{blog.blog_writer}</span>
-                        </p>
-                        <p className="text-blue-500 text-sm">Published on {formatDate(blog.blog_date)}</p>
-
-                    </div>
-                </div>
-            ))}
-            </div>
-
+                ))}
         </div>
     )
 }

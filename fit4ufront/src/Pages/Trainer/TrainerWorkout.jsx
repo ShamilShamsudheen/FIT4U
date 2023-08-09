@@ -6,17 +6,28 @@ import Workouts from '../../Components/Trainer/Workouts/Workouts';
 
 
 function TrainerWorkout() {
-    const style = {
-        backgroundImage: `url(${heroImage})`,
-        width: '98.8vw',
-        height: '100vh',
-        backgroundSize: 'cover'
-      };
+  const style = {
+    backgroundImage: `url(${heroImage})`,
+    width: '98.8vw',
+    height: '100vh',
+    backgroundSize: 'cover'
+  };
   return (
     <div style={style}>
       <TrainerHeader />
-      <Workouts/>
-      <WorkoutForm/>
+      <div className='trainer-list bg-black mt-80 '>
+        <div className='text-red-900 mx-auto'>
+          <div className="flex justify-center w-full mt-4">
+            <h2 className="uppercase font-semibold text-2xl text-center">
+              <span className=" text-lg tracking-wide font-Mogra font-extrabold">
+                Workouts
+              </span>
+            </h2>
+          </div>
+          <Workouts />
+          <WorkoutForm />
+        </div>
+      </div>
     </div>
   )
 }

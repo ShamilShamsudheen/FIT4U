@@ -20,6 +20,10 @@ function Workouts() {
     }
     fetchData();
   }, [])
+  const handleEditWorkout = async (workout_id) => {
+    console.log(workout_id)
+    
+  }
   const handleDeleteWorkout = async (workout_id) => {
     console.log(workout_id)
     await trainerAxiosInstance.post('/deleteWorkout', { workout_id }).then((res) => {
@@ -29,24 +33,24 @@ function Workouts() {
   return (
     <>
       {workoutData && (
-        <div className="bg-white mt-10 h-96 overflow-y-auto">
+        <div className="bg-transparent mt-10 h-96 overflow-y-auto">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-2/3 mx-auto mt-10">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase dark:text-gray-400 sticky top-0 bg-white">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 border border-gray-200">
+              <thead className="text-xs text-gray-700 uppercase dark:text-gray-400 sticky top-0 border border-gray-200">
                 <tr>
-                  <th scope="col" className="px-6 py-3 bg-gray-50">
+                  <th scope="col" className="px-6 py-3 border border-gray-200">
                     Workout Name
                   </th>
-                  <th scope="col" className="px-6 py-3 bg-gray-50">
+                  <th scope="col" className="px-6 py-3 border border-gray-200">
                     Item Name
                   </th>
-                  <th scope="col" className="px-6 py-3 bg-gray-50">
+                  <th scope="col" className="px-6 py-3 border border-gray-200">
                     Item Instruction
                   </th>
-                  <th scope="col" className="px-6 py-3 bg-gray-50">
+                  <th scope="col" className="px-6 py-3 border border-gray-200">
                     Instruction Video
                   </th>
-                  <th scope="col" className="px-6 py-3 bg-gray-50">
+                  <th scope="col" className="px-6 py-3 border border-gray-200">
                     Action
                   </th>
                 </tr>
@@ -54,25 +58,25 @@ function Workouts() {
               <tbody className="relative">
                 {workoutData.map((workout) => (
                   <React.Fragment key={`workout_${workout.id}`}>
-                    <tr className="border-b border-gray-200">
-                      <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <tr className="border border-gray-200">
+                      <td className="px-6 py-4 font-medium text-gray-50 whitespace-nowrap">
                         {workout.workout_name}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 border border-gray-200">
                         {workout.workout_items.map((item, index) => (
                           <div key={`workout_item_${workout.id}_${index}`}>
                             {item.item_name}
                           </div>
                         ))}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 border border-gray-200">
                         {workout.workout_items.map((item, index) => (
                           <div key={`workout_item_${workout.id}_${index}`}>
                             {item.item_instruction}
                           </div>
                         ))}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 border border-gray-200">
                         {workout.workout_items.map((item, index) => (
                           <div key={`workout_item_${workout.id}_${index}`}>
                             <video controls width="80" height="40">
@@ -81,13 +85,13 @@ function Workouts() {
                         </div>
                         ))}
                       </td>
-                      <td className="px-6 py-4">
-                        {/* <button
+                      <td className="px-6 py-4 border border-gray-200">
+                        <button
                           onClick={() => handleEditWorkout(workout._id)}
                           className="text-blue-500 hover:bg-blue-100 px-2 py-1 rounded"
                         >
                           <FaEdit />
-                        </button> */}
+                        </button>
                         <button
                           onClick={() => handleDeleteWorkout(workout._id)}
                           className="text-red-500 hover:bg-red-100 px-2 py-1 rounded"

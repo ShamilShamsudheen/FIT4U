@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Trainer from '../../../assets/trainerDefault.jpeg'
 import { userAxiosInstance } from '../../../axios/axios';
 import { Navigate, useNavigate } from 'react-router-dom';
+// import TrainerCard from '../../TrainerCard/TrainerCard';
 
 
 function TrainerMain() {
@@ -58,22 +59,22 @@ function TrainerMain() {
     navigate(`/singleTrainer/${trainerId}`)
   }
   return (
-    <div className="flex justify-center mt-6">
-      <div className="grid grid-cols-3 gap-6 mt-6">
+    <div className="flex justify-center mt-6 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {trainersData.map((trainer) => (
 
 
-          <div class="max-w-sm rounded overflow-hidden shadow-lg" onClick={()=>handleClick(trainer._id)}>
-            <div className="flex justify-center w-full rounded overflow-hidden mb-3 shadow-lg">
+          <div class="max-w-sm rounded overflow-hidden border-2 border-red-900 shadow-lg " onClick={()=>handleClick(trainer._id)}>
+            <div className="flex justify-center w-full  overflow-hidden mb-3 shadow-lg">
               {!trainer.profileImg ? (
                 <img
-                  className="bg-gray-500 rounded-full w-40 h-40"
+                  className="bg-gray-500 rounded-4 w-full h-40"
                   src={Trainer}
                   alt="Profile image"
                 />
               ) : (
                 <img
-                  className="bg-gray-500 rounded-full w-40 h-40"
+                  className="bg-gray-500 rounded-4 w-full h-40"
                   src={trainer.profileImg}
                   alt="Sunset in the mountains"
                 />
@@ -81,15 +82,15 @@ function TrainerMain() {
             </div>
 
             <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-white uppercase">{trainer.name}</div>
-              <p class="text-white text-base">
+              <div class="font-bold text-xl mb-2 text-red-500 uppercase">{trainer.name}</div>
+              <p class="text-gray-500 text-base">
                 {trainer.description}
               </p>
-              {/* <div class="font-bold text-xl mb-2 text-white mt-2">INR. {trainer.price}</div> */}
+              <div class="font-bold text-xl mb-2  mt-2">INR.1000</div>
 
             </div>
             <div class="px-6 pt-4 pb-2">
-              <div class=" hidden sm:ml-6 sm:block text-white">
+              <div class=" hidden sm:ml sm:block text-white">
 
                 <div class="text mt-6" onClick={() => handleResreve(trainer._id)}><button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                   connect with us : <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -101,7 +102,7 @@ function TrainerMain() {
           </div>
         ))}
       </div>
-
+          
     </div>
   )
 }
