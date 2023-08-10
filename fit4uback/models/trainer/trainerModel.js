@@ -49,6 +49,10 @@ const Trainer = new Schema({
   price:{
     type:Number,
     default:1000
+  },
+  wallet:{
+    type:Array,
+    required:false
   }
 });
 

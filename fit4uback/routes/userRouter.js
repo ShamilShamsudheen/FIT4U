@@ -16,8 +16,7 @@ userRouter.get('/singleBlog/:blogId',userController.singleBlog)
 userRouter.get('/singleTrainer/:trainerId',userController.singleTrainer)
 userRouter.post('/profile',isLogged,userController.profileUpdate)
 userRouter.post('/profileImgUpload',isLogged,userController.profileImageUpload)
-userRouter.post('/payment',userController.payment)
-userRouter.post('/paymentConformation',isLogged,userController.paymentConformation)
+userRouter.post('/payment',isLogged,userController.payment)
 
 
 

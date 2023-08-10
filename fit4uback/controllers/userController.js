@@ -73,14 +73,14 @@ module.exports = {
   postLogin: async (req, res) => {
     try {
       const { id } = req.user;
-  
+
       const userData = await User.findById(id);
-  
+
       if (!userData) {
         return res.status(404).json({ message: 'UserData not found' });
       }
-  
-      return res.status(200).json({userData});
+
+      return res.status(200).json({ userData });
     } catch (error) {
       console.error('Error fetching user data:', error);
       return res.status(500).json({ message: 'An error occurred while fetching user data' });
@@ -104,24 +104,24 @@ module.exports = {
     try {
       const { age, height, weight, goal } = req.body.values;
       const { id } = req.user;
-  
+
       const user = await User.findByIdAndUpdate(
         { _id: id },
         { age, height, weight, goal },
-        { new: true } 
+        { new: true }
       );
-  
+
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-  
+
       return res.status(200).json({ message: 'Profile updated successfully', user });
     } catch (error) {
       console.error('Error updating profile:', error);
       return res.status(500).json({ message: 'An error occurred while updating profile' });
     }
   },
-  
+
   profileImageUpload: async (req, res) => {
     try {
       const userId = req.user.id
@@ -147,11 +147,13 @@ module.exports = {
 
   payment: async (req, res) => {
     try {
-      // console.log(req.body.trainerId);
+      const userId = req.user.id
       const trainerId = req.body.trainerId;
       const trainerData = await Trainer.findById(trainerId);
+      const userData = await User.findById(userId);
       const priceId = trainerData.price; // Price in your currency (e.g., INR)
-
+      const username = userData.name
+      const trainername = trainerData.name
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
@@ -168,6 +170,12 @@ module.exports = {
         mode: 'payment',
         success_url: 'http://localhost:5173/trainerList',
         cancel_url: 'http://localhost:5173/trainerList',
+        metadata: {
+          trainerId: trainerId,
+          userId: userId,
+          username: username,
+          trainername: trainername,
+        },
       });
       // console.log(session);
       if (session.url) {
@@ -179,68 +187,39 @@ module.exports = {
       res.status(500).json({ error: 'An error occurred while processing the payment.' });
     }
   },
-  paymentConformation: async (req, res) => {
-    try {
-      const { trainerId, session } = req.body;
-      const {id} = req.user
-      const userData = await User.findById(id);
-      const trainerData = await Trainer.findById(trainerId);
-      console.log(session)
-      const currentDate = new Date();
-  
-      // Add one month to the current date
-      const oneMonthLater = new Date(currentDate);
-      oneMonthLater.setMonth(currentDate.getMonth() + 1);
-  
-      const purchase = new Purchase({
-        purchase_id: session.id,
-        purchase_amount: 1000,
-        purchase_date: currentDate,
-        purchase_expire: oneMonthLater,
-        trainer_id: trainerId,
-        user_id: id,
-      });
-  
-      await purchase.save();
-      res.json({ message: 'Payment', status: true });
-    } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  },
-  blogList: async(req,res)=>{
+  blogList: async (req, res) => {
     try {
       const blogData = await Blog.find()
       console.log(blogData)
-      res.status(200).json({blogData})
+      res.status(200).json({ blogData })
     } catch (error) {
-      console.log('Error',error.message)
+      console.log('Error', error.message)
     }
   },
-  singleBlog: async(req,res)=>{
+  singleBlog: async (req, res) => {
     try {
-      const {blogId} = req.params
-      const blogData = await Blog.findById({_id:blogId})
+      const { blogId } = req.params
+      const blogData = await Blog.findById({ _id: blogId })
       if (!blogData) {
         return res.status(404).json({ error: 'Blog not found' });
       }
-      res.json({blogData});
+      res.json({ blogData });
 
     } catch (error) {
-      console.log('Error',error.message)
+      console.log('Error', error.message)
       res.status(500).json({ error: 'Server error' });
     }
   },
-  singleTrainer: async(req,res) =>{
+  singleTrainer: async (req, res) => {
     try {
-      const {trainerId} = req.params
-      const trainerData = await Trainer.findById({_id:trainerId})
+      const { trainerId } = req.params
+      const trainerData = await Trainer.findById({ _id: trainerId })
       if (!trainerData) {
         return res.status(404).json({ error: 'Trainer not found' });
       }
-      res.json({trainerData});
+      res.json({ trainerData });
     } catch (error) {
-      console.log('Error',error.message)
+      console.log('Error', error.message)
       res.status(500).json({ error: 'Server error' });
     }
   },
@@ -248,21 +227,21 @@ module.exports = {
     try {
       const { id } = req.user;
       const paymentDetails = await Purchase.findOne({ user_id: id });
-  
+
       if (!paymentDetails) {
         return res.json({ message: 'You have not selected any user' });
       }
-  
+
       const { trainer_id } = paymentDetails;
       const workoutDetails = await Workout.findOne({ trainer_id });
-  
-      return res.json({workoutDetails});
+
+      return res.json({ workoutDetails });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: 'Internal server error' });
     }
   },
-  
+
 
 
 }

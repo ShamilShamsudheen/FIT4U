@@ -22,6 +22,14 @@ const Purchase = new Schema({
         type: String,
         required: true
     },
+    user_name: {
+        type: String,
+        required: true
+    },
+    trainer_name: {
+        type: String,
+        required: true
+    },
     user_id: {
         type: String,
         required: true

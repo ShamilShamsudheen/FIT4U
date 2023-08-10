@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom';
-import { TrainerApi } from '../../../api/api';
 import { fileUpload } from '../../../Constants/Constants';
+import { FaUsers } from 'react-icons/fa';
+import { FiCreditCard } from 'react-icons/fi';
+import { AiOutlineEye } from 'react-icons/ai';
 import { toast } from 'react-hot-toast';
 import { trainerAxiosInstance } from '../../../axios/axios';
 
@@ -11,47 +12,42 @@ function TrainerProfilePage() {
   const [trainer, setTrainer] = useState([]);
   const [showInput, setShowInput] = useState(false);
 
-useEffect(() => {
-  trainerAxiosInstance.get('/postLogin').then((res)=>{
-    setTrainer(res.data.trainerData)
-  })
-}, []);
-
-const handleImageClick = () => {
-  setShowInput(!showInput);
-};
-
-const handleImageInputChange = async (event) => {
-  const file = event.target.files[0];
-  console.log(file)
-
-  if (file) {
-    const profileUrl = await fileUpload('TrainerProfile/', file)
-    console.log(profileUrl)
-    trainerAxiosInstance.post('/profileImgUpload',{profileUrl}).then((res) => {
-      setTrainer(res.data.updateProfile)
-      setShowInput(false);
-      toast.success(res.data.message)
+  useEffect(() => {
+    trainerAxiosInstance.get('/postLogin').then((res) => {
+      setTrainer(res.data.trainerData)
     })
-  }
-};
 
-return (
+  }, []);
+
+  const handleImageClick = () => {
+    setShowInput(!showInput);
+  };
+
+  const handleImageInputChange = async (event) => {
+    const file = event.target.files[0];
+    console.log(file)
+
+    if (file) {
+      const profileUrl = await fileUpload('TrainerProfile/', file)
+      console.log(profileUrl)
+      trainerAxiosInstance.post('/profileImgUpload', { profileUrl }).then((res) => {
+        setTrainer(res.data.updateProfile)
+        setShowInput(false);
+        toast.success(res.data.message)
+      })
+    }
+  };
+
+  return (
     <div class="p-16 bg-transparent">
-      {/* {trainer.map((data)=>( */}
-
-      <div class="p-8 bg-white shadow mt-24 flex flex-col">
-        <div class="relative flex justify-center">
-        <div>
-            {/* Image Div */}
-            <div
-              className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500"
-              onClick={handleImageClick}
-            >
-              <img src={trainer.profileImg} className="w-full h-full rounded-full" alt="" />
+      <div class="p-8 bg-transparent shadow mt-24 flex flex-col">
+        <div className="flex w-2/4 mx-auto items-center justify-center border border-amber-500 rounded-md space-x-4">
+          <div className="flex flex-col justify-between">
+            <div className="w-40 h-40 bg-indigo-100 mx-auto rounded-full shadow-2xl relative">
+              <div className="absolute inset-0 flex items-start justify-start  text-indigo-500" onClick={handleImageClick}>
+                <img src={trainer.profileImg} className="w-full h-full border border-amber-500 rounded-full" alt="" />
+              </div>
             </div>
-
-            {/* Input to select image */}
             {showInput && (
               <input
                 type="file"
@@ -61,101 +57,48 @@ return (
                 ref={(fileInput) => fileInput && fileInput.click()}
               />
             )}
+            <p className="text-center text-amber-900 text-xs">Click on the photo to change</p>
           </div>
-        </div>
-        <br />
-        <p class="text-center mt-20">click on photo to change</p>
-       
-        <div class="pt-10 text-center border-b pb-12">
-          <h1 class="text-4xl font-medium text-gray-700">{trainer.name}</h1>
-          <p class="font-light text-gray-600 mt-3">{trainer.email}</p>
 
-          <p class="mt-2 text-gray-500">{trainer.mobile}</p>
-        </div>
 
-       
-        {/* <div className="mt-10">
-          <div className="mx-auto w-2/4">
-            <ul className="bg-gray-300 grid grid-flow-col gap-10 text-center text-gray-500rounded-lg p-1">
-              <li>
-                <a
-                  className="flex justify-center py-2 text-md cursor-pointer"
-                  style={{ fontFamily: 'Kanit, sans-serif' }}
-                  onClick={()=>setDetails(!details)}
-                >
-                  Details
-                </a>
-              </li>
-              <li>
-                <a
-                  className="flex justify-center py-2 text-md cursor-pointer"
-                  style={{ fontFamily: 'Kanit, sans-serif' }}
-                  onClick={()=>setStatus(!status)}
-                >
-                  Status
-                </a>
-              </li>
-              <li>
-                <a
-                  className="flex justify-center py-2 text-md cursor-pointer"
-                  style={{ fontFamily: 'Kanit, sans-serif' }}
-                  onClick={()=>setHistory(!history)}
-                >
-                  History
-                </a>
-              </li>
-            </ul>
+          <div className="pt-10  pb-12 text-left">
+            <h1 className="text-4xl font-medium text-amber-500"><span className='text-xs text-gray-500'>NAME :</span>{trainer.name}</h1>
+            <p className="font-light text-amber-500 mt-3"><span className='text-xs text-gray-500'>EMAIL :</span>{trainer.email}</p>
+            <p className="mt-2 text-amber-500"><span className='text-xs text-gray-500'>MOBILE NO :</span>{trainer.mobile}</p>
           </div>
-          
-        </div> */}
-        {/* {details &&
-           <div className="rounded-lg bg-white shadow-lg p-16">
-           <div className="flex justify-center">
-             <svg
-               xmlns="http://www.w3.org/2000/svg"
-               className="h-10 w-10 text-indigo-800"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke="currentColor"
-             >
-               <path
-                 strokeLinecap="round"
-                 strokeLinejoin="round"
-                 strokeWidth={2}
-                 d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-               />
-             </svg>
-           </div>
-     
-           <div className="text-center mt-2">
-             <h1 className="text-purple-900 font-bold text-2xl">Details</h1>
-            
-     
-             
-     
-             <div className="py-8 border-b border-indigo-50">
-  <div className="flex flex-col">
-    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Age: <span>{trainer.age}</span></p>
-    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Height: <span>{trainer.height}</span></p>
-    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Weight: <span>{trainer.weight}</span></p>
-    <p className="ml-1 text-gray-900 font-bold text-2xl uppercase">Goal: <span>{trainer.goal}</span></p>
-  </div>
-</div>
+
+        </div>
+        <div className='mx-auto mt-4 text:sm font-bold'>Dashboard</div>
+        <div className="flex justify-center w-1/2 mx-auto mt-4 text-gray-50">
+          <div className="items-center w-1/2 h-32 rounded-lg mr-2">
+            <div className=''>
+              <FaUsers size='2rem' />
+            </div>
+            <div className="">
+              Number of User:<span>10</span>
+            </div>
+          </div>
+          <div className="items-center w-1/2 h-32 rounded-lg mr-2">
+            <div className=''>
+              <FiCreditCard size='2rem' />
+            </div>
+            <div className="">
+              Wallet Amount: <span>10</span>
+            </div>
+          </div>
+          {/* <div className="flex items-center w-1/3 h-32 rounded-lg mr-2">
+            <div className='w-1/2'>
+              <AiOutlineEye size='1x' />
+            </div>
+            <div className="ml-2">
+              Number of Views: <span>10</span>
+            </div>
+          </div> */}
+        </div>
 
 
 
-           </div>
-     
-           <div className="flex justify-center mt-8">
-             <button className="text-white py-2 px-4 rounded-lg bg-purple-700 hover:bg-purple-600 shadow-md font-medium transition-colors">
-               Upload
-             </button>
-           </div>
-         </div>
-        } */}
       </div>
-      {/* ))} */}
-      
     </div>
   )
 }

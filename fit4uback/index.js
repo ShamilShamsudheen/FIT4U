@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const userRouter = require('./routes/userRouter');
 const adminRouter = require('./routes/adminRouter');
 const trainerRouter = require('./routes/trainerRouter');
+const purchaseModel = require('./models/purchase/purchaseModel');
+const trainerModel = require('./models/trainer/trainerModel');
 
 // Define database connection
 mongoose
@@ -34,6 +36,58 @@ app.use(express.static(path.join(__dirname,'public'))); // for serving static fi
 app.use('/', userRouter); // example route for user
 app.use('/admin', adminRouter); // example route for admin
 app.use('/trainer', trainerRouter); // example route for trainer
+const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
+
+app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+  const sig = request.headers['stripe-signature'];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+  } catch (err) {
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case 'charge.succeeded':
+
+      const session = event.data.object;
+
+      const {trainerId,userId,trainername,username} = session.metadata
+      const currentDate = new Date();
+
+      // Add one month to the current date
+      const oneMonthLater = new Date(currentDate);
+      oneMonthLater.setMonth(currentDate.getMonth() + 1);
+
+      const purchase = new purchaseModel({
+        purchase_id: session.id,
+        purchase_amount: 1000,
+        purchase_date: currentDate,
+        purchase_expire: oneMonthLater,
+        trainer_id: trainerId,
+        user_id: userId,
+        user_name: username,
+        trainer_name: trainername,
+      });
+      trainerModel.updateOne(
+        { _id: trainerId }, // Use the appropriate ID format in MongoDB
+        { $push: { wallet: 500 } }
+      );
+      purchase.save();
+
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+  if(event.type === charge.succeeded){
+
+  }
+  response.send();
+});
 
 
 

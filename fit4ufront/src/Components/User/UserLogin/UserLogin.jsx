@@ -2,11 +2,14 @@ import { useFormik } from 'formik';
 import React from 'react'
 import logo from '../../../assets/logo-1.png'
 import { Link, useNavigate } from 'react-router-dom';
-import { UserApi } from '../../../api/api';
 import { toast } from 'react-hot-toast';
 import Background from '../../Background/Background';
 import Button from '../../Button/Button';
 import { GoogleLogin } from '@react-oauth/google';
+import { userAxiosInstance } from '../../../axios/axios';
+import { useDispatch} from 'react-redux';
+import { userLogin } from '../../../Redux/app/userSlice';
+
 // import { CLIENT_ID } from '../../../Constants/Constants';
 
 const initialValues = {
@@ -28,15 +31,20 @@ const validate = (values) => {
 };
 
 function UserLogin() {
-    
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const formik = useFormik({
         initialValues,
         validate,
         onSubmit: async (values) => {
             try {
-                await UserApi.post('/login', { values }).then((res) => {
+                await userAxiosInstance.post('/login', { values }).then((res) => {
                     if (res.data.status) {
+                        const result = res.data
+                        dispatch(userLogin({
+                            userToken:result.token,
+                            username:result.username
+                        }))
                         localStorage.setItem('userToken', res.data.token)
 
                         toast.success(res.data.message)
