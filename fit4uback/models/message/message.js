@@ -1,16 +1,16 @@
 const { ObjectId } = require('mongodb')
 const mongoose = require('mongoose')
 
-const messege = mongoose.Schema({
+const Messege = mongoose.Schema({
 
     chat: { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' },
-    senderType: { type: String, enum: ['User', 'Company'] },
-    receiverType: { type: String, enum: ['User', 'Company'] },
+    senderType: { type: String, enum: ['User', 'Trainer'] },
+    receiverType: { type: String, enum: ['User', 'Trainer'] },
     sender: { type: String,refPath: 'senderType' },
     receiver: { type: String,refPath: 'receiverType' },
-    messege: { type: String },
+    message: { type: String },
     timestamp: { type: Date, default: Date.now },
 
 })
 
-module.exports = mongoose.model("Messege", messege)
+module.exports = mongoose.model("Messege", Messege)

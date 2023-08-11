@@ -13,7 +13,7 @@ function Sidebar() {
   const sideBarMenu = [
     {
       name: "Dashboard",
-      link: "/admin/dashboard",
+      link: "/admin",
       icons: MdSpaceDashboard,
     },
     {

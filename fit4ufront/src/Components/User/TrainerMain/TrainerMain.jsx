@@ -38,7 +38,6 @@ function TrainerMain() {
 
   console.log(trainersData)
   const handleResreve = async (trainerId) => {
-    console.log(trainerId)
     // e.preventDefault();
     await userAxiosInstance.post('/payment', { trainerId }).then(async (res) => {
       console.log(res.data.session);

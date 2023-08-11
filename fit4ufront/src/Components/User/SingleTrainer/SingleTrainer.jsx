@@ -30,12 +30,8 @@ function SingleTrainer() {
       const session = res.data.session;
       console.log(session);
       if (session) {
-        await userAxiosInstance.post('/paymentConformation', { trainerId, session }).then((res) => {
-          if (res.data.status) {
-
-            window.location.href = session.url;
-          }
-        })
+        window.location.href = session.url;
+       
       }
 
     })

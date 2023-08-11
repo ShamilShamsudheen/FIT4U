@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken')
 const Trainer = require('../models/trainer/trainerModel')
 const Purchase = require('../models/purchase/purchaseModel')
 const Blog = require('../models/blog/blogModel')
-const Workout = require('../models/workout/workout')
+const Workout = require('../models/workout/workout');
+const Chat = require('../models/chat/chat');
+const Message = require('../models/message/message');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 
@@ -151,7 +153,7 @@ module.exports = {
       const trainerId = req.body.trainerId;
       const trainerData = await Trainer.findById(trainerId);
       const userData = await User.findById(userId);
-      const priceId = trainerData.price; // Price in your currency (e.g., INR)
+      const priceId = trainerData.price;
       const username = userData.name
       const trainername = trainerData.name
       const session = await stripe.checkout.sessions.create({
@@ -241,7 +243,90 @@ module.exports = {
       return res.status(500).json({ message: 'Internal server error' });
     }
   },
+  PersonalTrainer: async(req,res)=>{
+    try {
+      const userId = req.user.id;
 
+    //  console.log(userId)
+      const payment = await Purchase.findOne({ user_id:userId });
+      // console.log(payment)
+      if (!payment) {
+        return res.status(404).json({ message: 'Payment not found' });
+      }
+      const trainerId = payment.trainer_id
+     
+      res.status(200).json({ trainerId });
+    } catch (error) {
+      console.error('Error finding payment:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  },
+  chat: async(req,res)=>{
+    try {
+      console.log(req.body)
+      const {trainer,message} = req.body
+      const {id} = req.user
+      if(!req.body.chatId) {
+        // create chat 
+        const newChat = new Chat({
+          participants: [id,trainer],
+          lastMessege:message
+        })
+        const chatData = await newChat.save();
 
+        // create message
+        const newMessage = new Message({
+          chat:chatData._id,
+          sender:id,
+          receiver:trainer,
+          message:message
+
+        })
+        const messageData = await newMessage.save()
+
+        await Chat.findByIdAndUpdate(
+          {_id:chatData._id},
+          {$push:{messages:messageData._id}}
+          )
+
+      }else {
+
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  },
+  getChat: async(req,res)=> {
+    try {
+      const userId = req.user.id;
+  
+      // Find chat data involving the user
+      const chatData = await Chat.find({
+        participants: { $in: [userId] }
+      });
+  
+      // Use Promise.all to fetch trainer data for each chat
+      const chatTrainerData = await Promise.all(chatData.map(async (chat) => {
+        const receiverId = chat.participants.find(memberId => memberId.toString() !== userId);
+        const trainer = await Trainer.findById(receiverId);
+  
+        return {
+          trainerId: trainer._id,
+          trainer: {
+            image: trainer.profileImg,
+            email: trainer.email,
+            trainerName: trainer.name
+          },
+          chatId: chat._id,
+          lastMessage: chat.lastMessege
+        };
+      }));
+  
+      res.json({ chatTrainerData });
+    } catch (error) {
+      console.error('Error retrieving chat data:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  },
 
 }

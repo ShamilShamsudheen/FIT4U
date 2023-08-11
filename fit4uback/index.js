@@ -28,8 +28,13 @@ mongoose
 app.use(cors());
 
 // Set up middleware
-app.use(express.json()); // for parsing JSON data
-app.use(express.urlencoded({ extended: true })); // for parsing URL-encoded data
+app.use((req, res, next) => {
+  if (req.originalUrl.includes("/webhook")) {
+    next();
+  } else {
+    express.json({ limit: "1mb" })(req, res, next);
+  }
+});
 app.use(express.static(path.join(__dirname,'public'))); // for serving static files (CSS, images, etc.)
 
 // Define routes
@@ -38,7 +43,7 @@ app.use('/admin', adminRouter); // example route for admin
 app.use('/trainer', trainerRouter); // example route for trainer
 const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
 
-app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+app.post('/webhook', express.raw({type: 'application/json'}), async(request, response) => {
   const sig = request.headers['stripe-signature'];
 
   let event;
@@ -52,13 +57,13 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
 
   // Handle the event
   switch (event.type) {
-    case 'charge.succeeded':
+    case 'checkout.session.completed':
 
       const session = event.data.object;
 
       const {trainerId,userId,trainername,username} = session.metadata
       const currentDate = new Date();
-
+console.log(session)
       // Add one month to the current date
       const oneMonthLater = new Date(currentDate);
       oneMonthLater.setMonth(currentDate.getMonth() + 1);
@@ -73,18 +78,17 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
         user_name: username,
         trainer_name: trainername,
       });
-      trainerModel.updateOne(
-        { _id: trainerId }, // Use the appropriate ID format in MongoDB
+      await purchase.save();
+      console.log('database saved')
+      await trainerModel.findByIdAndUpdate(
+        { _id: trainerId },
         { $push: { wallet: 500 } }
       );
-      purchase.save();
+      console.log('wallet updated')
 
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);
-  }
-  if(event.type === charge.succeeded){
-
   }
   response.send();
 });

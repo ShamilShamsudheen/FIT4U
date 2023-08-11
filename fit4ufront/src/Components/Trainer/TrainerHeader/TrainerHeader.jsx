@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../../assets/logo-1.png'
-// import './TrainerHeader.css'
+import { FiMessageSquare } from 'react-icons/fi'; // Import the chat icon
 
 function TrainerHeader() {
     const [logout, setLogout] = useState(false)
@@ -45,11 +45,14 @@ function TrainerHeader() {
                             <div className="hidden sm:ml-6 sm:block items-center ml-auto w-[100%] nav-items-div">
                                 <div className="flex items-center space-x-center justify-center mt-6">
                                     {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
-                                    <div className="mt-6">
+                                    <div className="flex items-center space-x-4 mt-5">
                                         <Link to="/trainer/" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">home</Link>
                                         {/* <Link to="/trainer" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">about</Link> */}
                                         <Link to="/trainer/workout" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">workout</Link>
-                                        <Link to="/trainer/members" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">members</Link>
+                                        <Link to="/trainer/chat" className="flex items-center text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">
+                                            <FiMessageSquare className="mr-1" /> {/* Adding margin-right to space the icon from the text */}
+                                            Chat
+                                        </Link>
                                         <Link to="/trainer/profile" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">profile</Link>
                                         <Link to="/trainer/blog" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline text-sm font-medium uppercase ...">blog</Link>
                                     </div>

@@ -17,6 +17,9 @@ userRouter.get('/singleTrainer/:trainerId',userController.singleTrainer)
 userRouter.post('/profile',isLogged,userController.profileUpdate)
 userRouter.post('/profileImgUpload',isLogged,userController.profileImageUpload)
 userRouter.post('/payment',isLogged,userController.payment)
+userRouter.get('/payedTrainer',isLogged,userController.PersonalTrainer)
+userRouter.post('/createMessage',isLogged,userController.chat)
+userRouter.get('/getChat',isLogged,userController.getChat)
 
 
 

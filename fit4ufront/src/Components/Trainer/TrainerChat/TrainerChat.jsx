@@ -1,53 +1,21 @@
-import React, { useEffect } from 'react'
-import { userAxiosInstance } from '../../../axios/axios'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { trainerAxiosInstance } from '../../../axios/axios'
 
 function Chat() {
-    const [userProfile, setProfile] = useState([])
-    const [chat, setChat] = useState([])
-    const [message, setMessage] = useState('')
-    const [trainer, setTrainer] = useState('')
+    const [trainerProfile, setProfile] = useState([])
     useEffect(()=>{
         const fetchData = async()=>{
             try {
-                await userAxiosInstance.post('/postLogin').then((res)=>{
-                    setProfile(res.data.userData)
+                await trainerAxiosInstance.get('/postLogin').then((res)=>{
+                    setProfile(res.data.trainerData)
                 })
             } catch (error) {
                 console.log(error.message)
             }
         }
-        const fetchTrainer = async()=>{
-          try {
-            await userAxiosInstance.get('/payedTrainer').then((res)=>{
-              setTrainer(res.data.trainerId)
-            })
-          } catch (error) {
-            console.log(error.message)
-          }
-        }
-        const fetchChat = async()=>{
-          try {
-            await userAxiosInstance.get('/getchat').then((res)=>{
-              setChat(res.data.chatTrainerData)
-            })
-          } catch (error) {
-            console.log(error.message)
-          }
-        }
-        fetchChat()
         fetchData();
-        fetchTrainer();
     },[])
-    console.log(trainer)
-    const handleSend = ()=>{
-      // console.log(message)
-      
-      userAxiosInstance.post('/createMessage',{trainer,message}).then((res)=>{
-
-      })
-    }
-    console.log(chat)
+    console.log(trainerProfile.name)
   return (
     <div className='mt-10'>
       <div className="flex h-screen antialiased text-gray-50">
@@ -63,10 +31,10 @@ function Chat() {
             </div>
             <div className="flex flex-col items-center  bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
               <div className="h-20 w-20 rounded-full border overflow-hidden">
-                <img src={userProfile.profileImg} alt="Avatar" className="h-full w-full" />
+                <img src={trainerProfile.profileImg} alt="Avatar" className="h-full w-full" />
               </div>
-              <div className="text-sm font-semibold mt-2 text-gray-500">{userProfile.name}</div>
-              <div className="text-xs text-gray-500">{userProfile.email}</div>
+              <div className="text-sm font-semibold mt-2 text-gray-500">{trainerProfile.name}</div>
+              <div className="text-xs text-gray-500">{trainerProfile.email}</div>
               
             </div>
             <div className="flex flex-col mt-8">
@@ -75,15 +43,14 @@ function Chat() {
                 <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
               </div>
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-                {chat.map((chat)=>(
                 <button className="flex flex-row items-center hover:bg-gray-500 rounded-xl p-2">
                   <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
                     H
                   </div>
-                  <div className="ml-2 text-sm font-semibold">{chat.trainer.trainerName}</div>
+                  <div className="ml-2 text-sm font-semibold">Henry Boyd</div>
                 </button>
                 
-                ))}
+                
               </div>
              
              
@@ -121,19 +88,12 @@ function Chat() {
                 
                 <div className="flex-grow ml-4">
                   <div className="relative w-full">
-                    <input 
-                    type="text" 
-                    name='msg'
-                    className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" 
-                    onChange={(e)=>setMessage(e.target.value)}
-                    />
+                    <input type="text" className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
                     
                   </div>
                 </div>
                 <div className="ml-4">
-                  <button className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
-                    onClick={handleSend}
-                  >
+                  <button className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
                     <span>Send</span>
                     <span className="ml-2">
                       <svg className="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -151,4 +111,4 @@ function Chat() {
   )
 }
 
-export default Chat
+export default Chat;
