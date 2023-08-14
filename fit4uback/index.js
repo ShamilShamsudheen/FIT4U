@@ -11,6 +11,8 @@ const adminRouter = require('./routes/adminRouter');
 const trainerRouter = require('./routes/trainerRouter');
 const purchaseModel = require('./models/purchase/purchaseModel');
 const trainerModel = require('./models/trainer/trainerModel');
+const chat = require('./models/chat/chat');
+
 
 // Define database connection
 mongoose
@@ -35,7 +37,7 @@ app.use((req, res, next) => {
     express.json({ limit: "1mb" })(req, res, next);
   }
 });
-app.use(express.static(path.join(__dirname,'public'))); // for serving static files (CSS, images, etc.)
+app.use(express.static(path.join(__dirname, 'public'))); // for serving static files (CSS, images, etc.)
 
 // Define routes
 app.use('/', userRouter); // example route for user
@@ -43,7 +45,7 @@ app.use('/admin', adminRouter); // example route for admin
 app.use('/trainer', trainerRouter); // example route for trainer
 const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
 
-app.post('/webhook', express.raw({type: 'application/json'}), async(request, response) => {
+app.post('/webhook', express.raw({ type: 'application/json' }), async (request, response) => {
   const sig = request.headers['stripe-signature'];
 
   let event;
@@ -61,9 +63,9 @@ app.post('/webhook', express.raw({type: 'application/json'}), async(request, res
 
       const session = event.data.object;
 
-      const {trainerId,userId,trainername,username} = session.metadata
+      const { trainerId, userId, trainername, username } = session.metadata
       const currentDate = new Date();
-console.log(session)
+      console.log(session)
       // Add one month to the current date
       const oneMonthLater = new Date(currentDate);
       oneMonthLater.setMonth(currentDate.getMonth() + 1);
@@ -85,7 +87,11 @@ console.log(session)
         { $push: { wallet: 500 } }
       );
       console.log('wallet updated')
+      const newChat = new chat({
+        participants: [userId, trainerId]
+      });
 
+      await newChat.save()
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);

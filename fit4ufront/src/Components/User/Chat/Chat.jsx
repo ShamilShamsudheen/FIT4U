@@ -1,53 +1,60 @@
 import React, { useEffect } from 'react'
 import { userAxiosInstance } from '../../../axios/axios'
 import { useState } from 'react'
+import { formatDate, truncateString } from '../../../Constants/Constants'
 
 function Chat() {
-    const [userProfile, setProfile] = useState([])
-    const [chat, setChat] = useState([])
-    const [message, setMessage] = useState('')
-    const [trainer, setTrainer] = useState('')
-    useEffect(()=>{
-        const fetchData = async()=>{
-            try {
-                await userAxiosInstance.post('/postLogin').then((res)=>{
-                    setProfile(res.data.userData)
-                })
-            } catch (error) {
-                console.log(error.message)
-            }
-        }
-        const fetchTrainer = async()=>{
-          try {
-            await userAxiosInstance.get('/payedTrainer').then((res)=>{
-              setTrainer(res.data.trainerId)
-            })
-          } catch (error) {
-            console.log(error.message)
-          }
-        }
-        const fetchChat = async()=>{
-          try {
-            await userAxiosInstance.get('/getchat').then((res)=>{
-              setChat(res.data.chatTrainerData)
-            })
-          } catch (error) {
-            console.log(error.message)
-          }
-        }
-        fetchChat()
-        fetchData();
-        fetchTrainer();
-    },[])
-    console.log(trainer)
-    const handleSend = ()=>{
-      // console.log(message)
-      
-      userAxiosInstance.post('/createMessage',{trainer,message}).then((res)=>{
 
-      })
+  const [userProfile, setProfile] = useState([])
+  const [chat, setChat] = useState([])
+  const [chatMessage, setChatMessage] = useState([])
+  const [message, setMessage] = useState('')
+  const [trainer, setTrainer] = useState('')
+  const [chatId, setChatId] = useState('')
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await userAxiosInstance.post('/postLogin').then((res) => {
+          setProfile(res.data.userData)
+        })
+      } catch (error) {
+        console.log(error.message)
+      }
     }
-    console.log(chat)
+    const fetchTrainer = async () => {
+      try {
+        await userAxiosInstance.get('/payedTrainer').then((res) => {
+          setTrainer(res.data.trainerId)
+        })
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+    const fetchChat = async () => {
+      try {
+        await userAxiosInstance.get('/getchat').then((res) => {
+          setChat(res.data.chatTrainerData)
+        })
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+    fetchData();
+    fetchTrainer();
+    fetchChat()
+  }, [])
+  // console.log(trainer)
+  const handleSend = () => {
+    console.log(trainer,message,chatId,'everything')
+    userAxiosInstance.post('/createMessage', { trainer, message ,chatId}).then((res) => {
+
+    })
+  }
+  const handleClick = (chatId) => {
+    userAxiosInstance.get(`/chatMessage/${chatId}`).then((res) => {
+      setChatMessage(res.data.messageData)
+    })
+  }
   return (
     <div className='mt-10'>
       <div className="flex h-screen antialiased text-gray-50">
@@ -67,7 +74,7 @@ function Chat() {
               </div>
               <div className="text-sm font-semibold mt-2 text-gray-500">{userProfile.name}</div>
               <div className="text-xs text-gray-500">{userProfile.email}</div>
-              
+
             </div>
             <div className="flex flex-col mt-8">
               <div className="flex flex-row items-center justify-between text-xs">
@@ -75,59 +82,84 @@ function Chat() {
                 <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
               </div>
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-                {chat.map((chat)=>(
-                <button className="flex flex-row items-center hover:bg-gray-500 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                    H
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">{chat.trainer.trainerName}</div>
-                </button>
-                
+                {chat.map((chat) => (
+                  <button className="flex flex-row items-center hover:bg-gray-500 rounded-xl p-2" onClick={() => {
+                    setChatId(chat.chatId)
+                    handleClick(chat.chatId)
+                  }}>
+                    <div className="flex border border-red-500 items-center justify-center h-10 w-10 bg-indigo-200 rounded-full">
+
+                      {chat.trainer.image ? (<img
+                        src={chat.trainer.image}
+                        alt="Image"
+                        className="h-8 w-8 object-cover rounded-full"
+                      />) : 'H'}
+
+                    </div>
+
+                    <div className="flex flex-col ml-2">
+                      <div className="text-sm font-semibold">{chat.trainer.trainerName}</div>
+                      <div className='flex justify-between'>
+                        <div className="text-xs text-gray-800 mb-auto">
+                          {truncateString(chat.lastMessage, 5)}
+                        </div>
+                        <div className="text-xs text-gray-800 self-end">{formatDate(chat.time)}</div>
+                      </div>
+                    </div>
+
+                  </button>
                 ))}
               </div>
-             
-             
             </div>
           </div>
           <div className="flex flex-col flex-auto h-4/5 text-gray-500 p-6">
             <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-800 h-full p-4">
+
               <div className="flex flex-col h-full overflow-x-auto mb-4">
                 <div className="flex flex-col h-full">
-                  <div className="grid grid-cols-12 gap-y-2">
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                      <div className="flex flex-row items-center">
-                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                          T
-                        </div>
-                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                          <div>Hey How are you today?</div>
-                        </div>
+                  {chatMessage.map((res) => (
+                    <>
+                      <div className="grid grid-cols-12 gap-y-2">
+                        {!(res.sender === userProfile._id) ?
+                          (<div className="col-start-1 col-end-8 p-3 rounded-lg">
+                            <div className="flex flex-row items-center">
+                              <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                                T
+                              </div>
+                              <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
+                                <div>{res.message}</div>
+                              </div>
+                            </div>
+                          </div>)
+                          :
+                          (<div className="col-start-6 col-end-13 p-3 rounded-lg">
+                            <div className="flex items-center justify-start flex-row-reverse">
+                              <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                                U
+                              </div>
+                              <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
+                                <div>{res.message}</div>
+                              </div>
+                            </div>
+                          </div>)
+                        }
                       </div>
-                    </div>
-                    <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                      <div className="flex items-center justify-start flex-row-reverse">
-                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                          U
-                        </div>
-                        <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                          <div>I'm ok what about you?</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    </>
+                  ))}
                 </div>
               </div>
+
               <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
-                
+
                 <div className="flex-grow ml-4">
                   <div className="relative w-full">
-                    <input 
-                    type="text" 
-                    name='msg'
-                    className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" 
-                    onChange={(e)=>setMessage(e.target.value)}
+                    <input
+                      type="text"
+                      name='msg'
+                      className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                      onChange={(e) => setMessage(e.target.value)}
                     />
-                    
+
                   </div>
                 </div>
                 <div className="ml-4">

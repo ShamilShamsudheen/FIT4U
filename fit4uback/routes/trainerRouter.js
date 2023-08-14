@@ -17,7 +17,9 @@ trainerRouter.post('/editBlog/:blogId',isLogged,trainerController.editBlog)
 trainerRouter.post('/addWorkout',isLogged,trainerController.addWorkout)
 trainerRouter.post('/deleteBlog',isLogged,trainerController.deleteBlog)
 trainerRouter.post('/deleteWorkout',isLogged,trainerController.deleteWorkout)
-
-
+trainerRouter.get('/payedUser',isLogged,trainerController.personalUser)
+trainerRouter.post('/createMessage',isLogged,trainerController.chat)
+trainerRouter.get('/getChat',isLogged,trainerController.getChat)
+trainerRouter.get('/chatMessage/:chatId',isLogged,trainerController.chatMessage)
 
 module.exports = trainerRouter;

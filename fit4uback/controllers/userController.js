@@ -243,73 +243,88 @@ module.exports = {
       return res.status(500).json({ message: 'Internal server error' });
     }
   },
-  PersonalTrainer: async(req,res)=>{
+  personalTrainer: async (req, res) => {
     try {
       const userId = req.user.id;
 
-    //  console.log(userId)
-      const payment = await Purchase.findOne({ user_id:userId });
+      //  console.log(userId)
+      const payment = await Purchase.findOne({ user_id: userId });
       // console.log(payment)
       if (!payment) {
         return res.status(404).json({ message: 'Payment not found' });
       }
       const trainerId = payment.trainer_id
-     
+
       res.status(200).json({ trainerId });
     } catch (error) {
       console.error('Error finding payment:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
-  chat: async(req,res)=>{
+  chat: async (req, res) => {
     try {
       console.log(req.body)
-      const {trainer,message} = req.body
-      const {id} = req.user
-      if(!req.body.chatId) {
+      const { trainer, message, chatId } = req.body
+      const { id } = req.user
+      if (!chatId) {
         // create chat 
         const newChat = new Chat({
-          participants: [id,trainer],
-          lastMessege:message
+          participants: [id, trainer],
+          lastMessege: message
         })
         const chatData = await newChat.save();
 
         // create message
         const newMessage = new Message({
-          chat:chatData._id,
-          sender:id,
-          receiver:trainer,
-          message:message
+          chat: chatData._id,
+          sender: id,
+          receiver: trainer,
+          message: message
 
         })
         const messageData = await newMessage.save()
 
         await Chat.findByIdAndUpdate(
-          {_id:chatData._id},
-          {$push:{messages:messageData._id}}
-          )
+          { _id: chatData._id },
+          { $push: { messages: messageData._id } }
+        )
 
-      }else {
+      } else {
+         // create message
+         const newMessage = new Message({
+          chat: chatId,
+          sender: id,
+          receiver: trainer,
+          message: message
 
+        })
+        const messageData = await newMessage.save()
+        await Chat.findByIdAndUpdate(
+            chatId,
+            {
+              $set: { lastMessege: message },
+              $push: { messages: messageData._id }
+            }
+          );
       }
     } catch (error) {
       console.log(error.message)
     }
   },
-  getChat: async(req,res)=> {
+  getChat: async (req, res) => {
     try {
       const userId = req.user.id;
-  
+
       // Find chat data involving the user
       const chatData = await Chat.find({
         participants: { $in: [userId] }
       });
-  
+
       // Use Promise.all to fetch trainer data for each chat
       const chatTrainerData = await Promise.all(chatData.map(async (chat) => {
         const receiverId = chat.participants.find(memberId => memberId.toString() !== userId);
         const trainer = await Trainer.findById(receiverId);
-  
+
         return {
           trainerId: trainer._id,
           trainer: {
@@ -318,15 +333,39 @@ module.exports = {
             trainerName: trainer.name
           },
           chatId: chat._id,
-          lastMessage: chat.lastMessege
+          lastMessage: chat.lastMessege,
+          time: chat.timestamp
         };
       }));
-  
+
       res.json({ chatTrainerData });
     } catch (error) {
       console.error('Error retrieving chat data:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
+  chatMessage: async (req, res) => {
+    try {
+      const { chatId } = req.params;
 
+      // Use findById to find the chat message by its ID
+      const chatData = await Chat.findById(chatId);
+      console.log(chatData)
+      const messageData = await Promise.all(chatData.messages.map(async (messege) => {
+        return (
+          await Message.findById({ _id: messege })
+        )
+      }))
+      console.log(messageData)
+      if (!chatData) {
+        return res.status(404).json({ error: 'Chat message not found' });
+      }
+
+      // Return the chat message
+      res.json({messageData});
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }

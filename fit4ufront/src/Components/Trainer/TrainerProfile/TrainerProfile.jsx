@@ -37,7 +37,18 @@ function TrainerProfilePage() {
       })
     }
   };
-
+  const calculateWalletSum = (trainer) => {
+    if (!trainer || !trainer.wallet || !Array.isArray(trainer.wallet)) {
+      return 0; 
+    }
+  
+    const sum = trainer.wallet.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+  
+    return sum;
+  };
+  const walletSum = calculateWalletSum(trainer);
   return (
     <div class="p-16 bg-transparent">
       <div class="p-8 bg-transparent shadow mt-24 flex flex-col">
@@ -75,7 +86,7 @@ function TrainerProfilePage() {
               <FaUsers size='2rem' />
             </div>
             <div className="">
-              Number of User:<span>10</span>
+              Number of User:<span>1</span>
             </div>
           </div>
           <div className="items-center w-1/2 h-32 rounded-lg mr-2">
@@ -83,7 +94,7 @@ function TrainerProfilePage() {
               <FiCreditCard size='2rem' />
             </div>
             <div className="">
-              Wallet Amount: <span>10</span>
+              Wallet Amount: ₹<span>{walletSum}</span>
             </div>
           </div>
           {/* <div className="flex items-center w-1/3 h-32 rounded-lg mr-2">
