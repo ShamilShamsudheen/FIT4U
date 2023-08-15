@@ -7,10 +7,10 @@ import Background from '../../Background/Background';
 import Button from '../../Button/Button';
 import { GoogleLogin } from '@react-oauth/google';
 import { userAxiosInstance } from '../../../axios/axios';
-// import { useDispatch} from 'react-redux';
-// import { userLogin } from '../../../Redux/app/userSlice';
+import { useDispatch } from 'react-redux';
+import { userLogin } from '../../../Redux/app/userSlice';
+import { GoogleLogin } from '@react-oauth/google';
 
-// import { CLIENT_ID } from '../../../Constants/Constants';
 
 const initialValues = {
     email: '',
@@ -31,7 +31,8 @@ const validate = (values) => {
 };
 
 function UserLogin() {
-    // const dispatch = useDispatch()
+    const client_id = import.meta.env.VITE_CLIENT_ID
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const formik = useFormik({
         initialValues,
@@ -40,13 +41,12 @@ function UserLogin() {
             try {
                 await userAxiosInstance.post('/login', { values }).then((res) => {
                     if (res.data.status) {
-                        // const result = res.data
-                        // dispatch(userLogin({
-                        //     userToken:result.token,
-                        //     username:result.username
-                        // }))
                         localStorage.setItem('userToken', res.data.token)
-
+                        const {token} = res.data
+                        dispatch(userLogin({
+                            token:token,
+                            username:token.username
+                        }))
                         toast.success(res.data.message)
                         navigate('/');
                     }
@@ -127,6 +127,7 @@ function UserLogin() {
                                 buttonText="Login with Google"
                                 onSuccess={handleGoogleSuccess}
                                 onFailure={handleGoogleFailure}
+                                clientId = {client_id}
                             />
                         </div>
                         <div className="mt-4 flex justify-center">

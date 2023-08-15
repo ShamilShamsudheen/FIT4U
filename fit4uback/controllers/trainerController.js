@@ -50,7 +50,7 @@ module.exports = {
                 if (passMatch) {
                     const username = trainerData.name;
                     let token = jwt.sign(
-                        { id: trainerData._id, role: trainerData.role },
+                        { id: trainerData._id, role: trainerData.role,username },
                         process.env.JWT_SECRET_KEY,
                         { expiresIn: '1d' }
                     );

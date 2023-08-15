@@ -14,7 +14,7 @@ module.exports = {
             const username = 'admin'
             if (emailAdmin === req.body.values.email && passAdmin === req.body.values.pass) {
                 let token = jwt.sign(
-                    { id: process.env.ADMIN_ID },
+                    { id: process.env.ADMIN_ID ,username},
                     process.env.JWT_SECRET_KEY,
                     { expiresIn: "1d" }
                 );

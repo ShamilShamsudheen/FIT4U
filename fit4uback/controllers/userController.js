@@ -51,7 +51,7 @@ module.exports = {
         if (passMatch) {
           const username = userData.name;
           let token = jwt.sign(
-            { id: userData._id, role: userData.role },
+            { id: userData._id, role: userData.role, username },
             process.env.JWT_SECRET_KEY,
             { expiresIn: "1d" }
           );
@@ -70,6 +70,13 @@ module.exports = {
       }
     } catch (error) {
       console.log(error.message)
+    }
+  },
+  tokenCheck: async (req, res) => {
+    try {
+      res.json({status:true})
+    } catch (error) {
+
     }
   },
   postLogin: async (req, res) => {
@@ -290,8 +297,8 @@ module.exports = {
         )
 
       } else {
-         // create message
-         const newMessage = new Message({
+        // create message
+        const newMessage = new Message({
           chat: chatId,
           sender: id,
           receiver: trainer,
@@ -300,12 +307,12 @@ module.exports = {
         })
         const messageData = await newMessage.save()
         await Chat.findByIdAndUpdate(
-            chatId,
-            {
-              $set: { lastMessege: message },
-              $push: { messages: messageData._id }
-            }
-          );
+          chatId,
+          {
+            $set: { lastMessege: message },
+            $push: { messages: messageData._id }
+          }
+        );
       }
     } catch (error) {
       console.log(error.message)
@@ -362,7 +369,7 @@ module.exports = {
       }
 
       // Return the chat message
-      res.json({messageData});
+      res.json({ messageData });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal server error' });

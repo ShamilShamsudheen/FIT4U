@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter , Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from '../Pages/User/Home'
 import Selection from '../Pages/User/Selection';
 import UserReg from '../Pages/User/UserReg';
@@ -10,27 +10,75 @@ import BlogsPage from '../Pages/User/Blogs';
 import SingleBlog from '../Pages/User/SingleBlog.jsx';
 import WorkoutPage from '../Pages/User/Workouts';
 import SingleTrainerPage from '../Pages/User/SingleTrainer';
-import chatPage from '../Pages/User/chatPage'
 import ChatPage from '../Pages/User/chatPage';
+import { Authorization } from '../Authentication/UserAuth/postLogin';
+import { HomeVerification } from '../Authentication/UserAuth/preLogin';
 
 const UserRoutes = () => {
-    return (
-        <Routes>
-          <Route exact path={"/"} element={<Home/>} />
-          <Route path="/signUp" element={<UserReg/>} />
-          <Route path="/selectUser" element={<Selection/>} />
-          <Route path="/login" element={<UserLoginPage/>} />
-          <Route exact path={"/trainerList"} element={<Trainers/>} />
-          <Route exact path={"/profile"} element={<Profile/>} />
-          <Route exact path={"/blogs"} element={<BlogsPage/>} />
-          <Route exact path={"/workouts"} element={<WorkoutPage/>} />
-          <Route exact path={"/singleBlogs/:blogId"} element={<SingleBlog/>} />
-          <Route exact path={"/singleTrainer/:trainerId"} element={<SingleTrainerPage/>} />
-          <Route exact path={"/chat"} element={<ChatPage/>} />
-         
-        </Routes>
-    );
-  }
-  
-  export default UserRoutes;
-  
+
+
+  return (
+    <Routes>
+      <Route path="/signUp" element={
+        <Authorization accessBy={'non-Authorized'}>
+          <UserReg />
+        </Authorization>
+
+      } />
+      <Route path="/selectUser" element={
+        <Authorization accessBy={'non-Authorized'}>
+          <Selection />
+        </Authorization>
+
+      } />
+      <Route path="/login" element={
+        <Authorization accessBy={'non-Authorized'}>
+          <UserLoginPage />
+        </Authorization>
+      } />
+      <Route exact path={"/"} element={
+        <HomeVerification>
+          <Home />
+        </HomeVerification>
+      } />
+      <Route exact path={"/trainerList"} element={
+        <HomeVerification accessBy={'Authorized'}>
+          <Trainers />
+        </HomeVerification>
+      } />
+      <Route exact path={"/profile"} element={
+        <HomeVerification accessBy={'Authorized'}>
+          <Profile />
+        </HomeVerification>
+      } />
+      <Route exact path={"/blogs"} element={
+        <HomeVerification accessBy={'Authorized'}>
+          <BlogsPage />
+        </HomeVerification>
+      } />
+      <Route exact path={"/workouts"} element={
+        <HomeVerification accessBy={'Authorized'}>
+          <WorkoutPage />
+        </HomeVerification>
+      } />
+      <Route exact path={"/singleBlogs/:blogId"} element={
+        <HomeVerification accessBy={'Authorized'}>
+          <SingleBlog />
+        </HomeVerification>
+      } />
+      <Route exact path={"/singleTrainer/:trainerId"} element={
+        <HomeVerification accessBy={'Authorized'}>
+          <SingleTrainerPage />
+        </HomeVerification>
+      } />
+      <Route exact path={"/chat"} element={
+        <HomeVerification accessBy={'Authorized'}>
+          <ChatPage />
+        </HomeVerification>
+      } />
+
+    </Routes>
+  );
+}
+
+export default UserRoutes;

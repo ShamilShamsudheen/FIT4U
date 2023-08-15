@@ -9,7 +9,7 @@ import AdminRoutes from './Routes/AdminRoutes';
 
 
 function App() {
-
+  
   return (
     <>
         <Toaster/>
