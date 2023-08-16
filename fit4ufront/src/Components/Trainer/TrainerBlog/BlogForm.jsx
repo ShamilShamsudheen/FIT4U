@@ -183,7 +183,7 @@ function BlogForm() {
                         </div>
                     </form>
                 </div>}
-            <div className="fixed w-full flex justify-center "  onClick={() => setBlogForm(!blogForm)} >
+            <div className="fixed bg-black w-full flex justify-center "  onClick={() => setBlogForm(!blogForm)} >
                 {!blogForm ? (<Button buttonText="Add Blog"/>):""}
             </div>
             

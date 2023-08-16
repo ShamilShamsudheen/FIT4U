@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 
 function EditBlog() {
     const navigate = useNavigate()
+    const [copy,setCopy] = useState(false)
     const { blogId } = useParams();
     const [trainerDetails, setTrainerDetails] = useState(null)
     const [blogData, setBlogData] = useState([])
@@ -48,15 +49,28 @@ function EditBlog() {
         console.log(values);
 
         try {
-            const res = await trainerAxiosInstance.post(`/editBlog/${blogId}`, {
-                values,
-                templateImg,
-            }).then((res) => {
+            if(copy){
 
-                toast.success(res.data.message);
-                resetForm();
-                navigate('/trainer/blog')
-            })
+                const res = await trainerAxiosInstance.post(`/editBlog/${blogId}`, {
+                    values,
+                    templateImg,
+                }).then((res) => {
+    
+                    toast.success(res.data.message);
+                    resetForm();
+                    navigate('/trainer/blog')
+                })
+            }else {
+                const res = await trainerAxiosInstance.post(`/editBlog/${blogId}`, {
+                    values,
+                    templateImg:blogData.blog_template,
+                }).then((res) => {
+    
+                    toast.success(res.data.message);
+                    resetForm();
+                    navigate('/trainer/blog')
+                })
+            }
 
         } catch (error) {
             console.log('Error:', error.message);
@@ -86,6 +100,9 @@ function EditBlog() {
         onSubmit,
     });
     const handletemplate = async (e) => {
+        if((e.target.files[0])){
+            setCopy(true)
+        }
         e.preventDefault()
         console.log("object" + e.target.files[0])
         const selectedFile = e.target.files[0];

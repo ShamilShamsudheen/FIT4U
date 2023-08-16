@@ -20,8 +20,8 @@ function Workouts() {
     }
     fetchData();
   }, [])
-  const handleEditWorkout = async (workout_id) => {
-    console.log(workout_id)
+  const handleEditWorkout = async (workoutId) => {
+    navigate(`/trainer/editWorkout/${workoutId}`)
     
   }
   const handleDeleteWorkout = async (workout_id) => {

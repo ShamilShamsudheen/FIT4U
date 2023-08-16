@@ -50,7 +50,7 @@ module.exports = {
                 if (passMatch) {
                     const username = trainerData.name;
                     let token = jwt.sign(
-                        { id: trainerData._id, role: trainerData.role,username },
+                        { id: trainerData._id, role: trainerData.role, username },
                         process.env.JWT_SECRET_KEY,
                         { expiresIn: '1d' }
                     );
@@ -99,7 +99,7 @@ module.exports = {
         } catch (error) {
             console.log(error.message)
         }
-    },      
+    },
     addBlog: async (req, res) => {
         try {
             const trainer = await Trainer.findOne({ _id: req.user.id }, { name: 1, _id: 0 })
@@ -211,7 +211,7 @@ module.exports = {
                     blog_template,
                     blog_date,
                 },
-                { new: true } 
+                { new: true }
             );
 
             if (!updatedBlog) {
@@ -223,25 +223,43 @@ module.exports = {
             res.status(500).json({ message: 'An error occurred', error: error.message });
         }
     },
-    workoutList: async(req,res)=>{
+    workoutList: async (req, res) => {
         try {
             const trainer_id = req.user.id;
-        
+
             const workouts = await Workout.find({ trainer_id },);
             console.log(workouts)
-            res.json({workouts})
-          } catch (error) {
+            res.json({ workouts })
+        } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
-          }
+        }
     },
-    deleteWorkout: async(req,res)=>{
+    singleWorkout: async (req, res) => {
         try {
-            const {workout_id} = req.body;
+            const { workoutId } = req.params;
+
+            // Find the workout by its ID
+            const workout = await Workout.findById(workoutId);
+
+            if (!workout) {
+                return res.status(404).json({ message: 'Workout not found' });
+            }
+
+            // Send the found workout data to the frontend
+            res.status(200).json({ workout });
+        } catch (error) {
+            console.error('Error editing workout:', error.message);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+    deleteWorkout: async (req, res) => {
+        try {
+            const { workout_id } = req.body;
             if (!workout_id) {
                 return res.status(400).json({ message: 'Invalid workout ID' });
             }
 
-            const deletedBlog = await Workout.deleteOne({_id:workout_id});
+            const deletedBlog = await Workout.deleteOne({ _id: workout_id });
 
             if (!deletedBlog) {
                 return res.status(404).json({ message: 'workout not found' });
@@ -253,129 +271,129 @@ module.exports = {
             res.status(500).json({ message: 'Internal server error' });
         }
     },
-    personalUser: async(req,res)=>{
+    personalUser: async (req, res) => {
         try {
             const trianerId = req.user.id;
             const payment = await Purchase.findOne({ trainer_id: trianerId });
             if (!payment) {
-              return res.status(404).json({ message: 'Payment not found' });
+                return res.status(404).json({ message: 'Payment not found' });
             }
             const userId = payment.user_id
-      
+
             res.status(200).json({ userId });
-          } catch (error) {
+        } catch (error) {
             console.error('Error finding payment:', error);
             res.status(500).json({ message: 'Internal server error' });
-          }
+        }
     },
     chat: async (req, res) => {
         try {
-          const { user, message, chatId } = req.body
-          const { id } = req.user
-          if (!chatId) {
-            // create chat 
-            const newChat = new Chat({
-              participants: [id, user]
-            })
-            const chatData = await newChat.save();
-    
-            // create message
-            const newMessage = new Message({
-              chat: chatData._id,
-              sender: id,
-              receiver: user,
-              message: message
-    
-            })
-            const messageData = await newMessage.save()
-    
-            await Chat.findByIdAndUpdate(
-                chatId,
-                {
-                  $set: { lastMessege: message },
-                  $push: { messages: messageData._id }
-                }
-              );
-          } else {
-            // create message
-            const newMessage = new Message({
-              chat: chatId,
-              sender: id,
-              receiver: user,
-              message: message
-    
-            })
-            const messageData = await newMessage.save()
-            await Chat.findByIdAndUpdate(
-                chatId,
-                {
-                  $set: { lastMessege: message },
-                  $push: { messages: messageData._id }
-                }
-              );
-              
-              
-              
-          }
+            const { user, message, chatId } = req.body
+            const { id } = req.user
+            if (!chatId) {
+                // create chat 
+                const newChat = new Chat({
+                    participants: [id, user]
+                })
+                const chatData = await newChat.save();
+
+                // create message
+                const newMessage = new Message({
+                    chat: chatData._id,
+                    sender: id,
+                    receiver: user,
+                    message: message
+
+                })
+                const messageData = await newMessage.save()
+
+                await Chat.findByIdAndUpdate(
+                    chatId,
+                    {
+                        $set: { lastMessege: message },
+                        $push: { messages: messageData._id }
+                    }
+                );
+            } else {
+                // create message
+                const newMessage = new Message({
+                    chat: chatId,
+                    sender: id,
+                    receiver: user,
+                    message: message
+
+                })
+                const messageData = await newMessage.save()
+                await Chat.findByIdAndUpdate(
+                    chatId,
+                    {
+                        $set: { lastMessege: message },
+                        $push: { messages: messageData._id }
+                    }
+                );
+
+
+
+            }
         } catch (error) {
-          console.log(error.message)
+            console.log(error.message)
         }
-      },
-      getChat: async (req, res) => {
+    },
+    getChat: async (req, res) => {
         try {
-          const trainerId = req.user.id;
-    
-          // Find chat data involving the user
-          const chatData = await Chat.find({
-            participants: { $in: [trainerId] }
-          });
-    
-          // Use Promise.all to fetch trainer data for each chat
-          const chatUserData = await Promise.all(chatData.map(async (chat) => {
-            const receiverId = chat.participants.find(memberId => memberId.toString() !== trainerId);
-            const user = await User.findById(receiverId);
-    
-            return {
-              userId: user._id,
-              user: {
-                image: user.profileImg,
-                email: user.email,
-                userName: user.name
-              },
-              chatId: chat._id,
-              lastMessage: chat.lastMessege,
-              time: chat.timestamp
-            };
-          }));
-    
-          res.json({ chatUserData });
+            const trainerId = req.user.id;
+
+            // Find chat data involving the user
+            const chatData = await Chat.find({
+                participants: { $in: [trainerId] }
+            });
+
+            // Use Promise.all to fetch trainer data for each chat
+            const chatUserData = await Promise.all(chatData.map(async (chat) => {
+                const receiverId = chat.participants.find(memberId => memberId.toString() !== trainerId);
+                const user = await User.findById(receiverId);
+
+                return {
+                    userId: user._id,
+                    user: {
+                        image: user.profileImg,
+                        email: user.email,
+                        userName: user.name
+                    },
+                    chatId: chat._id,
+                    lastMessage: chat.lastMessege,
+                    time: chat.timestamp
+                };
+            }));
+
+            res.json({ chatUserData });
         } catch (error) {
-          console.error('Error retrieving chat data:', error);
-          res.status(500).json({ message: 'Internal server error' });
+            console.error('Error retrieving chat data:', error);
+            res.status(500).json({ message: 'Internal server error' });
         }
-      },
-      chatMessage: async (req, res) => {
+    },
+    chatMessage: async (req, res) => {
         try {
-          const { chatId } = req.params;
-    
-          // Use findById to find the chat message by its ID
-          const chatData = await Chat.findById(chatId);
-          console.log(chatData,'xdrtfcgyhgvbhjn')
-          const messageData = await Promise.all(chatData.messages.map(async (messege) => {
-            return (
-              await Message.findById({ _id: messege })
-            )
-          }))
-          console.log(messageData)
-          if (!chatData) {
-            return res.status(404).json({ error: 'Chat message not found' });
-          }
-    
-          // Return the chat message
-          res.json({messageData});
+            const { chatId } = req.params;
+
+            // Use findById to find the chat message by its ID
+            const chatData = await Chat.findById(chatId);
+            console.log(chatData, 'xdrtfcgyhgvbhjn')
+            const messageData = await Promise.all(chatData.messages.map(async (messege) => {
+                return (
+                    await Message.findById({ _id: messege })
+                )
+            }))
+            console.log(messageData)
+            if (!chatData) {
+                return res.status(404).json({ error: 'Chat message not found' });
+            }
+
+            // Return the chat message
+            res.json({ messageData });
         } catch (error) {
-          console.error(error);
-          res.status(500).json({ error: 'Internal server error' });
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
         }
-      }
+    }
 }
