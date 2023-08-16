@@ -11,11 +11,11 @@ function WorkoutDetails() {
             setWorkout(res.data.workoutDetails)
         })
     },[])
-    // const handleview = async(id)=>{
-    //     await adminAxiosInstance.get(`/singleWorkouts${id}`).then((res)=>{
-    //       setSingleWorkout(res.data.workout)
-    //     })
-    // }
+    const handleview = (id)=>{
+        adminAxiosInstance.get(`/singleWorkout/${id}`).then((res)=>{
+          setSingleWorkout(res.data.workout)
+        })
+    }
   return (
     <div>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-14">
@@ -49,8 +49,11 @@ function WorkoutDetails() {
                 {workout.isApprove ? 'Approved' : 'Not Approved'}
               </div>
             </td>
-            <td className="px-6 py-4" onClick={()=>handleview(workout._id)}>
+            <td className="px-6 py-4">
+              <div  onClick={()=>handleview(workout._id)}>
+
               <FiEye />
+              </div>
             </td>
           </tr>
         ))}

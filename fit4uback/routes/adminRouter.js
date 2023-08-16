@@ -14,6 +14,7 @@ adminRouter.get('/blogDetails',isLogged,adminController.blogData)
 adminRouter.get('/workoutDetails',isLogged,adminController.workoutData)
 adminRouter.get('/userName/:id',isLogged,adminController.userName)
 adminRouter.get('/trainerName/:id',isLogged,adminController.trainerName)
-adminRouter.get('/singleWorkouts/:id',isLogged,adminController.singleWorkout)
+adminRouter.get('/singleWorkout/:id',isLogged,adminController.singleWorkout)
+adminRouter.get('/singleBlog/:id',isLogged,adminController.singleBlog)
 
 module.exports = adminRouter;

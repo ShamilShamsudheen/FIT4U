@@ -126,8 +126,19 @@ module.exports = {
             console.log(error.message)
         }
     },
+    singleBlog: async(req,res) =>{
+        console.log(req.params,'blog')
+        try {
+            const {id} = req.params
+            const blogData = await Blog.findOne({_id:id})
+            res.json({blog:blogData})
+            
+        } catch (error) {
+            console.log(error.message)
+        }
+    },
     singleWorkout: async(req,res)=>{
-        console.log(req.params)
+        console.log(req.params,'workout')
         try {
             const {id} = req.params
             const workoutData = await Workout.findOne({_id:id})
