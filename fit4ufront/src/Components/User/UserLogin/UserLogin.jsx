@@ -1,16 +1,15 @@
 import { useFormik } from 'formik';
-import React from 'react'
-import logo from '../../../assets/logo-1.png'
+import React, { useEffect } from 'react';
+import logo from '../../../assets/logo-1.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import Background from '../../Background/Background';
 import Button from '../../Button/Button';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from 'react-google-login';
 import { userAxiosInstance } from '../../../axios/axios';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../../Redux/app/userSlice';
-import { GoogleLogin } from '@react-oauth/google';
-
+import {gapi} from 'gapi-script'
 
 const initialValues = {
     email: '',
@@ -31,7 +30,12 @@ const validate = (values) => {
 };
 
 function UserLogin() {
-    const client_id = import.meta.env.VITE_CLIENT_ID
+    const CLIENT_ID = import.meta.env.VITE_CLIENT_ID
+    useEffect(()=>{
+        gapi.load("client:auth2",()=>{
+            gapi.auth2.init({clientId:CLIENT_ID})
+        })
+    })
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const formik = useFormik({
@@ -42,10 +46,10 @@ function UserLogin() {
                 await userAxiosInstance.post('/login', { values }).then((res) => {
                     if (res.data.status) {
                         localStorage.setItem('userToken', res.data.token)
-                        const {token} = res.data
+                        const { token } = res.data
                         dispatch(userLogin({
-                            token:token,
-                            username:token.username
+                            token: token,
+                            username: token.username
                         }))
                         toast.success(res.data.message)
                         navigate('/');
@@ -57,14 +61,33 @@ function UserLogin() {
             }
         }
     });
-    const handleGoogleSuccess = (res) => {
-        console.log('success');
-        console.log(res);
-    }
-    const handleGoogleFailure = (res) => {
-        console.log('failure');
-        console.log(res);
-    }
+
+    const responseGoogle = async(response) => {
+        if (response.accessToken) {
+          // Successful sign-in
+          console.log("Access Token:", response.accessToken);
+          console.log("User ID:", response.profileObj.googleId);
+          console.log("User Email:", response.profileObj.email);
+          console.log("User Name:", response.profileObj.name);
+          console.log("User Name:", response);
+          const {profileObj} = response
+          await userAxiosInstance.post('/login', { profileObj }).then((res) => {
+            if (res.data.status) {
+                localStorage.setItem('userToken', res.data.token)
+                const { token } = res.data
+                dispatch(userLogin({
+                    token: token,
+                    username: token.username
+                }))
+                toast.success(res.data.message)
+                navigate('/');
+            }
+        })
+        } else {
+          // Sign-in failed
+          console.log("Google Sign-in Failed:", response.error);
+        }
+      };
     return (
         <div>
             <Background />
@@ -124,10 +147,11 @@ function UserLogin() {
                         </div>
                         <div className='mt-4 flex justify-center' id='signInButton'>
                             <GoogleLogin
+                                clientId={CLIENT_ID}
                                 buttonText="Login with Google"
-                                onSuccess={handleGoogleSuccess}
-                                onFailure={handleGoogleFailure}
-                                clientId = {client_id}
+                                onSuccess={responseGoogle}
+                                onFailure={responseGoogle}
+                                cookiePolicy={"single_host_origin"}
                             />
                         </div>
                         <div className="mt-4 flex justify-center">

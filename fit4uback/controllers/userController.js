@@ -16,34 +16,94 @@ module.exports = {
     try {
       const body = req.body.values;
       console.log(body);
-      const userEmail = await User.findOne({ email: body.email })
-      if (userEmail) {
-        res.json({ message: 'This email already exist', status: false })
+      const userEmail = await User.findOne({ email: body.email });
+      
+      if (userEmail ) {
+        return res.json({ message: 'This email already exists', status: false });
       } else {
         if (req.body.otp) {
-
-          password = body.pass
-          const secPass = await bcrypt.hash(password, 5)
+          let password = body.pass; // Declare the password variable
+          
+          const secPass = await bcrypt.hash(password, 5);
           const userData = new User({
             name: body.name,
             email: body.email,
             mobile: body.mob,
             password: secPass,
             role: body.role
-          })
-          console.log(userData)
+          });
+          
+          console.log(userData);
           await userData.save();
-          res.json({ message: 'Your account has been created successfully', status: true })
-        } else {
-          res.json({ status: true, message: 'Email verified successfully' })
+          
+          return res.json({ message: 'Your account has been created successfully', status: true });
         }
       }
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
+      return res.status(500).json({ message: 'An error occurred', status: false });
     }
   },
+  
   logIn: async (req, res) => {
     try {
+      if (req.body.profileObj) {
+        console.log(req.body.profileObj);
+        const { name, email, googleId } = req.body.profileObj;
+      
+        // Check if the user with the given email already exists in the database
+        const existingUser = await User.findOne({ email });
+      
+        if (existingUser) {
+          // User exists, generate a token and send it to the frontend
+          const username = existingUser.name;
+          const token = jwt.sign(
+            { id: existingUser._id, role: existingUser.role, username },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: "1d" }
+          );
+      
+          return res.json({
+            message: 'Login Successfully',
+            status: true,
+            token,
+            username,
+          });
+        } else {
+          // User doesn't exist, create a new user account
+      
+          // Hash the password (using googleId as the password in this case)
+          const password = googleId;
+          const secPass = await bcrypt.hash(password, 5);
+      
+          // Create a new user document
+          const userData = new User({
+            name,
+            email,
+            mobile: "9947014527",
+            password: secPass,
+            role: "user",
+          });
+      
+          // Save the new user to the database
+          await userData.save();
+      
+          // Generate a token for the newly created user and send it to the frontend
+          const username = userData.name;
+          const token = jwt.sign(
+            { id: userData._id, role: userData.role, username },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: "1d" }
+          );
+      
+          return res.json({
+            message: 'Account created and logged in successfully',
+            status: true,
+            token,
+            username,
+          });
+        }
+      }
       let userData = await User.findOne({ email: req.body.values.email })
       if (!userData.isBlocked) {
 
