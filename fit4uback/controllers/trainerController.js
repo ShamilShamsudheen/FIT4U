@@ -140,7 +140,7 @@ module.exports = {
                 workout_name: req.body.workout_name,
                 workout_items: workoutItems,
             });
-
+            console.log(newWorkout)
             await newWorkout.save();
             res.json({ message: 'ok' });
         } catch (error) {
@@ -250,6 +250,31 @@ module.exports = {
         } catch (error) {
             console.error('Error editing workout:', error.message);
             res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+    updateWorkout: async (req, res) => {
+        try {
+            const { id } = req.user;
+            const { workoutId, workout_name, workoutItems } = req.body;
+
+            // Find the workout by ID and trainer_id
+            const updatedWorkout = await Workout.findOneAndUpdate(
+                { _id: workoutId, trainer_id: id },
+                {
+                    workout_name: workout_name,
+                    workout_items: workoutItems
+                },
+                { new: true }
+            );
+
+            if (!updatedWorkout) {
+                return res.status(404).json({ message: 'Workout not found' });
+            }
+
+            return res.status(200).json({ message: 'Workout updated successfully', updatedWorkout });
+        } catch (error) {
+            console.error('Error updating workout:', error.message);
+            return res.status(500).json({ message: 'Internal server error' });
         }
     },
     deleteWorkout: async (req, res) => {

@@ -1,17 +1,22 @@
 import React, { useEffect } from 'react'
 import { userAxiosInstance } from '../../../axios/axios'
 import { useState } from 'react'
-import { formatDate, truncateString } from '../../../Constants/Constants'
+import { formatDate, formatTimestamp, truncateString } from '../../../Constants/Constants'
+import io from 'socket.io-client';
 
 function Chat() {
-
   const [userProfile, setProfile] = useState([])
   const [chat, setChat] = useState([])
   const [chatMessage, setChatMessage] = useState([])
   const [message, setMessage] = useState('')
   const [trainer, setTrainer] = useState('')
   const [chatId, setChatId] = useState('')
+  const [recieveMsg, setRecieveMsg] = useState()
+  const [trainerId, setTrainerId] = useState()
+  const [connection, setConnection] = useState(false);
+
   useEffect(() => {
+    const socket = io(import.meta.env.VITE_baseURL);
     const fetchData = async () => {
       try {
         await userAxiosInstance.post('/postLogin').then((res) => {
@@ -42,12 +47,28 @@ function Chat() {
     fetchData();
     fetchTrainer();
     fetchChat()
-  }, [])
-  // console.log(trainer)
-  const handleSend = () => {
-    console.log(trainer,message,chatId,'everything')
-    userAxiosInstance.post('/createMessage', { trainer, message ,chatId}).then((res) => {
+    socket.on('receive_message', (data) => {
+      setRecieveMsg({
+        senderId: data.senderId,
+        content: data.content,
+        createdAt: Date.now()
+      })
+      console.log('Received message:', data);
+    });
 
+    return () => {
+      socket.disconnect();
+    };
+  }, [])
+
+  const handleSend = () => {
+    userAxiosInstance.post('/createMessage', { trainer, message, chatId }).then((res) => {
+      setMessage('')
+    })
+    socket.emit('send_message', {
+      message: message,
+      senderId: userProfile._id,
+      recieverId: userId
     })
   }
   const handleClick = (chatId) => {
@@ -79,13 +100,17 @@ function Chat() {
             <div className="flex flex-col mt-8">
               <div className="flex flex-row items-center justify-between text-xs">
                 <span className="font-bold">Trainer Conversations</span>
-                <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
+                <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">1</span>
               </div>
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
                 {chat.map((chat) => (
-                  <button className="flex flex-row items-center hover:bg-gray-500 rounded-xl p-2" onClick={() => {
+                  <button className={`flex flex-row items-center ${
+                    connection ? 'bg-gray-500' : 'hover:bg-gray-500'
+                  } rounded-xl p-2`} onClick={() => {
                     setChatId(chat.chatId)
                     handleClick(chat.chatId)
+                    setTrainerId(chat.trainerId)
+                    setConnection(true)
                   }}>
                     <div className="flex border border-red-500 items-center justify-center h-10 w-10 bg-indigo-200 rounded-full">
 
@@ -101,7 +126,7 @@ function Chat() {
                       <div className="text-sm font-semibold">{chat.trainer.trainerName}</div>
                       <div className='flex justify-between'>
                         <div className="text-xs text-gray-800 mb-auto">
-                          {truncateString(chat.lastMessage, 5)}
+                          {chat.lastMessage && truncateString(chat.lastMessage, 5)}
                         </div>
                         <div className="text-xs text-gray-800 self-end">{formatDate(chat.time)}</div>
                       </div>
@@ -128,6 +153,15 @@ function Chat() {
                               </div>
                               <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
                                 <div>{res.message}</div>
+                                <br />
+                                <div className="absolute bottom-0 right-0 text-gray-800 text-xs pt-1">
+                                  {formatTimestamp(res.timestamp)}
+                                </div>
+                              </div>
+                              <div
+                                class="absolute text-xs bottom-0 right-0 -mb-5 mr-2 text-gray-500"
+                              >
+                                Seen
                               </div>
                             </div>
                           </div>)
@@ -139,7 +173,12 @@ function Chat() {
                               </div>
                               <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
                                 <div>{res.message}</div>
+                                <br />
+                                <div className="absolute bottom-0 left-0 text-gray-800 text-xs pt-1">
+                                  {formatTimestamp(res.timestamp)}
+                                </div>
                               </div>
+                             
                             </div>
                           </div>)
                         }
@@ -148,33 +187,35 @@ function Chat() {
                   ))}
                 </div>
               </div>
+              {connection ?
+                (<div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
 
-              <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
+                  <div className="flex-grow ml-4">
+                    <div className="relative w-full">
+                      <input
+                        type="text"
+                        name='msg'
+                        value={message}
+                        className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                        onChange={(e) => setMessage(e.target.value)}
+                      />
 
-                <div className="flex-grow ml-4">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      name='msg'
-                      className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
-                      onChange={(e) => setMessage(e.target.value)}
-                    />
-
+                    </div>
                   </div>
-                </div>
-                <div className="ml-4">
-                  <button className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
-                    onClick={handleSend}
-                  >
-                    <span>Send</span>
-                    <span className="ml-2">
-                      <svg className="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                      </svg>
-                    </span>
-                  </button>
-                </div>
-              </div>
+                  <div className="ml-4">
+                    <button className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                      onClick={handleSend}
+                    >
+                      <span>Send</span>
+                      <span className="ml-2">
+                        <svg className="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>) : ""
+              }
             </div>
           </div>
         </div>

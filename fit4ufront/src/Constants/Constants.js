@@ -48,5 +48,12 @@ export const truncateString = (str, maxLength)=> {
     return str.slice(0, maxLength) + "...";
   }
 
-
-export const CLIENT_ID = "218979441807-vqp0lda53qd3dfdkvqcti2mgjbn3obs1.apps.googleusercontent.com";
+// Define a function to format the timestamp
+export const formatTimestamp =(timestamp)=> {
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    };
+    return new Date(timestamp).toLocaleTimeString([], options);
+  }

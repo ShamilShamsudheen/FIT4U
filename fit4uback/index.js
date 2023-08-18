@@ -12,7 +12,10 @@ const trainerRouter = require('./routes/trainerRouter');
 const purchaseModel = require('./models/purchase/purchaseModel');
 const trainerModel = require('./models/trainer/trainerModel');
 const chat = require('./models/chat/chat');
-
+const http = require('http');
+const socketIo = require('socket.io');
+const server = http.createServer(app);
+// const io = socketIo(server);
 
 // Define database connection
 mongoose
@@ -29,6 +32,22 @@ mongoose
 
 app.use(cors());
 
+// Socket.IO Connect:
+const io = socketIo(server, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ['GET', 'POST'],
+  }
+});
+
+// Socket.IO Connection Event:
+io.on('connection', (socket) => {
+  socket.on('send_message', (data) => {
+    socket.broadcast.emit('receive_message', data);
+  });
+});
+
+
 // Set up middleware
 app.use((req, res, next) => {
   if (req.originalUrl.includes("/webhook")) {
@@ -37,7 +56,7 @@ app.use((req, res, next) => {
     express.json({ limit: "1mb" })(req, res, next);
   }
 });
-app.use(express.static(path.join(__dirname, 'public'))); // for serving static files (CSS, images, etc.)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Define routes
 app.use('/', userRouter); // example route for user

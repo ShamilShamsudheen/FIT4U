@@ -3,14 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { fileUpload } from '../../../Constants/Constants';
 import Button from '../../Button/Button';
 import { trainerAxiosInstance } from '../../../axios/axios';
+import { toast } from 'react-hot-toast';
+import { FaPlus } from 'react-icons/fa';
 
 function WorkoutForm() {
-
   const [tableShow, setTableShow] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [instruction_video, setInstruction_video] = useState([]);
   const [workoutItems, setWorkoutItems] = useState([]);
-  console.log(workoutItems)
+  // console.log(workoutItems)
 
 
   const [videoPreview, setVideoPreview] = useState(null); // Add video preview state
@@ -19,46 +20,43 @@ function WorkoutForm() {
   const formik = useFormik({
     initialValues: {
       workout_name: '',
-      workoutItems: workoutItems,
+      item_name: '',
+      item_instruction: '',
+      item_instruction_video: null,
     },
-    validate: (values) => {
+    validate: (values) => {console.log('validate');
       const errors = {};
 
       if (!values.workout_name.trim()) {
         errors.workout_name = 'Workout Name is required';
       }
 
-      values.workoutItems.forEach((item, index) => {
-        if (!item.item_name.trim()) {
-          errors[`workoutItems[${index}].item_name`] = 'Item Name is required';
-        }
-        if (!item.item_instruction.trim()) {
-          errors[`workoutItems[${index}].item_instruction`] = 'Instruction is required';
-        }
-      });
+      // if (values.workoutItems.length > 0) {
+      //   values.workoutItems.forEach((item, index) => {
+      //     if (!item.item_name.trim()) {
+      //       errors[`workoutItems[${index}].item_name`] = 'Item Name is required';
+      //     }
+      //     if (!item.item_instruction.trim()) {
+      //       errors[`workoutItems[${index}].item_instruction`] = 'Instruction is required';
+      //     }
+      //   });
+      // }
 
       return errors;
     },
     onSubmit: async (values) => {
-      // Handle form submission here
-      console.log(workoutItems, " workoutItems");
+      console.log('onsubmit')
+      console.log(workoutItems, 'workoutItems')
       await trainerAxiosInstance
-        .post('/addWorkout', { workout_name: values.workout_name, workoutItems })
+        .post('/addWorkout', { workout_name: values.workout_name, workoutItems: workoutItems })
         .then((res) => {
           formik.resetForm();
           setTableShow(false)
-          console.log(res.data.message);
+          toast.success(res.data.message);
         })
         .catch((err) => {
           console.log('Error:', err.message);
         });
-
-      // Clear the form after submission
-
-      // Add the current workout item to savedWorkouts
-      setSavedWorkouts((prevSavedWorkouts) => [...prevSavedWorkouts, values.workoutItems]);
-
-      // Clear video preview after saving
       setVideoPreview(null);
     },
   });
@@ -70,8 +68,7 @@ function WorkoutForm() {
       console.log(e.target.files[0])
       const instruction_vid = e.target.files[0];
       const instruction_vid_ref = await fileUpload('workout-instruction-video/', instruction_vid);
-      formik.setFieldValue('item_instruction_video', instruction_vid_ref);
-      console.log(formik.values.item_instruction_video)
+      formik.setFieldValue('item_instruction_video', instruction_vid_ref)
       setVideoPreview(instruction_vid_ref)
 
     } catch (error) {
@@ -81,37 +78,30 @@ function WorkoutForm() {
 
   const handleAddWorkoutItem = async (e) => {
     e.preventDefault();
-    console.log(formik)
     const newItem = {
       item_name: formik.values.item_name,
       item_instruction: formik.values.item_instruction,
       item_instruction_video: formik.values.item_instruction_video,
     };
-    // console.log(newItem)
-
-    // Add the new item to the workoutItems array
+    setSavedWorkouts(newItem)
     setWorkoutItems((prevItems) => [...prevItems, newItem]);
-
-    // Clear the form fields
+    console.log(workoutItems)
     formik.setFieldValue('item_name', '');
     formik.setFieldValue('item_instruction', '');
     formik.setFieldValue('item_instruction_video', null);
-
-    // Clear video preview after adding the item
     setVideoPreview(null);
   };
 
 
   const handleRemovePreview = () => {
-    // Remove the video preview URL
     setVideoPreview(null);
   };
   const buttonClick = () => {
     setShowModal(true)
   }
+
   return (
     <div className="p-8 bg-transparent mx-auto rounded  flex justify-center">
-
       <div>
         {!showModal && (<div onClick={buttonClick}>
           <Button
@@ -208,17 +198,36 @@ function WorkoutForm() {
                 </div>
               )}
               <div className="flex justify-center space-x-4 mt-8">
-                <div className="space-x-4 mt-8" onClick={handleAddWorkoutItem}>
-                  <Button type="button" buttonText="Add" />
+                <div className="space-x-4 mt-8">
+                  <button
+                    type="button"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                    onClick={handleAddWorkoutItem}
+                  >
+                    Add
+                  </button>
                 </div>
 
                 <div className="space-x-4 mt-8">
-                  <Button type="submit" buttonText="Save" />
-                </div>
-                <div className="space-x-4 mt-8" onClick={()=>setShowModal(false)}>
-                  <Button type="button" buttonText="back" />
+                  <button
+                    type="button"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Back
+                  </button>
                 </div>
               </div>
+
+              <div className="flex justify-center mt-8">
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                >
+                  Submit
+                </button>
+              </div>
+
             </form>
 
 

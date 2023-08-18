@@ -5,22 +5,22 @@ const Trainer = require('../trainer/trainerModel');
 const workouts_Item_Details = new Schema({
     item_name:{
         type:String,
-        required:true
+        required:false
     },
     item_instruction:{
         type:String,
-        required:true
+        required:false
     },
     item_instruction_refer:{
         type:String,
-        required:true
+        required:false
     }
 })
 
 const WorkoutSchema = new Schema({
     trainer_id: {
-        type: String, // Use String type for trainer_id
-        ref: 'Trainer', // Reference to the Trainer schema
+        type: String, 
+        ref: 'Trainer', 
         required: true
     },
     trainer_name:{
