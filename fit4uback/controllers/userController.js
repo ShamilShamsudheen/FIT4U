@@ -161,6 +161,7 @@ module.exports = {
       const approvedTrainer = await Trainer.find({ isApproved: true })
       // console.log(approvedTrainer);
       if (approvedTrainer) {
+        console.log(approvedTrainer)
         res.json({ status: true, approvedTrainer })
       } else {
         res.json({ status: false })
@@ -434,5 +435,20 @@ module.exports = {
       console.error(error);
       res.status(500).json({ error: 'Internal server error' });
     }
+  },
+  
+ paymentHistory :async (req, res) => {
+  try {
+    const { id } = req.user; 
+    const payments = await Purchase.find({ user_id: id });
+
+    if (payments.length === 0) {
+      return res.status(404).json({ message: 'No payment history found for the user.' });
+    }
+    return res.status(200).json({ payments});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error.' });
   }
+},
 }

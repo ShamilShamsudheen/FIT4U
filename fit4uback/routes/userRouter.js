@@ -8,10 +8,10 @@ const isLogged = require('../middleware/jwtMiddleware')
 // user routes
 userRouter.post('/signUp',userController.signUp)
 userRouter.post('/login',userController.logIn)
-userRouter.post('/postLogin',isLogged,userController.postLogin)
+userRouter.get('/postLogin',isLogged,userController.postLogin)
 userRouter.get('/tokenCheck',isLogged,userController.tokenCheck)
 userRouter.get('/trainers',userController.trainersList)
-userRouter.get('/blogs',isLogged,userController.blogList)
+userRouter.get('/blogs',userController.blogList)
 userRouter.get('/workouts',isLogged,userController.workouts)
 userRouter.get('/singleBlog/:blogId',userController.singleBlog)
 userRouter.get('/singleTrainer/:trainerId',userController.singleTrainer)
@@ -22,6 +22,7 @@ userRouter.get('/payedTrainer',isLogged,userController.personalTrainer)
 userRouter.post('/createMessage',isLogged,userController.chat)
 userRouter.get('/getChat',isLogged,userController.getChat)
 userRouter.get('/chatMessage/:chatId',isLogged,userController.chatMessage)
+userRouter.get('/paymentHistory',isLogged,userController.paymentHistory)
 
 
 

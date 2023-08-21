@@ -45,16 +45,15 @@ function UserProfile() {
   const [showUpload, setShowUpload] = useState(false)
   const [details, setDetails] = useState(false)
   const [detailsForm, setDetailsForm] = useState(false)
-  const [status, setStatus] = useState(true)
-  const [history, setHistory] = useState(true)
+  const [status, setStatus] = useState(false)
+  const [history, setHistory] = useState(false)
   const [user, setUser] = useState([]);
   const [showInput, setShowInput] = useState(false);
+  const [paymentHistory,setPaymnetHistory] = useState(null)
 
   useEffect(() => {
-    const userJwtToken = localStorage.getItem('userToken');
-    if (userJwtToken) {
       userAxiosInstance
-        .post('/postLogin')
+        .get('/postLogin')
         .then((res) => {
           console.log(res.data.userData);
           setUser(res.data.userData);
@@ -62,10 +61,11 @@ function UserProfile() {
         .catch((error) => {
           console.log(error);
         });
-    } else {
-      <Navigate to="/login" />;
-    }
+        userAxiosInstance.get('/paymentHistory').then((res)=>{
+          setPaymnetHistory(res.data.payments)
+        })
   }, []);
+  console.log(paymentHistory)
   const formik = useFormik({
     initialValues,
     validate,
@@ -85,7 +85,7 @@ function UserProfile() {
   const handleImageInputChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      const profileUrl = await fileUpload('userProfile', file)
+      const profileUrl = await fileUpload('userProfile/', file)
       console.log(profileUrl)
       userAxiosInstance.post('/profileImgUpload', { profileUrl }).then((res) => {
         setUser(res.data.updateProfile)
@@ -102,6 +102,14 @@ function UserProfile() {
     formik.setFieldValue('goal', user.goal)
     setShowUpload(true)
   }
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+  
+    return `${day}/${month}/${year}`;
+  };
   return (
     <div class="p-16 bg-transparent">
       <div class="p-8 bg-transparent shadow mt-24 flex flex-col">
@@ -141,7 +149,11 @@ function UserProfile() {
                 <a
                   className={`flex justify-center py-2 text-md cursor-pointer ${details ? 'bg-gray-400' : 'bg-gray-300'}`}
                   style={{ fontFamily: 'Kanit, sans-serif' }}
-                  onClick={() => setDetails(!details)}
+                  onClick={() => {
+                    setDetails(!details)
+                    // setStatus(!status)
+                    setHistory(false)
+                  }}
                 >
                   Details
                 </a>
@@ -151,7 +163,11 @@ function UserProfile() {
                 <a
                   className={`flex justify-center py-2 text-md cursor-pointer ${status ? 'bg-gray-400' : 'bg-gray-300'}`}
                   style={{ fontFamily: 'Kanit, sans-serif' }}
-                  onClick={() => setStatus(!status)}
+                  onClick={() => {
+                    setStatus(!status)
+                    // setDetails(!details)
+                    // setHistory(!history)
+                  }}
                 >
                   Status
                 </a>
@@ -160,7 +176,11 @@ function UserProfile() {
                 <a
                   className={`flex justify-center py-2 text-md cursor-pointer ${history ? 'bg-gray-400' : 'bg-gray-300'}`}
                   style={{ fontFamily: 'Kanit, sans-serif' }}
-                  onClick={() => setHistory(!history)}
+                  onClick={() => {
+                    setHistory(!history)
+                    setDetails(false)
+                    // setStatus(false)
+                  }}
                 >
                   History
                 </a>
@@ -175,22 +195,14 @@ function UserProfile() {
 
             <div className=" mt-2">
               <h1 className="text-amber-500 font-bold text-2xl uppercase">Details</h1>
-
-
-
-
               <div className="py-8 border-b border-indigo-50">
                 <div className="flex flex-col items-start"> {/* Add 'items-end' class here */}
-                  <p className="ml-1 text-gray-500 font-bold text-2xl items-start ">Age: <span className='text-amber-600'>{user.age} </span>yr</p>
-                  <p className="ml-1 text-gray-500 font-bold text-2xl items-start ">Height: <span className='text-amber-600'>{user.height} </span>cm</p>
-                  <p className="ml-1 text-gray-500 font-bold text-2xl items-start ">Weight: <span className='text-amber-600'>{user.weight}</span> kg</p>
-                  <p className="ml-1 text-gray-500 font-bold text-2xl items-start ">Goal: <span>{user.goal}</span></p>
+                  <p className="ml-1 text-gray-500 font-bold text-xs items-start ">Age: <span className='text-amber-600 text-sm'>{user.age} </span>yr</p>
+                  <p className="ml-1 text-gray-500 font-bold text-xs items-start ">Height: <span className='text-amber-600 text-sm'>{user.height} </span>cm</p>
+                  <p className="ml-1 text-gray-500 font-bold text-xs items-start ">Weight: <span className='text-amber-600 text-sm'>{user.weight}</span> kg</p>
+                  <p className="ml-1 text-gray-500 font-bold text-xs items-start ">Goal: <span className='text-amber-600 text-sm'>{user.goal}</span></p>
                 </div>
               </div>
-
-
-
-
             </div>
 
             <div className=" mt-8" onClick={handleUpload}>
@@ -293,6 +305,24 @@ function UserProfile() {
                 </div>
               </div>)
             }
+          </div>
+        }
+        { history &&
+          <div className="rounded-lg mt-2 bg-transparent border border-amber-500 shadow-lg p-16 justify-items-center mx-auto w-1/3 items-start">
+
+          {/* paymentHistory */}
+            <div className=" mt-2">
+              <h1 className="text-amber-500 font-bold text-2xl uppercase">Payment History</h1>
+              <div className="py-8 border-b border-indigo-50">
+                <div className="flex flex-col items-start">
+                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Payment id: <span className='text-amber-600 text-xs'>{paymentHistory[0]._id}</span></p>
+                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Trainer Name <span className='text-amber-600 text-xs'>{paymentHistory[0].trainer_name}</span></p>
+                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Amount: <span className='text-amber-600 text-xs'>{paymentHistory[0].purchase_amount}</span></p>
+                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Payed Date: <span className='text-amber-600 text-xs'>{formatDate(paymentHistory[0].purchase_date)}</span></p>
+                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Expired Date: <span className='text-red-900 text-xs'>{formatDate(paymentHistory[0].purchase_expire)}</span></p>
+                </div>
+              </div>
+            </div>
           </div>
         }
       </div>

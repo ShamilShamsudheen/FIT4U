@@ -20,6 +20,32 @@
 .main-slide h1{
     font-size: 6vw;
 }
+.blog-slide h3{
+  font-size: 3vw;
+  font-weight: 700;
+  display: inline-block;
+  position: relative;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px #f6f7f8;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+.blog-slide h1{
+  font-size: 6vw;
+}
+.trainer-slide h3{
+  font-size: 3vw;
+  font-weight: 700;
+  display: inline-block;
+  position: relative;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px #f6f7f8;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+.trainer-slide h1{
+  font-size: 6vw;
+}
 .svg-wrapper {
     position: relative;
     width: 190px;

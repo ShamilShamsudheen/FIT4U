@@ -19,7 +19,7 @@ function Chat() {
     const socket = io(import.meta.env.VITE_baseURL);
     const fetchData = async () => {
       try {
-        await userAxiosInstance.post('/postLogin').then((res) => {
+        await userAxiosInstance.get('/postLogin').then((res) => {
           setProfile(res.data.userData)
         })
       } catch (error) {
