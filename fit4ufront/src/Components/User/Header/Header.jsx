@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import logo from '../../../assets/logo-1.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FiMessageSquare } from 'react-icons/fi'; // Import the chat icon
 import { userAxiosInstance } from '../../../axios/axios';
 
 
 
 function Header() {
+    const navigate = useNavigate()
     const [logout, setLogout] = useState(false)
     const [mobMenu, setMobMenu] = useState(false)
     const [payed ,setPayed] =  useState(false)
@@ -22,7 +23,7 @@ function Header() {
 
     }, [])
     const handleLogout = () => {
-        alert('logout')
+        navigate('/')
 
         localStorage.removeItem('userToken')
         setLogout(false)
@@ -82,12 +83,12 @@ function Header() {
                                                 >
                                                     Profile
                                                 </Link>
-                                                <Link
+                                                {payed && (<Link
                                                     to="/chat"
                                                     className="flex items-center text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline hover:border-red-500 hover:border-b hover:border-solid text-sm font-medium uppercase"
                                                 >
                                                     <FiMessageSquare className="mr-1" /> Chat
-                                                </Link>
+                                                </Link>)}
                                             </div>
                                         )}
 

@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import { toast } from 'react-hot-toast';
 import { userAxiosInstance } from '../../../axios/axios';
 import Button from '../../Button/Button';
+import ReactApexChart from 'react-apexcharts';
 
 
 const initialValues = {
@@ -49,21 +50,100 @@ function UserProfile() {
   const [history, setHistory] = useState(false)
   const [user, setUser] = useState([]);
   const [showInput, setShowInput] = useState(false);
-  const [paymentHistory,setPaymnetHistory] = useState(null)
+  const [paymentHistory, setPaymnetHistory] = useState(null)
+  const [chartOptions, setChartOptions] = useState({
+    chart: {
+      height: 350,
+      type: 'radialBar',
+      toolbar: {
+        show: true
+      }
+    },
+    plotOptions: {
+      radialBar: {
+        startAngle: -135,
+        endAngle: 225,
+        hollow: {
+          margin: 0,
+          size: '70%',
+          background: '#fff',
+          image: undefined,
+          imageOffsetX: 0,
+          imageOffsetY: 0,
+          position: 'front',
+          dropShadow: {
+            enabled: true,
+            top: 3,
+            left: 0,
+            blur: 4,
+            opacity: 0.24
+          }
+        },
+        track: {
+          background: '#fff',
+          strokeWidth: '67%',
+          margin: 0, // margin is in pixels
+          dropShadow: {
+            enabled: true,
+            top: -3,
+            left: 0,
+            blur: 4,
+            opacity: 0.35
+          }
+        },
+
+        dataLabels: {
+          show: true,
+          name: {
+            offsetY: -10,
+            show: true,
+            color: '#888',
+            fontSize: '17px'
+          },
+          value: {
+            formatter: function (val) {
+              return parseInt(val);
+            },
+            color: '#111',
+            fontSize: '36px',
+            show: true,
+          }
+        }
+      }
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'dark',
+        type: 'horizontal',
+        shadeIntensity: 0.5,
+        gradientToColors: ['#ABE5A1'],
+        inverseColors: true,
+        opacityFrom: 1,
+        opacityTo: 1,
+        stops: [0, 100]
+      }
+    },
+    stroke: {
+      lineCap: 'round'
+    },
+    labels: ['Percent'],
+  });
+  const [chartSeries, setChartSeries] = useState([75]);
 
   useEffect(() => {
-      userAxiosInstance
-        .get('/postLogin')
-        .then((res) => {
-          console.log(res.data.userData);
-          setUser(res.data.userData);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-        userAxiosInstance.get('/paymentHistory').then((res)=>{
-          setPaymnetHistory(res.data.payments)
-        })
+    userAxiosInstance
+      .get('/postLogin')
+      .then((res) => {
+        console.log(res.data.userData);
+        setUser(res.data.userData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    userAxiosInstance.get('/paymentHistory').then((res) => {
+      setPaymnetHistory(res.data.payments)
+    })
   }, []);
   console.log(paymentHistory)
   const formik = useFormik({
@@ -107,17 +187,17 @@ function UserProfile() {
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
-  
+
     return `${day}/${month}/${year}`;
   };
   return (
     <div class="p-16 bg-transparent">
       <div class="p-8 bg-transparent shadow mt-24 flex flex-col">
-        <div className="flex w-2/4 mx-auto items-center justify-center border border-amber-500 rounded-md space-x-4">
-          <div className="flex flex-col justify-between">
-            <div className="w-40 h-40 bg-indigo-100 mx-auto rounded-full shadow-2xl relative">
-              <div className="absolute inset-0 flex items-start justify-start  text-indigo-500" onClick={handleImageClick}>
-                <img src={user.profileImg} className="w-full h-full border border-amber-500 rounded-full" alt="" />
+        <div className="flex flex-col md:flex-row w-full mx-auto items-center justify-center border border-amber-500 rounded-md md:space-x-4 space-y-4 md:space-y-0">
+          <div className="flex flex-col md:justify-between">
+            <div className="w-40 h-40 bg-indigo-100 mx-auto md:mx-0 rounded-full shadow-2xl relative">
+              <div className="absolute inset-0 flex items-start justify-start text-indigo-500" onClick={handleImageClick}>
+                <img src={user.profileImg} className="w-full h-full   rounded-full" alt="" />
               </div>
             </div>
             {showInput && (
@@ -129,44 +209,42 @@ function UserProfile() {
                 ref={(fileInput) => fileInput && fileInput.click()}
               />
             )}
-            <p className="text-center text-amber-900 text-xs">Click on the photo to change</p>
+            <p className="text-center md:text-left text-amber-900 text-xs">Click on the photo to change</p>
           </div>
 
-
-          <div className="pt-10  pb-12 text-left">
-            <h1 className="text-4xl font-medium text-amber-500"><span className='text-xs text-gray-500'>NAME :</span>{user.name}</h1>
-            <p className="font-light text-amber-500 mt-3"><span className='text-xs text-gray-500'>EMAIL :</span>{user.email}</p>
-            <p className="mt-2 text-amber-500"><span className='text-xs text-gray-500'>MOBILE NO :</span>{user.mobile}</p>
+          <div className="pt-10 pb-12 text-center md:text-left">
+            <h1 className="text-4xl font-medium text-amber-500"><span className='text-xs text-gray-500'>NAME:</span> {user.name}</h1>
+            <p className="font-light text-amber-500 mt-3"><span className='text-xs text-gray-500'>EMAIL:</span> {user.email}</p>
+            <p className="mt-2 text-amber-500"><span className='text-xs text-gray-500'>MOBILE NO:</span> {user.mobile}</p>
           </div>
-
         </div>
 
 
+
         <div className="mt-10">
-          <div className="mx-auto w-2/4 border-rounded-2">
-            <ul className="bg-gray-300 grid grid-flow-col gap-10 text-center text-gray-500rounded-lg p-1">
+          <div className="mx-auto w-full md:w-2/3 lg:w-1/2 border-rounded-2">
+            <ul className="bg-gray-300 grid grid-cols-1 md:grid-cols-3 gap-4 text-center text-gray-500 rounded-lg p-1">
               <li>
                 <a
-                  className={`flex justify-center py-2 text-md cursor-pointer ${details ? 'bg-gray-400' : 'bg-gray-300'}`}
+                  className={`flex justify-center py-2 text-sm md:text-md cursor-pointer ${details ? 'bg-gray-400' : 'bg-gray-300'}`}
                   style={{ fontFamily: 'Kanit, sans-serif' }}
                   onClick={() => {
                     setDetails(!details)
-                    // setStatus(!status)
+                    setStatus(false)
                     setHistory(false)
                   }}
                 >
                   Details
                 </a>
-
               </li>
               <li>
                 <a
-                  className={`flex justify-center py-2 text-md cursor-pointer ${status ? 'bg-gray-400' : 'bg-gray-300'}`}
+                  className={`flex justify-center py-2 text-sm md:text-md cursor-pointer ${status ? 'bg-gray-400' : 'bg-gray-300'}`}
                   style={{ fontFamily: 'Kanit, sans-serif' }}
                   onClick={() => {
                     setStatus(!status)
-                    // setDetails(!details)
-                    // setHistory(!history)
+                    setDetails(false)
+                    setHistory(false)
                   }}
                 >
                   Status
@@ -174,12 +252,12 @@ function UserProfile() {
               </li>
               <li>
                 <a
-                  className={`flex justify-center py-2 text-md cursor-pointer ${history ? 'bg-gray-400' : 'bg-gray-300'}`}
+                  className={`flex justify-center py-2 text-sm md:text-md cursor-pointer ${history ? 'bg-gray-400' : 'bg-gray-300'}`}
                   style={{ fontFamily: 'Kanit, sans-serif' }}
                   onClick={() => {
                     setHistory(!history)
                     setDetails(false)
-                    // setStatus(false)
+                    setStatus(false)
                   }}
                 >
                   History
@@ -187,25 +265,32 @@ function UserProfile() {
               </li>
             </ul>
           </div>
-
         </div>
+
         {details &&
-          <div className="rounded-lg mt-2 bg-transparent border border-amber-500 shadow-lg p-16 justify-items-center mx-auto w-1/3 items-start">
+          <div className="rounded-lg mt-2 bg-transparent border border-amber-500 shadow-lg p-4 md:p-8 lg:p-12 xl:p-16 justify-items-center mx-auto w-full md:w-2/3 lg:w-1/2 items-center md:items-start">
 
-
-            <div className=" mt-2">
-              <h1 className="text-amber-500 font-bold text-2xl uppercase">Details</h1>
-              <div className="py-8 border-b border-indigo-50">
-                <div className="flex flex-col items-start"> {/* Add 'items-end' class here */}
-                  <p className="ml-1 text-gray-500 font-bold text-xs items-start ">Age: <span className='text-amber-600 text-sm'>{user.age} </span>yr</p>
-                  <p className="ml-1 text-gray-500 font-bold text-xs items-start ">Height: <span className='text-amber-600 text-sm'>{user.height} </span>cm</p>
-                  <p className="ml-1 text-gray-500 font-bold text-xs items-start ">Weight: <span className='text-amber-600 text-sm'>{user.weight}</span> kg</p>
-                  <p className="ml-1 text-gray-500 font-bold text-xs items-start ">Goal: <span className='text-amber-600 text-sm'>{user.goal}</span></p>
+            <div className="mt-4 md:mt-2">
+              <h1 className="text-amber-500 font-bold text-lg md:text-xl lg:text-2xl uppercase">Details</h1>
+              <div className="py-4 md:py-8 border-b border-indigo-50">
+                <div className="flex flex-col items-center md:items-start"> {/* Add 'items-end' class here */}
+                  <p className="ml-1 text-gray-500 font-bold text-xs md:text-sm lg:text-base items-start">
+                    Age: <span className='text-amber-600 text-xs md:text-sm lg:text-base'>{user.age} </span>yr
+                  </p>
+                  <p className="ml-1 text-gray-500 font-bold text-xs md:text-sm lg:text-base items-start">
+                    Height: <span className='text-amber-600 text-xs md:text-sm lg:text-base'>{user.height} </span>cm
+                  </p>
+                  <p className="ml-1 text-gray-500 font-bold text-xs md:text-sm lg:text-base items-start">
+                    Weight: <span className='text-amber-600 text-xs md:text-sm lg:text-base'>{user.weight}</span> kg
+                  </p>
+                  <p className="ml-1 text-gray-500 font-bold text-xs md:text-sm lg:text-base items-start">
+                    Goal: <span className='text-amber-600 text-xs md:text-sm lg:text-base'>{user.goal}</span>
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className=" mt-8" onClick={handleUpload}>
+            <div className="mt-8" onClick={handleUpload}>
               <button className="text-white py-2 px-4 rounded-lg bg-amber-700 hover:bg-amber-600 shadow-md font-medium transition-colors">
                 Upload
               </button>
@@ -307,23 +392,52 @@ function UserProfile() {
             }
           </div>
         }
-        { history &&
-          <div className="rounded-lg mt-2 bg-transparent border border-amber-500 shadow-lg p-16 justify-items-center mx-auto w-1/3 items-start">
+        {history &&
+          <div className="rounded-lg mt-2 bg-transparent border border-amber-500 shadow-lg p-4 md:p-8 lg:p-12 xl:p-16 justify-items-center mx-auto w-full md:w-2/3 lg:w-1/2 items-center md:items-start">
 
-          {/* paymentHistory */}
-            <div className=" mt-2">
-              <h1 className="text-amber-500 font-bold text-2xl uppercase">Payment History</h1>
-              <div className="py-8 border-b border-indigo-50">
-                <div className="flex flex-col items-start">
-                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Payment id: <span className='text-amber-600 text-xs'>{paymentHistory[0]._id}</span></p>
-                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Trainer Name <span className='text-amber-600 text-xs'>{paymentHistory[0].trainer_name}</span></p>
-                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Amount: <span className='text-amber-600 text-xs'>{paymentHistory[0].purchase_amount}</span></p>
-                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Payed Date: <span className='text-amber-600 text-xs'>{formatDate(paymentHistory[0].purchase_date)}</span></p>
-                  <p className="ml-1 text-gray-500 font-bold text-sm items-start ">Expired Date: <span className='text-red-900 text-xs'>{formatDate(paymentHistory[0].purchase_expire)}</span></p>
+            {/* paymentHistory */}
+            <div className="mt-4 md:mt-2">
+              <h1 className="text-amber-500 font-bold text-xl md:text-2xl lg:text-3xl uppercase">Payment History</h1>
+              <div className="py-4 md:py-8 border-b border-indigo-50">
+                <div className="flex flex-col items-center md:items-start">
+                  <p className="ml-1 text-gray-500 font-bold text-sm md:text-base lg:text-lg items-start">
+                    Payment id: <span className='text-amber-600 text-xs md:text-sm lg:text-base'>{paymentHistory[0]._id}</span>
+                  </p>
+                  <p className="ml-1 text-gray-500 font-bold text-sm md:text-base lg:text-lg items-start">
+                    Trainer Name <span className='text-amber-600 text-xs md:text-sm lg:text-base'>{paymentHistory[0].trainer_name}</span>
+                  </p>
+                  <p className="ml-1 text-gray-500 font-bold text-sm md:text-base lg:text-lg items-start">
+                    Amount: <span className='text-amber-600 text-xs md:text-sm lg:text-base'>{paymentHistory[0].purchase_amount}</span>
+                  </p>
+                  <p className="ml-1 text-gray-500 font-bold text-sm md:text-base lg:text-lg items-start">
+                    Payed Date: <span className='text-amber-600 text-xs md:text-sm lg:text-base'>{formatDate(paymentHistory[0].purchase_date)}</span>
+                  </p>
+                  <p className="ml-1 text-gray-500 font-bold text-sm md:text-base lg:text-lg items-start">
+                    Expired Date: <span className='text-red-900 text-xs md:text-sm lg:text-base'>{formatDate(paymentHistory[0].purchase_expire)}</span>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
+
+        }
+        {status &&
+          <div className="rounded-lg mt-2 bg-transparent border border-amber-500 shadow-lg p-4 md:p-8 lg:p-12 xl:p-16 justify-items-center mx-auto w-full md:w-2/3 lg:w-1/2 items-center md:items-start">
+            <div className="mt-4 md:mt-2">
+              <h1 className="text-amber-500 font-bold text-2xl md:text-3xl lg:text-4xl uppercase">Status</h1>
+              <div className="py-4 md:py-8 border-b border-indigo-50">
+                <div className="flex flex-col items-center md:items-start">
+                  <ReactApexChart
+                    options={chartOptions}
+                    series={chartSeries}
+                    type="radialBar"
+                    height={350}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
         }
       </div>
     </div>

@@ -24,7 +24,7 @@ function Workouts() {
     setSelectedVideo(videoUrl);
   };
 
-  console.log('workoutData:', workoutData); // Check the value of workoutData in the console
+  console.log('workoutData:', workoutData);
 
   return (
     <div className='w-2/3 mx-auto'>
@@ -59,14 +59,14 @@ function Workouts() {
                         Play Video
                       </button>
                     </td>
-                  </tr>
+                  </tr> 
                 ))}
               </tbody>
             </table>
           </div>
         </div>
       ) : (
-        <div>No workout items found.</div>
+        <div className='text-white mx-auto' >No workout items found.</div>
       )}
 
       {preview && (

@@ -17,13 +17,13 @@ module.exports = {
       const body = req.body.values;
       console.log(body);
       const userEmail = await User.findOne({ email: body.email });
-      
-      if (userEmail ) {
+
+      if (userEmail) {
         return res.json({ message: 'This email already exists', status: false });
       } else {
         if (req.body.otp) {
           let password = body.pass; // Declare the password variable
-          
+
           const secPass = await bcrypt.hash(password, 5);
           const userData = new User({
             name: body.name,
@@ -32,10 +32,10 @@ module.exports = {
             password: secPass,
             role: body.role
           });
-          
+
           console.log(userData);
           await userData.save();
-          
+
           return res.json({ message: 'Your account has been created successfully', status: true });
         }
       }
@@ -44,16 +44,16 @@ module.exports = {
       return res.status(500).json({ message: 'An error occurred', status: false });
     }
   },
-  
+
   logIn: async (req, res) => {
     try {
       if (req.body.profileObj) {
         console.log(req.body.profileObj);
         const { name, email, googleId } = req.body.profileObj;
-      
+
         // Check if the user with the given email already exists in the database
         const existingUser = await User.findOne({ email });
-      
+
         if (existingUser) {
           // User exists, generate a token and send it to the frontend
           const username = existingUser.name;
@@ -62,7 +62,7 @@ module.exports = {
             process.env.JWT_SECRET_KEY,
             { expiresIn: "1d" }
           );
-      
+
           return res.json({
             message: 'Login Successfully',
             status: true,
@@ -71,11 +71,11 @@ module.exports = {
           });
         } else {
           // User doesn't exist, create a new user account
-      
+
           // Hash the password (using googleId as the password in this case)
           const password = googleId;
           const secPass = await bcrypt.hash(password, 5);
-      
+
           // Create a new user document
           const userData = new User({
             name,
@@ -84,10 +84,10 @@ module.exports = {
             password: secPass,
             role: "user",
           });
-      
+
           // Save the new user to the database
           await userData.save();
-      
+
           // Generate a token for the newly created user and send it to the frontend
           const username = userData.name;
           const token = jwt.sign(
@@ -95,7 +95,7 @@ module.exports = {
             process.env.JWT_SECRET_KEY,
             { expiresIn: "1d" }
           );
-      
+
           return res.json({
             message: 'Account created and logged in successfully',
             status: true,
@@ -134,7 +134,7 @@ module.exports = {
   },
   tokenCheck: async (req, res) => {
     try {
-      res.json({status:true})
+      res.json({ status: true })
     } catch (error) {
 
     }
@@ -436,19 +436,18 @@ module.exports = {
       res.status(500).json({ error: 'Internal server error' });
     }
   },
-  
- paymentHistory :async (req, res) => {
-  try {
-    const { id } = req.user; 
-    const payments = await Purchase.find({ user_id: id });
 
-    if (payments.length === 0) {
-      return res.status(404).json({ message: 'No payment history found for the user.' });
+  paymentHistory: async (req, res) => {
+    try {
+      const { id } = req.user;
+      const payments = await Purchase.find({ user_id: id });
+      if (payments.length === 0) {
+        return res.status(404).json({ message: 'No payment history found for the user.' });
+      }
+      return res.status(200).json({ payments, status: true });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error.' });
     }
-    return res.status(200).json({ payments,status:true});
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal server error.' });
-  }
-},
+  },
 }

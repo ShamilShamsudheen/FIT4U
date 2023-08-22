@@ -242,7 +242,7 @@ function UserSignUp() {
             </div>
             <p className='mx-auto'>Verify OTP</p>
             <span className="countdown">
-              <span style={{ "--value": {timeout} }}></span>
+              <span style={{ "--value": {timer}, backgroundColor: 'blue' }}></span>
             </span>
             <hr className="w-full border border-red-500 mt-3" />
             <form className="mx-auto mt-4" onSubmit={handleSubmit}>
