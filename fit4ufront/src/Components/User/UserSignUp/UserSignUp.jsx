@@ -57,7 +57,7 @@ function UserSignUp() {
         setTimeOut((preTime) => preTime - 1)
       }, 1000);
       setReset(true)
-    }else{
+    } else {
 
       setReset(false)
     }
@@ -95,7 +95,7 @@ function UserSignUp() {
     e.preventDefault();
     const values = formik.values;
     try {
-      result.confirm(otp).then(async() => {
+      result.confirm(otp).then(async () => {
         console.log(result);
         console.log('Success');
         await userAxiosInstance.post('/signUp', { values, otp })
@@ -227,7 +227,7 @@ function UserSignUp() {
                   type="submit"
                 />
               </div>
-              
+
               <div className="mt-2 flex justify-center">
                 <p className="text-sm">
                   Already a member? <Link to="/login" className="text-red-500 underline">Login Here</Link>
@@ -241,7 +241,9 @@ function UserSignUp() {
               <img className="mx-auto h-12 w-auto" src={logo} alt="Workflow" />
             </div>
             <p className='mx-auto'>Verify OTP</p>
-            <span>timout {timeout}</span>
+            <span className="countdown">
+              <span style={{ "--value": {timeout} }}></span>
+            </span>
             <hr className="w-full border border-red-500 mt-3" />
             <form className="mx-auto mt-4" onSubmit={handleSubmit}>
               <input

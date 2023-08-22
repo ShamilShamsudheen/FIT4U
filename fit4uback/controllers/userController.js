@@ -445,7 +445,7 @@ module.exports = {
     if (payments.length === 0) {
       return res.status(404).json({ message: 'No payment history found for the user.' });
     }
-    return res.status(200).json({ payments});
+    return res.status(200).json({ payments,status:true});
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error.' });

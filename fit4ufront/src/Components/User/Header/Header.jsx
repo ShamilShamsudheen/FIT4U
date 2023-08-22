@@ -9,11 +9,15 @@ import { userAxiosInstance } from '../../../axios/axios';
 function Header() {
     const [logout, setLogout] = useState(false)
     const [mobMenu, setMobMenu] = useState(false)
+    const [payed ,setPayed] =  useState(false)
     useEffect(() => {
         userAxiosInstance.get('/postLogin').then((res) => {
             setLogout(true)
         }).catch((error) => {
             setLogout(false)
+        })
+        userAxiosInstance.get('/paymentHistory').then((res)=>{
+            setPayed(res.data.status)
         })
 
     }, [])
