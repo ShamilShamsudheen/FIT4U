@@ -23,6 +23,8 @@ userRouter.post('/createMessage',isLogged,userController.chat)
 userRouter.get('/getChat',isLogged,userController.getChat)
 userRouter.get('/chatMessage/:chatId',isLogged,userController.chatMessage)
 userRouter.get('/paymentHistory',isLogged,userController.paymentHistory)
+userRouter.get('/getBlogSearch',isLogged,userController.getBlogSearch)
+userRouter.get('/blogsCategory',isLogged,userController.blogsCategory)
 
 
 

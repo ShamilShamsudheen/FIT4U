@@ -2,29 +2,39 @@ import React, { useEffect, useState } from 'react'
 import { AdminApi } from '../../../api/api'
 import Button from '../../Button/Button'
 import { toast } from 'react-hot-toast'
+import { adminAxiosInstance } from '../../../axios/axios'
 
 function UserDetails() {
     const [userData, setUserData] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [userId, setUserId] = useState(null)
-
+    const [lastHandleClickTime, setLastHandleClickTime] = useState(null)
     useEffect(() => {
-        AdminApi.get('/admin/userDetails').then((res) => {
-            setUserData(res.data.userDetails)
-        })
-    }, [])
-    const handleClick = async(e)=>{
-      e.preventDefault()
-      await AdminApi.post('/admin/userBlock',{userId}).then((res)=>{
-        if(res.data.status){
-          setShowModal(false)
-          toast.success(res.data.message)
-        }else{
-          setShowModal(false)
-          toast.error(res.data.message)
-        }
+      adminAxiosInstance.get('/userDetails').then((res) => {
+          setUserData(res.data.userDetails)
       })
-    }
+  }, [])
+    useEffect(() => {
+      if (lastHandleClickTime) {
+        adminAxiosInstance.get('/userDetails').then((res) => {
+          setUserData(res.data.userDetails);
+        });
+      }
+    }, [lastHandleClickTime]);
+  
+    const handleClick = async (e) => {
+      e.preventDefault();
+      await adminAxiosInstance.patch('/userBlock', { userId }).then((res) => {
+        if (res.data.status) {
+          setShowModal(false);
+          toast.success(res.data.message);
+        } else {
+          setShowModal(false);
+          toast.error(res.data.message);
+        }
+        setLastHandleClickTime(null); 
+      });
+    };
 
     return (
         <div className=''>
@@ -35,9 +45,6 @@ function UserDetails() {
                 <th scope="col" className="px-6 py-3">
                   Name
                 </th>
-                {/* <th scope="col" className="px-6 py-3">
-                  Position
-                </th> */}
                 <th scope="col" className="px-6 py-3">
                   Status
                 </th>
@@ -49,20 +56,13 @@ function UserDetails() {
             <tbody>
               {userData.map((user) => (
                 <tr key={user.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                      <input id={`checkbox-table-search-${user.id}`} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                      <label htmlFor={`checkbox-table-search-${user.id}`} className="sr-only">checkbox</label>
-                    </div>
-                  </td> */}
+                  
                   <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                    {/* <img className="w-10 h-10 rounded-full" src={user.image} alt="User image" /> */}
                     <div className="pl-3">
                       <div className="text-base font-semibold">{user.name}</div>
                       <div className="font-normal text-gray-500">{user.email}</div>
                     </div>
                   </th>
-                  {/* <td className="px-6 py-4">{user.position}</td> */}
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       {user.isBlocked ? (<div className="h-2.5 w-2.5 rounded-full bg-red-500 mr-2" />) : (<div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2" />)}
@@ -70,7 +70,6 @@ function UserDetails() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    {/* Modal toggle */}
                     <div onClick={()=>{setShowModal(true);setUserId(user._id)}}>
 
                     <Button

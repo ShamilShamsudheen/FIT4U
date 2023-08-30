@@ -18,7 +18,6 @@ function Home() {
       <Header/>
       <Main/>
       <LBlog/>
-      <hr className=" w-4/5 my-0" />
       <LTrainer/>
       <Footer/>
     </div>

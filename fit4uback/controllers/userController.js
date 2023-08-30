@@ -450,4 +450,24 @@ module.exports = {
       return res.status(500).json({ message: 'Internal server error.' });
     }
   },
+  getBlogSearch: async (req, res) => {
+    try {
+      const { createrName } = req.body;
+      const blogs = await Blog.find({ blog_writer: createrName });
+
+      res.status(200).json(searchedBlogs);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+
+  },
+  blogsCategory: async (req, res) => {
+    try {
+      const categories = await Blog.distinct('blog_category');
+
+      res.status(200).json(categories);
+    } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  }
 }

@@ -67,8 +67,8 @@ function Header() {
                                     <div className="flex items-center space-x-4 mt-5"> {/* Use space-x-4 to add spacing between links */}
                                         {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
                                         <Link to="/" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline hover:border-red-500 hover:border-b hover:border-solid text-sm font-medium uppercase">home</Link>
-                                        <Link to="/trainerList" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline hover:border-red-500 hover:border-b hover:border-solid text-sm font-medium uppercase">trainer</Link>
-                                        <Link to="/blogs" className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline hover:border-red-500 hover:border-b hover:border-solid text-sm font-medium uppercase">blog</Link>
+                                        <Link to={logout ? "/trainerList":""} className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline hover:border-red-500 hover:border-b hover:border-solid text-sm font-medium uppercase">trainer</Link>
+                                        <Link to={logout ? "/blogs":""} className="text-gray-300 hover:text-white rounded-md px-3 py-2 hover:underline hover:border-red-500 hover:border-b hover:border-solid text-sm font-medium uppercase">blog</Link>
                                         {logout && (
                                             <div className="flex items-center space-x-4">
                                                 <Link

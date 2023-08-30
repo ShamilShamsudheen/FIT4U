@@ -2,9 +2,6 @@ import React from 'react'
 import TrainerHeader from '../../Components/Trainer/TrainerHeader/TrainerHeader'
 import TrainerMain from '../../Components/Trainer/TrainerMain/TrainerMain'
 import heroImage from '../../assets/h1_hero.png'
-import LBlog from '../../Components/User/LandBlog/LBlog'
-import LTrainer from '../../Components/User/landTrainer/LTrainer'
-import Footer from '../../Components/User/Footer/footer'
 
 function TrainerHome() {
   const style = {

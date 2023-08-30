@@ -70,6 +70,13 @@ module.exports = {
             console.log(error.message)
         }
     },
+    tokenCheck: async (req, res) => {
+      try {
+        res.json({ status: true })
+      } catch (error) {
+  
+      }
+    },
     postLogin: async (req, res) => {
         try {
             const trainerData = await Trainer.findById(req.user.id).exec();

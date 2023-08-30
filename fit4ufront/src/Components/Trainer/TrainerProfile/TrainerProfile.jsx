@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { fileUpload } from '../../../Constants/Constants';
 import { FaUsers } from 'react-icons/fa';
 import { FiCreditCard } from 'react-icons/fi';
-import { AiOutlineEye } from 'react-icons/ai';
 import { toast } from 'react-hot-toast';
 import { trainerAxiosInstance } from '../../../axios/axios';
 
@@ -30,7 +29,7 @@ function TrainerProfilePage() {
     if (file) {
       const profileUrl = await fileUpload('TrainerProfile/', file)
       console.log(profileUrl)
-      trainerAxiosInstance.post('/profileImgUpload', { profileUrl }).then((res) => {
+      trainerAxiosInstance.patch('/profileImgUpload', { profileUrl }).then((res) => {
         setTrainer(res.data.updateProfile)
         setShowInput(false);
         toast.success(res.data.message)
@@ -97,14 +96,6 @@ function TrainerProfilePage() {
               Wallet Amount: ₹<span>{walletSum}</span>
             </div>
           </div>
-          {/* <div className="flex items-center w-1/3 h-32 rounded-lg mr-2">
-            <div className='w-1/2'>
-              <AiOutlineEye size='1x' />
-            </div>
-            <div className="ml-2">
-              Number of Views: <span>10</span>
-            </div>
-          </div> */}
         </div>
 
 

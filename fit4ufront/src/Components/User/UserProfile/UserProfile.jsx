@@ -129,7 +129,7 @@ function UserProfile() {
     },
     labels: ['Percent'],
   });
-  const [chartSeries, setChartSeries] = useState([75]);
+  const [chartSeries, setChartSeries] = useState([15]);
 
   useEffect(() => {
     userAxiosInstance

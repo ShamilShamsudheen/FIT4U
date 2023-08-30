@@ -10,37 +10,47 @@ function LTrainer() {
     })
   }, [])
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center">
-      <hr className="my-4" />
-      <div className="trainer-slide mx-auto top-0 mb-2">
-        <h3 className="text-3xl font-bold animate-slide-top">Trainers</h3>
+    <div className="min-h-screen bg-black flex flex-col items-center" id="trainers">
+      <div className="trainer-slide mb-2">
+        <h3 className="text-3xl font-bold animate-slide-top text-white">Trainers</h3>
       </div>
-      <div className="container mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
-        {trainers &&
-          trainers.map((trainer, index) => (
-            <div
-              key={index}
-              className="p-9 bg-white max-w-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 mx-auto transform hover:translate-y-2"
-            >
-              <img
-                className="rounded-xl h-40"
-                src={trainer.profileImg ? `${trainer.profileImg}` : `${Trainer}`}
-                alt="Product"
-              />
-              <div className="flex justify-between items-center">
-                <div>
-                  <h1 className="mt-5 text-2xl font-semibold">{trainer.name}</h1>
+      <div className="container mx-auto flex flex-row items-start gap-4">
+        {/* Left Div */}
+        <div className="flex flex-col justify-start w-1/2 p-4">
+          <h1 className="text-2xl font-semibold text-white">Trainer Information</h1>
+          <p className="text-gray-300 mt-2">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod...
+          </p>
+        </div>
+        {/* Right Div */}
+        <div className="w-1/2 overflow-x-auto">
+          <div className="flex flex-row space-x-2 max-h-80 overflow-y-auto">
+            {trainers &&
+              trainers.map((trainer, index) => (
+                <div
+                  key={index}
+                  className="relative h-40 w-40 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 transform hover:translate-y-2"
+                >
+                  <img
+                    className="object-cover h-full w-full"
+                    src={trainer.profileImg ? `${trainer.profileImg}` : `${Trainer}`}
+                    alt="Trainer"
+                  />
+                  <span
+                    className={`${index % 2 === 0 ? 'bg-blue-200' : 'bg-blue-400'
+                      } absolute bottom-0 left-0 w-full py-1 text-center text-xs text-white`}
+                  >
+                    {trainer.name}
+                  </span>
                 </div>
-                <div>
-                  <button className="text-white text-md font-semibold bg-green-400 py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-500 transform-gpu hover:scale-110">
-                    view
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+              ))}
+          </div>
+        </div>
       </div>
     </div>
+
+
+
 
   )
 }

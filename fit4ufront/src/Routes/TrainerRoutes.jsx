@@ -9,19 +9,72 @@ import TrainerBlog from '../Pages/Trainer/TrainerBlog';
 import TrainerEditBlog from '../Pages/Trainer/TrainerEditBlog';
 import TrainerEditWorkout from '../Pages/Trainer/TrainerEditWorkout';
 import TrainerChat from '../Pages/Trainer/TrianerChat';
+import { HomeVerification } from '../Authentication/TrainerAuth/preLogin';
+import { Authorization } from '../Authentication/TrainerAuth/postLogin';
 
 function TrainerRoutes() {
   return (
     <Routes>
-      <Route exact path={"/"} element={<TrainerHome />} />
-      <Route exact path={"/signUp"} element={<TrainerReg />} />
-      <Route exact path={"/login"} element={<TrainerLogIn />} />
-      <Route exact path={"/profile"} element={<TrainerProfile />} />
-      <Route exact path={"/workout"} element={<TrainerWorkout />} />
-      <Route exact path={"/blog"} element={<TrainerBlog />} />
-      <Route exact path={"/editBlog/:blogId"} element={<TrainerEditBlog />} />
-      <Route exact path={"/editWorkout/:workoutId"} element={<TrainerEditWorkout />} />
-      <Route exact path={"/chat"} element={<TrainerChat/>} />
+      <Route exact path={"/"} element={
+        <HomeVerification>
+          <TrainerHome />
+        </HomeVerification>
+
+      } />
+      <Route exact path={"/signUp"} element={
+        <Authorization accessBy={'non-Authorized'}>
+          <TrainerReg />
+        </Authorization>
+
+      } />
+      <Route exact path={"/login"} element={
+        <Authorization accessBy={'non-Authorized'}>
+          <TrainerLogIn />
+        </Authorization>
+
+      } />
+      <Route exact path={"/profile"} element={
+        <HomeVerification accessBy={'Authorized'}>
+
+          <TrainerProfile />
+        </HomeVerification>
+
+      } />
+      <Route exact path={"/workout"} element={
+        <HomeVerification accessBy={'Authorized'}>
+
+          <TrainerWorkout />
+        </HomeVerification>
+
+      } />
+      <Route exact path={"/blog"} element={
+        <HomeVerification accessBy={'Authorized'}>
+
+          <TrainerBlog />
+        </HomeVerification>
+
+      } />
+      <Route exact path={"/editBlog/:blogId"} element={
+        <HomeVerification accessBy={'Authorized'}>
+
+          <TrainerEditBlog />
+        </HomeVerification>
+
+      } />
+      <Route exact path={"/editWorkout/:workoutId"} element={
+        <HomeVerification accessBy={'Authorized'}>
+
+          <TrainerEditWorkout />
+        </HomeVerification>
+
+      } />
+      <Route exact path={"/chat"} element={
+        <HomeVerification accessBy={'Authorized'}>
+
+          <TrainerChat />
+        </HomeVerification>
+
+      } />
 
     </Routes>
   )

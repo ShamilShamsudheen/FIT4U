@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { AdminApi } from '../../../api/api'
 import Button from '../../Button/Button'
 import { toast } from 'react-hot-toast'
 import { Navigate } from 'react-router-dom'
+import { adminAxiosInstance } from '../../../axios/axios'
 
 function TrainerDetails() {
   const [trainerData,setTrianerData] = useState([])
   const [showModal,setShowModal] = useState(false)
   const [trainerId,setTrainerId] = useState(null)
   useEffect(()=>{
-    AdminApi.get('/admin/trainerDetails').then((res)=>{
+    adminAxiosInstance.get('/trainerDetails').then((res)=>{
       setTrianerData(res.data.trainerDetails)
     })
   },[])
   const handleClick = async(e)=>{
     e.preventDefault()
     console.log(trainerId+"trainerId")
-    await AdminApi.post('/admin/trainerApproval',{trainerId}).then((res)=>{
+    await adminAxiosInstance.patch('/trainerApproval',{trainerId}).then((res)=>{
       if(res.data.status){
         setShowModal(false)
         toast.success(res.data.message)

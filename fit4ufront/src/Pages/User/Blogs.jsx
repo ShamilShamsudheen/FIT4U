@@ -23,12 +23,10 @@ function BlogsPage() {
             </h2>
           </div>
           <div className="flex mt-4">
-            <div className="w-4/5">
+            <div className="w-full">
               <Blogs />
             </div>
-            <div className="w-1/5 bg-gray-100">
-              {/* Content for the second column */}
-            </div>
+            
           </div>
 
         </div>
