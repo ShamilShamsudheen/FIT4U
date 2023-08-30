@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import Background from '../../Background/Background';
 import Button from '../../Button/Button';
-// import { GoogleLogin } from 'react-google-login';
+import { GoogleLogin } from 'react-google-login';
 import { userAxiosInstance } from '../../../axios/axios';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../../Redux/app/userSlice';
@@ -146,13 +146,13 @@ function UserLogin() {
                             />
                         </div>
                         <div className='mt-4 flex justify-center' id='signInButton'>
-                            {/* <GoogleLogin
+                            <GoogleLogin
                                 clientId={CLIENT_ID}
                                 buttonText="Login with Google"
                                 onSuccess={responseGoogle}
                                 onFailure={responseGoogle}
                                 cookiePolicy={"single_host_origin"}
-                            /> */}
+                            />
                         </div>
                         <div className="mt-4 flex justify-center">
                             <p className="text-sm">
