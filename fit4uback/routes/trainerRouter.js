@@ -1,7 +1,6 @@
 const express = require('express');
 const trainerRouter = express.Router();
 const trainerController = require('../controllers/trainerController')
-// const config = require('../config/config')
 const isLogged = require('../middleware/jwtMiddleware')
 
 trainerRouter.post('/signUp',trainerController.signUp)

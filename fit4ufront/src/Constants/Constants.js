@@ -49,6 +49,8 @@ export const truncateString = (str, maxLength)=> {
   }
 
 // Define a function to format the timestamp
+
+// aszdxfcgvbhnjm
 export const formatTimestamp =(timestamp)=> {
     const options = {
       hour: 'numeric',
