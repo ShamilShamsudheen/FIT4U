@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import logo from '../../../assets/logo-1.png';
-import { TrainerApi } from '../../../api/api';
 import { toast } from 'react-hot-toast';
 import { storage } from '../../../firebase/config'
 import { ref, uploadBytes } from 'firebase/storage';
 import { fileUpload } from '../../../Constants/Constants';
 import Background from '../../Background/Background';
 import Button from '../../Button/Button';
+import { trainerAxiosInstance } from '../../../axios/axios';
 const initialValues = {
   name: '',
   email: '',
@@ -54,7 +54,7 @@ function TrainerSignUp() {
     onSubmit: async (values) => {
       console.log(values);
       try {
-        await TrainerApi.post('/trainer/signUp', { values }).then((res) => {
+        await trainerAxiosInstance.post('/signUp', { values }).then((res) => {
           if (res.data.status) {
             toast.success(res.data.message)
             setModal(true);
@@ -91,7 +91,7 @@ function TrainerSignUp() {
       description
     }
     console.log(resumeUrl,certificateUrl)
-    TrainerApi.post('/trainer/signUp', { values }).then((res) => {
+    trainerAxiosInstance.post('/signUp', { values }).then((res) => {
       toast.success(res.data.message)
       navigate('/trainer/login')
     });

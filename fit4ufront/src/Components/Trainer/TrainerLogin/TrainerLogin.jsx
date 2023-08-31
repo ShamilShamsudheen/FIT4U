@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import logo from '../../../assets/logo-1.png';
-import { TrainerApi } from '../../../api/api';
 import { toast } from 'react-hot-toast';
 import Button from '../../Button/Button';
 import Background from '../../Background/Background';
+import { trainerAxiosInstance } from '../../../axios/axios';
 
 const initialValues = {
   email: '',
@@ -31,7 +31,7 @@ function TrainerLogin() {
     validate,
     onSubmit: async (values) => {
       try {
-          await TrainerApi.post('/trainer/login', { values }).then((res)=>{
+          await trainerAxiosInstance.post('/login', { values }).then((res)=>{
           if(res.data.status) {
             localStorage.setItem('trainerToken',res.data.token)
             toast.success(res.data.message)
