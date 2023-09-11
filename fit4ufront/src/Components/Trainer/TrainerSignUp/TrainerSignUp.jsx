@@ -53,7 +53,7 @@ function TrainerSignUp() {
     validate,
     onSubmit: async (values) => {
       console.log(values);
-      try {
+      try {''
         await trainerAxiosInstance.post('/signUp', { values }).then((res) => {
           if (res.data.status) {
             toast.success(res.data.message)

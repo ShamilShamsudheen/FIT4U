@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import logo from '../../../assets/logo-1.png';
-import { UserApi } from '../../../api/api';
+// import { UserApi } from '../../../api/api';
 import { auth, firebase } from '../../../firebase/config';
 import { toast } from 'react-hot-toast';
 import Background from '../../Background/Background';
@@ -53,7 +53,7 @@ function UserSignUp() {
   const [result, setResult] = useState();
   useEffect(() => {
     if (timeout > 0) {
-      const timer = setTimeout(() => {
+      let timer = setTimeout(() => {
         setTimeOut((preTime) => preTime - 1)
       }, 1000);
       setReset(true)
@@ -70,9 +70,10 @@ function UserSignUp() {
     onSubmit: async (values) => {
       const mobile = `+91${values.mob}`;
       try {
-        await UserApi.post('/signUp', { values }).then((res) => {
+        await userAxiosInstance.post('/signUp', { values }).then((res) => {
           if (res.data.status) {
-            toast.success(res.data.message);
+            console.log(res.data.status)
+            // toast.success(res.data.message);
 
             const verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
             auth.signInWithPhoneNumber(mobile, verify).then((res) => {
@@ -242,7 +243,7 @@ function UserSignUp() {
             </div>
             <p className='mx-auto'>Verify OTP</p>
             <span className="countdown">
-              <span style={{ "--value": {timer}, backgroundColor: 'blue' }}></span>
+              <span style={{ "--value": {timeout}, backgroundColor: 'blue' }}></span>
             </span>
             <hr className="w-full border border-red-500 mt-3" />
             <form className="mx-auto mt-4" onSubmit={handleSubmit}>

@@ -255,12 +255,12 @@ function UserProfile() {
                   className={`flex justify-center py-2 text-sm md:text-md cursor-pointer ${history ? 'bg-gray-400' : 'bg-gray-300'}`}
                   style={{ fontFamily: 'Kanit, sans-serif' }}
                   onClick={() => {
-                    setHistory(!history)
+                    {paymentHistory && setHistory(!history)}
                     setDetails(false)
                     setStatus(false)
                   }}
                 >
-                  History
+                  {paymentHistory ? "History":'No History'}
                 </a>
               </li>
             </ul>

@@ -39,6 +39,7 @@ module.exports = {
           return res.json({ message: 'Your account has been created successfully', status: true });
         }
       }
+      return res.json({status:true})
     } catch (error) {
       console.log(error.message);
       return res.status(500).json({ message: 'An error occurred', status: false });
