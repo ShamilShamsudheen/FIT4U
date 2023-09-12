@@ -25,6 +25,9 @@ export const HomeVerification = ({ children }) => {
                         setLoading(false);
                     }
                 })
+                .catch((error)=>{
+                    setLoading(false)
+                })
             }else{
                 setLoading(false)
             }
