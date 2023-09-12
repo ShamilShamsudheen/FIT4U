@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import logo from '../../../assets/logo-1.png';
-// import { UserApi } from '../../../api/api';
+import { UserApi } from '../../../api/api';
 import { auth, firebase } from '../../../firebase/config';
 import { toast } from 'react-hot-toast';
 import Background from '../../Background/Background';
@@ -70,10 +70,10 @@ function UserSignUp() {
     onSubmit: async (values) => {
       const mobile = `+91${values.mob}`;
       try {
-        await userAxiosInstance.post('/signUp', { values }).then((res) => {
+        await userApi.post('/signUp', { values }).then((res) => {
           if (res.data.status) {
             console.log(res.data.status)
-            // toast.success(res.data.message);
+            toast.success(res.data.message);
 
             const verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
             auth.signInWithPhoneNumber(mobile, verify).then((res) => {
