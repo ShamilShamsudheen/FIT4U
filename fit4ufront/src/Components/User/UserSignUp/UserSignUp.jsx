@@ -23,13 +23,24 @@ const validate = (values) => {
 
   if (!values.name || values.name.trim() === '') {
     errors.name = 'This field is required';
+  } else if (!/^[a-zA-Z\s]+$/.test(values.name.trim())) {
+    errors.name = 'Invalid characters in name';
   }
+  
   if (!values.email || values.email.trim() === '') {
     errors.email = 'This field is required';
+  } else if (
+    !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email.trim())
+  ) {
+    errors.email = 'Invalid email address';
   }
+  
   if (!values.mob || values.mob.trim() === '') {
     errors.mob = 'This field is required';
+  } else if (!/^[0-9]{10}$/.test(values.mob.trim())) {
+    errors.mob = 'Invalid mobile number';
   }
+  
   if (!values.pass || values.pass.trim() === '') {
     errors.pass = 'This field is required';
   } else if (!/(?=.*[A-Z])(?=.*\W)/.test(values.pass)) {
