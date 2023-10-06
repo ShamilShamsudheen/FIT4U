@@ -13,22 +13,12 @@ function BlogsPage() {
   return (
     <div className="BlogsPage" style={style}>
       <Header />
-      <div className='trainer-list bg-black mt-80 '>
-        <div className='text-red-900 mx-auto'>
-          <div className="flex justify-center w-full mt-4">
-            <h2 className="uppercase font-semibold text-2xl text-center">
-              <span className=" text-lg tracking-wide font-Mogra font-extrabold">
-                Top Blogs
-              </span>
-            </h2>
-          </div>
-          <div className="flex mt-4">
-            <div className="w-full">
+      <div className="flex justify-center h-72 items-center main-slide">
+        <h3 className="slide-text animate-slide-top">Top blogs</h3>
+      </div>
+      <div className="trainer-list bg-black flex justify-center">
+        <div className="w-full flex justify-center">
               <Blogs />
-            </div>
-            
-          </div>
-
         </div>
       </div>
     </div>

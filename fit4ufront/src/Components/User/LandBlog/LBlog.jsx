@@ -1,47 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { userAxiosInstance } from '../../../axios/axios';
+import React ,{ useEffect, useState } from "react";
+import { userAxiosInstance } from "../../../axios/axios";
+import { truncateString } from "../../../Constants/Constants";
 
 function LBlog() {
   const [blogs, setBlogs] = useState([]);
   useEffect(() => {
-    userAxiosInstance.get('/blogs').then((res) => {
+    userAxiosInstance.get("/blogs").then((res) => {
       setBlogs(res.data.blogData);
       console.log(res.data.blogData);
     });
   }, []);
 
   return (
-    <div className="bg-black flex flex-col items-center min-h-screen py-8" id="blogs">
-  <div className="blog-slide mx-auto top-0 mb-6">
-    <h3 className="text-3xl font-bold animate-slide-top">Blog</h3>
-  </div>
-  {blogs && (
-    <div className="flex overflow-x-auto space-x-4">
-      {/* Left side (Blogs) */}
-      <div className="flex-shrink-0">
-        {blogs.map((blog) => (
-          <div key={blog.id} className="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden">
-            <img src={blog.blog_template} alt="Blog" className="w-full h-32 object-cover" />
-            <div className="p-4">
-              <h2 className="text-xl font-semibold">{blog.blog_title}</h2>
-              <p className="text-gray-500">{blog.blog_writer}</p>
+    <div
+      className="bg-slate-950  flex flex-col items-center  py-8"
+      id="blogs"
+    >
+      <div className="blog-slide mx-auto top-0 mb-6">
+        <h3 className="text-3xl font-bold relative inline-block group">
+          Blogs
+          <span className="absolute left-0 -bottom-0.5 mt-1 w-full h-1 bg-amber-500 transform scale-x-0 transition-transform origin-left group-hover:scale-x-100"></span>
+        </h3>
+      </div>
+
+      {blogs && (
+        <div className="w-full flex justify-center overflow-x-auto">
+          {blogs.map((blog) => (
+            <div
+              className="flex w-2/3 bg-slate-50  rounded mt-2 mb-2"
+              key={blog.id}
+            >
+              <div className="bg-yellow  w-1/2 flex justify-center">
+                <img
+                  src={blog.blog_template}
+                  alt="blog image"
+                  className="rounded"
+                />
+              </div>
+              <div className="bg-blue w-2/3 flex justify-center">
+                <div className="w-2/3">
+                  <h3 className="text-xl text-slate-800">{blog.blog_title}</h3>
+                  <p className="text-slate-800 text-xs">
+                    {truncateString(blog.blog_content, 400)}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Right side (Heading and Paragraph) */}
-      <div className="flex-shrink-0 p-4 bg-trainsparent rounded-lg">
-        <h1 className="text-2xl font-semibold text-white">Blog Information</h1>
-        <p className="text-gray-300 mt-2">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod...
-        </p>
-      </div>
+          ))}
+        </div>
+      )}
     </div>
-  )}
-  <hr className="w-5/6 my-4 bg-gray-300" />
-</div>
-
   );
 }
 

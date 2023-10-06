@@ -15,7 +15,14 @@ function SingleTrainerPage() {
   return (
     <div className="SingleTrainerPage" style={style}>
       <Header/>
+      <div className="flex justify-center h-72 items-center main-slide">
+        <h3 className="slide-text animate-slide-top">Trainer Details</h3>
+      </div>
+      <div className="trainer-list bg-black">
+        <div className=" mx-auto">
       <SingleTrainer trainerId={trainerId}/>
+      </div>
+      </div>
     </div>
   )
 }

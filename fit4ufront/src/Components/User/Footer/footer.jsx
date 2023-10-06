@@ -1,8 +1,8 @@
-import React from 'react';
+// import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900">
+    <footer className="bg-gray-950 mb-2">
       <div className="container mx-auto py-10">
         <ul className="flex justify-center flex-wrap text-sm text-gray-50">
           <li className="mx-2">

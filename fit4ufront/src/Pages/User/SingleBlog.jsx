@@ -15,7 +15,14 @@ function SingleBlogPage() {
   return (
     <div className="SingleBlogPage" style={style}>
       <Header/>
+      <div className="flex justify-center h-72 items-center main-slide">
+        <h3 className="slide-text animate-slide-top">blog Details</h3>
+      </div>
+      <div className="trainer-list bg-black">
+        <div className=" mx-auto">
       <SingleBlogComponent blogId={blogId}/>
+      </div>
+      </div>
     </div>
   )
 }

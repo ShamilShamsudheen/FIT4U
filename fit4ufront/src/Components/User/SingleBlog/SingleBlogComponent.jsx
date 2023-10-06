@@ -24,19 +24,29 @@ function SingleBlogComponent() {
     };
     console.log(singleBlog)
     return (
-        <div className='w-full h-full bg-white mt-10 backdrop-filter backdrop-blur-lg'>
-            <div className="flex flex-col items-center justify-center min-h-screen w-1/3 mx-auto mt-10">
-                <h2 className="text-xl font-bold mt-2 mb-3 ">{singleBlog.blog_title}</h2>
-                <img src={singleBlog.blog_template} alt="Blog" className="mb-2" />
-                <p className="text-blue-500 text-sm">Published on {formatDate(singleBlog.blog_date)}</p>
-                <p className="text-blue-500 text-sm"><span>{singleBlog.blog_category}</span> | created by  <span className='text-red-900 font-bold uppercase ml-2'>  {singleBlog.blog_writer}</span></p>
-                <p className="mt-4 text-grey">
-                    {singleBlog.blog_content}
-                </p>
-            </div>
-            
-        </div>
+        <>
+            <div className='bg-slate-950 w-full flex justify-center'>
+                <div className='mt-4 mb-4 flex justify-center'>
+                    <div className='flex flex-col sm:flex-row w-3/4 space-x-0 sm:space-x-4 space-y-4'>
+                        <div className='w-full sm:w-1/2 my-auto '>
 
+                            <h1 className='text-2xl text-slate-300 uppercase font-bold'>{singleBlog.blog_title}</h1>
+                            <img src={singleBlog.blog_template} alt="" className='w-full rounded-2xl' />
+                            <p className="text-blue-500 text-xs mt-2">Published on {formatDate(singleBlog.blog_date)}</p>
+                            <p className="text-blue-500 text-x mt-2"><span>{singleBlog.blog_category}</span>
+                                | created by
+                                <span className='text-slate-700 text-xl font-bold uppercase ml-2'>  {singleBlog.blog_writer}</span>
+                            </p>
+                        </div>
+                        <div className='w-full sm:w-1/2 items-start mt-4 sm:mt-0 my-auto'>
+                            <h1 className='text-2xl text-slate-300 uppercase font-bold'>To read :</h1>
+                            <p className='text-md text-slate-500 mt-4'>{singleBlog.blog_content}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </>
     )
 }
 
